@@ -72,6 +72,9 @@
     },
     "authorization_scheme": "Basic",
     "schema_adapter": "declared",
+    "auth_headers": {
+      "Authorization": "Basic base64({secret.api_key}:X)"
+    },
     "notes": "Lists are wrapped ({tickets:[...]}, {requesters:[...]}, ...) and paged with page/per_page (max 100). GET /tickets only returns tickets created in the last 30 days unless updated_since is supplied, so the list path pins updated_since to the epoch. Ticket lists can only be ordered by created_at, so tickets use a full hash snapshot rather than a timestamp delta. Tags and other embeds need include=... (2 extra credits each) and are not requested. Ticket status/priority are integers and stay in remote_data. Agent groups default to the primary workspace on multi-workspace accounts. Requesters and agents carry first_name/last_name only (no full-name field), so the unified name is left to remote_data. Authenticates with an agent's API key over HTTP Basic auth: Authorization: Basic base64('<api_key>:X'). The worker sends 'Authorization: Basic <token>', so the stored token must be the Base64 of '<api_key>:X'. Freshservice also gained Freshworks-org OAuth (scopes such as freshservice.tickets.view) in 2024, but it is tied to the customer's *.myfreshworks.com org host and Freshworks app registration; API key remains the documented default for server-to-server access."
   },
   "webhooks": {
