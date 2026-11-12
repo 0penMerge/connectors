@@ -69,6 +69,9 @@
     },
     "authorization_scheme": "Bearer",
     "schema_adapter": "declared",
+    "auth_headers": {
+      "api_key": "{secret.api_key}"
+    },
     "notes": "Hive REST API v2. Every list is workspace-scoped and returns a connection object {edges:[{cursor,node}], pageInfo:{endCursor,hasNextPage}}; records are the edges, so mapped fields read from node.*. Pages request first=200 (the maximum) and follow pageInfo.endCursor via 'after'. There is no updated-since filter, so reads are hashed snapshots. Node schemas are untyped in the v2 spec; field names follow the documented Hive object model (_id, title, deadline, checkedDate, createdBy, ...). Hive API keys are generated under Profile > API info (which also shows the workspace id). The v2 API accepts either an 'api_key' header or 'Authorization: Bearer <token>'; this connector sends the key as a Bearer token. If a key is rejected as Bearer, the runtime must send it in the api_key header instead."
   },
   "webhooks": {
