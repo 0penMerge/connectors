@@ -1,0 +1,422 @@
+{
+  "apiVersion": "openmerge.dev/connector-schema/v1",
+  "kind": "ConnectorSchema",
+  "category": "ticketing@1",
+  "discovery": {
+    "mode": "declared",
+    "description": "GitLab objects use the declared Merge-compatible Ticketing inventory."
+  },
+  "models": {
+    "Ticket": {
+      "mode": "unified",
+      "nativeObject": "gitlab.issues",
+      "read": {
+        "strategy": "timestamp_delta",
+        "cursor": {
+          "field": "updated_at",
+          "tieBreaker": "id",
+          "parameter": "updated_after",
+          "overlapSeconds": 300,
+          "precision": "seconds"
+        },
+        "deletion": {
+          "strategy": "full_inventory",
+          "reconcileEverySeconds": 86400
+        },
+        "requiredScopes": [
+          "read_api"
+        ]
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/issues?scope=all&order_by=updated_at&sort=asc",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "gitlab.issues",
+        "model": {
+          "ref": "Ticket",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "title"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "description"
+            }
+          },
+          "status": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "state"
+            }
+          },
+          "ticket_type": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "issue_type"
+            }
+          },
+          "due_date": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "due_date"
+            }
+          },
+          "creator": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "author.id"
+            }
+          },
+          "tags": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "labels"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "created_at"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "updated_at"
+            }
+          },
+          "completed_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "closed_at"
+            }
+          },
+          "ticket_url": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "web_url"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins",
+          "cursor": "updated_at"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Ticket model to GitLab (https://docs.gitlab.com/api/issues/)"
+        }
+      }
+    },
+    "Collection": {
+      "mode": "unified",
+      "nativeObject": "gitlab.projects",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        },
+        "requiredScopes": [
+          "read_api"
+        ]
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/projects?include_subgroups=true&order_by=id&sort=asc",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "gitlab.projects",
+        "model": {
+          "ref": "Collection",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name_with_namespace"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "description"
+            }
+          },
+          "access_level": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "visibility"
+            }
+          },
+          "collection_url": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "web_url"
+            }
+          },
+          "collection_type": {
+            "mode": "read_only",
+            "get": {
+              "op": "const",
+              "value": "PROJECT"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "created_at"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Collection model to GitLab (https://docs.gitlab.com/api/issues/)"
+        }
+      }
+    },
+    "Team": {
+      "mode": "unified",
+      "nativeObject": "gitlab.groups",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        },
+        "requiredScopes": [
+          "read_api"
+        ]
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/descendant_groups?order_by=id&sort=asc",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "gitlab.groups",
+        "model": {
+          "ref": "Team",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "full_name"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "description"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Team model to GitLab (https://docs.gitlab.com/api/issues/)"
+        }
+      }
+    },
+    "Tag": {
+      "mode": "unified",
+      "nativeObject": "gitlab.labels",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        },
+        "requiredScopes": [
+          "read_api"
+        ]
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/labels?include_descendant_groups=true&include_ancestor_groups=true",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "gitlab.labels",
+        "model": {
+          "ref": "Tag",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Tag model to GitLab (https://docs.gitlab.com/api/issues/)"
+        }
+      }
+    },
+    "User": {
+      "mode": "unified",
+      "nativeObject": "gitlab.members",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        },
+        "requiredScopes": [
+          "read_api"
+        ]
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/members/all",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "gitlab.members",
+        "model": {
+          "ref": "User",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "email_address": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "email"
+            }
+          },
+          "avatar": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "avatar_url"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing User model to GitLab (https://docs.gitlab.com/api/issues/)"
+        }
+      }
+    }
+  }
+}
