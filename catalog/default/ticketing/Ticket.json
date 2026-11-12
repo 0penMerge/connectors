@@ -1,0 +1,151 @@
+{
+  "kind": "model",
+  "id": "Ticket",
+  "version": 1,
+  "scope": "default",
+  "fields": {
+    "access_level": {
+      "type": "string",
+      "description": "Open enum; Merge-normalized values: COMPANY, PUBLIC, PRIVATE, COLLECTION",
+      "nullable": true
+    },
+    "account": {
+      "type": "string",
+      "ref": "Account",
+      "nullable": true
+    },
+    "assigned_teams": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "ref": "Team"
+      },
+      "nullable": true
+    },
+    "assignees": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "ref": "User"
+      },
+      "nullable": true
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "ref": "Attachment"
+      },
+      "nullable": true
+    },
+    "collections": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "ref": "Collection"
+      },
+      "nullable": true
+    },
+    "completed_at": {
+      "type": "datetime",
+      "nullable": true
+    },
+    "contact": {
+      "type": "string",
+      "ref": "Contact",
+      "nullable": true
+    },
+    "creator": {
+      "type": "string",
+      "ref": "User",
+      "nullable": true
+    },
+    "description": {
+      "type": "string",
+      "nullable": true
+    },
+    "due_date": {
+      "type": "datetime",
+      "nullable": true
+    },
+    "name": {
+      "type": "string",
+      "nullable": true
+    },
+    "parent_ticket": {
+      "type": "string",
+      "ref": "Ticket",
+      "nullable": true
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "nullable": true
+    },
+    "priority": {
+      "type": "string",
+      "description": "Open enum; Merge-normalized values: URGENT, HIGH, NORMAL, LOW",
+      "nullable": true
+    },
+    "remote_created_at": {
+      "type": "datetime",
+      "nullable": true
+    },
+    "remote_data": {
+      "type": "object",
+      "nullable": true
+    },
+    "remote_data_path": {
+      "type": "string",
+      "nullable": true
+    },
+    "remote_fields": {
+      "type": "object",
+      "nullable": true
+    },
+    "remote_id": {
+      "type": "string"
+    },
+    "remote_updated_at": {
+      "type": "datetime",
+      "nullable": true
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "ref": "Role"
+      },
+      "nullable": true
+    },
+    "status": {
+      "type": "string",
+      "description": "Open enum; Merge-normalized values: OPEN, CLOSED, IN_PROGRESS, ON_HOLD",
+      "nullable": true
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "nullable": true
+    },
+    "ticket_type": {
+      "type": "string",
+      "nullable": true
+    },
+    "ticket_url": {
+      "type": "string",
+      "format": "uri",
+      "nullable": true
+    }
+  },
+  "provenance": {
+    "author": "seed:merge-unified-openapi@owner-directed",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Canonical ticketing model compiled from the Merge unified ticketing OpenAPI common model 'Ticket' at the repository owner's direction",
+    "evidence": "sha256:0f4d220addc84cafc28efd0e7c9b20c3b29bc247cbfccd14fad5af811dd6824e"
+  }
+}

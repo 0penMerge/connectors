@@ -1,0 +1,140 @@
+{
+  "apiVersion": "openmerge.dev/connector/v1",
+  "kind": "Connector",
+  "metadata": {
+    "id": "jira",
+    "version": "1.0.0",
+    "coreAbi": "2",
+    "name": "Jira",
+    "company": "Atlassian",
+    "description": "Sync Jira Cloud issues, projects, users and roles through the OpenMerge ticketing model.",
+    "logo": {
+      "url": "https://cdn.openmerge.dev/connectors/jira.svg"
+    }
+  },
+  "runtime": {
+    "entrypoint": "plugin.py:JiraPlugin"
+  },
+  "categories": [
+    "ticketing@1"
+  ],
+  "capabilities": {
+    "reads": [
+      "hash_snapshot"
+    ],
+    "writes": [],
+    "dynamicSchema": false,
+    "customFields": false
+  },
+  "auth": {
+    "type": "oauth2",
+    "driver": "oauth2",
+    "authorization_url": "https://auth.atlassian.com/authorize",
+    "token_url": "https://auth.atlassian.com/oauth/token",
+    "refresh_rotates": true,
+    "rotation_grace_seconds": 0,
+    "scopes_param": "scope",
+    "default_scopes": [
+      "read:jira-work",
+      "read:jira-user",
+      "offline_access"
+    ],
+    "scope_catalog": [
+      {
+        "id": "offline_access",
+        "label": "Offline access",
+        "description": "Issue refresh tokens so syncs keep running.",
+        "recommended": true
+      },
+      {
+        "id": "read:jira-work",
+        "label": "Read Jira work",
+        "description": "Read issues, projects and roles.",
+        "models": [
+          "Ticket",
+          "Collection",
+          "Role"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "read:jira-user",
+        "label": "Read Jira users",
+        "description": "Read user profiles and email addresses.",
+        "models": [
+          "User"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "write:jira-work",
+        "label": "Write Jira work",
+        "description": "Create and edit issues and comments."
+      }
+    ],
+    "connection_config_fields": [
+      "cloud_id"
+    ],
+    "scope_separator": " ",
+    "authorization_params": {
+      "audience": "api.atlassian.com",
+      "prompt": "consent"
+    },
+    "notes": "Atlassian 3LO. cloud_id is the site id returned by https://api.atlassian.com/oauth/token/accessible-resources after authorization."
+  },
+  "setup": {
+    "oauthAppFields": [
+      {
+        "id": "client_id",
+        "component": "text",
+        "label": "Client ID",
+        "required": true
+      },
+      {
+        "id": "client_secret",
+        "component": "secret",
+        "label": "Client secret",
+        "required": true,
+        "writeOnly": true
+      }
+    ],
+    "instructions": [
+      {
+        "component": "callback_url",
+        "label": "Add this redirect URL to your Jira OAuth app"
+      }
+    ]
+  },
+  "api": {
+    "base_url": "https://api.atlassian.com/ex/jira/{cloud_id}",
+    "describe_endpoint": "/",
+    "pagination": {
+      "style": "offset",
+      "param": "startAt",
+      "records_path": "values",
+      "next_path": "next",
+      "limit_param": "maxResults"
+    },
+    "rate_limit_headers": {
+      "remaining": null,
+      "reset": null,
+      "reset_style": "auto_seconds"
+    },
+    "authorization_scheme": "Bearer",
+    "schema_adapter": "declared",
+    "notes": "Issues use enhanced JQL search with nextPageToken; project and user lists use startAt/maxResults offsets."
+  },
+  "webhooks": {
+    "supported": false,
+    "automatic": false
+  },
+  "provenance": {
+    "author": "human:nath@datakart.ai",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://developer.atlassian.com/cloud/jira/platform/rest/v3/"
+  }
+}

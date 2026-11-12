@@ -1,0 +1,168 @@
+{
+  "apiVersion": "openmerge.dev/connector/v1",
+  "kind": "Connector",
+  "metadata": {
+    "id": "zoho_desk",
+    "version": "1.0.0",
+    "coreAbi": "2",
+    "name": "Zoho Desk",
+    "company": "Zoho Corporation",
+    "description": "Sync Zoho Desk tickets, contacts, accounts, agents, departments, teams and roles through the OpenMerge ticketing model.",
+    "logo": {
+      "url": "https://cdn.openmerge.dev/connectors/zoho_desk.svg"
+    }
+  },
+  "runtime": {
+    "entrypoint": "plugin.py:ZohoDeskPlugin"
+  },
+  "categories": [
+    "ticketing@1"
+  ],
+  "capabilities": {
+    "reads": [
+      "hash_snapshot"
+    ],
+    "writes": [
+      "update"
+    ],
+    "dynamicSchema": false,
+    "customFields": false
+  },
+  "auth": {
+    "type": "oauth2",
+    "driver": "oauth2",
+    "authorization_url": "https://accounts.zoho.com/oauth/v2/auth",
+    "token_url": "https://accounts.zoho.com/oauth/v2/token",
+    "refresh_rotates": false,
+    "rotation_grace_seconds": null,
+    "scopes_param": "scope",
+    "default_scopes": [
+      "Desk.tickets.READ",
+      "Desk.contacts.READ",
+      "Desk.accounts.READ",
+      "Desk.basic.READ"
+    ],
+    "scope_catalog": [
+      {
+        "id": "Desk.tickets.READ",
+        "label": "Read tickets",
+        "description": "List and read tickets.",
+        "models": [
+          "Ticket"
+        ],
+        "operations": [
+          "read"
+        ],
+        "recommended": true
+      },
+      {
+        "id": "Desk.tickets.UPDATE",
+        "label": "Update tickets",
+        "description": "Update ticket subject, status, priority, category and due date.",
+        "models": [
+          "Ticket"
+        ],
+        "operations": [
+          "update"
+        ]
+      },
+      {
+        "id": "Desk.contacts.READ",
+        "label": "Read contacts",
+        "description": "List and read contacts.",
+        "models": [
+          "Contact"
+        ],
+        "operations": [
+          "read"
+        ],
+        "recommended": true
+      },
+      {
+        "id": "Desk.accounts.READ",
+        "label": "Read accounts",
+        "description": "List and read accounts.",
+        "models": [
+          "Account"
+        ],
+        "operations": [
+          "read"
+        ],
+        "recommended": true
+      },
+      {
+        "id": "Desk.basic.READ",
+        "label": "Read organization basics",
+        "description": "List agents, departments, teams and roles (each endpoint also accepts its specific scope: Desk.agents.READ, Desk.departments.READ, Desk.teams.READ, Desk.permissions.READ).",
+        "models": [
+          "User",
+          "Collection",
+          "Team",
+          "Role"
+        ],
+        "operations": [
+          "read"
+        ],
+        "recommended": true
+      }
+    ],
+    "connection_config_fields": [],
+    "scope_separator": ",",
+    "authorization_params": {
+      "access_type": "offline",
+      "prompt": "consent"
+    },
+    "notes": "Zoho Accounts OAuth (server-based client from api-console.zoho.com). access_type=offline returns a non-rotating refresh token. The authorization URL above is the US data center; EU/IN/AU/JP/CA/SA/CN accounts use the matching accounts.zoho.<tld> host, which this spec format cannot express (the Zoho CRM bundle's endpoint_regions pattern should be copied when promoted)."
+  },
+  "setup": {
+    "oauthAppFields": [
+      {
+        "id": "client_id",
+        "component": "text",
+        "label": "Client ID",
+        "required": true
+      },
+      {
+        "id": "client_secret",
+        "component": "secret",
+        "label": "Client secret",
+        "required": true,
+        "writeOnly": true
+      }
+    ],
+    "instructions": [
+      {
+        "component": "callback_url",
+        "label": "Add this redirect URL to your Zoho Desk OAuth app"
+      }
+    ]
+  },
+  "api": {
+    "base_url": "https://desk.zoho.com/api/v1",
+    "describe_endpoint": "/",
+    "pagination": {
+      "style": "offset",
+      "param": "from",
+      "records_path": "data",
+      "next_path": "next",
+      "limit_param": "limit"
+    },
+    "rate_limit_headers": {
+      "remaining": null,
+      "reset": null,
+      "reset_style": "auto_seconds"
+    },
+    "authorization_scheme": "Zoho-oauthtoken",
+    "schema_adapter": "declared",
+    "notes": "BLOCKER: every Zoho Desk endpoint except /organizations requires an orgId request header (GET /api/v1/organizations lists the ids); this declarative spec cannot set it, so the runtime must inject orgId from connection config before this connector can sync. Lists page with from (zero-based index) + limit (tickets/contacts/accounts max 100; agents/departments/teams max 200; roles max 500) and wrap rows in data (teams in teams). An empty page returns HTTP 204. US data center host desk.zoho.com; other regions use desk.zoho.eu/.in/.com.au/.jp/.sa/.ae/.sg/zohocloud.ca/.com.cn. Calls cost API credits per edition."
+  },
+  "webhooks": {
+    "supported": false,
+    "automatic": false
+  },
+  "provenance": {
+    "author": "human:nath@datakart.ai",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://desk.zoho.com/DeskAPIDocument"
+  }
+}

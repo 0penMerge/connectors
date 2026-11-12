@@ -1,0 +1,103 @@
+{
+  "apiVersion": "openmerge.dev/connector/v1",
+  "kind": "Connector",
+  "metadata": {
+    "id": "intercom",
+    "version": "1.0.0",
+    "coreAbi": "2",
+    "name": "Intercom",
+    "company": "Intercom",
+    "description": "Sync Intercom conversations, contacts, companies, admins, teams and tags through the OpenMerge ticketing model.",
+    "logo": {
+      "url": "https://cdn.openmerge.dev/connectors/intercom.svg"
+    }
+  },
+  "runtime": {
+    "entrypoint": "plugin.py:IntercomPlugin"
+  },
+  "categories": [
+    "ticketing@1"
+  ],
+  "capabilities": {
+    "reads": [
+      "hash_snapshot"
+    ],
+    "writes": [
+      "create",
+      "update"
+    ],
+    "dynamicSchema": false,
+    "customFields": false
+  },
+  "auth": {
+    "type": "oauth2",
+    "driver": "oauth2",
+    "authorization_url": "https://app.intercom.com/oauth",
+    "token_url": "https://api.intercom.io/auth/eagle/token",
+    "refresh_rotates": false,
+    "rotation_grace_seconds": null,
+    "scopes_param": "scope",
+    "default_scopes": [
+      "default"
+    ],
+    "scope_catalog": [
+      {
+        "id": "default",
+        "label": "Default access",
+        "description": "Intercom does not take scopes on the authorize request; permissions (read conversations, read users and companies, read admins, read tags, write users) are ticked on the app's Authorization page in the Developer Hub and shown to the installer."
+      }
+    ],
+    "connection_config_fields": [],
+    "notes": "Authorization-code flow; the token endpoint takes code, client_id and client_secret in the body and returns a non-expiring access token (no refresh token). EU and AU workspaces authorize at app.eu.intercom.com / app.au.intercom.com."
+  },
+  "setup": {
+    "oauthAppFields": [
+      {
+        "id": "client_id",
+        "component": "text",
+        "label": "Client ID",
+        "required": true
+      },
+      {
+        "id": "client_secret",
+        "component": "secret",
+        "label": "Client secret",
+        "required": true,
+        "writeOnly": true
+      }
+    ],
+    "instructions": [
+      {
+        "component": "callback_url",
+        "label": "Add this redirect URL to your Intercom OAuth app"
+      }
+    ]
+  },
+  "api": {
+    "base_url": "https://api.intercom.io",
+    "describe_endpoint": "/",
+    "pagination": {
+      "style": "cursor",
+      "param": "starting_after",
+      "records_path": "data",
+      "next_path": "pages.next.starting_after"
+    },
+    "rate_limit_headers": {
+      "remaining": null,
+      "reset": null,
+      "reset_style": "auto_seconds"
+    },
+    "authorization_scheme": "Bearer",
+    "schema_adapter": "declared",
+    "notes": "Send Intercom-Version (2.11 or later) to pin the API version; otherwise the app's default version applies. US region host only: EU/AU workspaces use api.eu.intercom.io / api.au.intercom.io. Conversations and contacts use cursor pagination (pages.next.starting_after); companies use page/per_page (max 60, at most 10,000 companies, and only companies with at least one contact are listed). Timestamps are Unix integers, so created/updated datetimes stay in remote_data. Intercom's separate Tickets object is only reachable through POST /tickets/search and is not synced; conversations are the Ticket source."
+  },
+  "webhooks": {
+    "supported": false,
+    "automatic": false
+  },
+  "provenance": {
+    "author": "human:nath@datakart.ai",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://developers.intercom.com/docs/references/rest-api/api.intercom.io"
+  }
+}

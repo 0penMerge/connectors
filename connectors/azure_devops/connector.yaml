@@ -1,0 +1,135 @@
+{
+  "apiVersion": "openmerge.dev/connector/v1",
+  "kind": "Connector",
+  "metadata": {
+    "id": "azure_devops",
+    "version": "1.0.0",
+    "coreAbi": "2",
+    "name": "Azure DevOps",
+    "company": "Microsoft",
+    "description": "Sync Azure DevOps work items, projects and teams for one organization through the OpenMerge ticketing model.",
+    "logo": {
+      "url": "https://cdn.openmerge.dev/connectors/azure_devops.svg"
+    }
+  },
+  "runtime": {
+    "entrypoint": "plugin.py:AzureDevopsPlugin"
+  },
+  "categories": [
+    "ticketing@1"
+  ],
+  "capabilities": {
+    "reads": [
+      "hash_snapshot"
+    ],
+    "writes": [],
+    "dynamicSchema": false,
+    "customFields": false
+  },
+  "auth": {
+    "type": "oauth2",
+    "driver": "oauth2",
+    "authorization_url": "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize",
+    "token_url": "https://login.microsoftonline.com/organizations/oauth2/v2.0/token",
+    "refresh_rotates": true,
+    "rotation_grace_seconds": 86400,
+    "scopes_param": "scope",
+    "default_scopes": [
+      "499b84ac-1321-427f-aa17-267ca6975798/vso.work",
+      "499b84ac-1321-427f-aa17-267ca6975798/vso.project",
+      "offline_access"
+    ],
+    "scope_catalog": [
+      {
+        "id": "offline_access",
+        "label": "Offline access",
+        "description": "Issue refresh tokens so syncs keep running.",
+        "recommended": true
+      },
+      {
+        "id": "499b84ac-1321-427f-aa17-267ca6975798/vso.work",
+        "label": "Work items (read)",
+        "description": "Read work items, queries, boards and area/iteration paths.",
+        "models": [
+          "Ticket"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "499b84ac-1321-427f-aa17-267ca6975798/vso.project",
+        "label": "Project and team (read)",
+        "description": "Read projects and teams.",
+        "models": [
+          "Collection",
+          "Team"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "499b84ac-1321-427f-aa17-267ca6975798/vso.work_write",
+        "label": "Work items (read and write)",
+        "description": "Create and update work items."
+      }
+    ],
+    "connection_config_fields": [
+      "organization"
+    ],
+    "scope_separator": " ",
+    "notes": "Microsoft Entra ID delegated OAuth for the Azure DevOps resource (499b84ac-1321-427f-aa17-267ca6975798); legacy Azure DevOps OAuth apps are deprecated. Work/school accounts only (MSA users are not supported by Entra apps for Azure DevOps). organization is the dev.azure.com organization name chosen by the user."
+  },
+  "setup": {
+    "oauthAppFields": [
+      {
+        "id": "client_id",
+        "component": "text",
+        "label": "Client ID",
+        "required": true
+      },
+      {
+        "id": "client_secret",
+        "component": "secret",
+        "label": "Client secret",
+        "required": true,
+        "writeOnly": true
+      }
+    ],
+    "instructions": [
+      {
+        "component": "callback_url",
+        "label": "Add this redirect URL to your Azure DevOps OAuth app"
+      }
+    ]
+  },
+  "api": {
+    "base_url": "https://dev.azure.com/{organization}",
+    "describe_endpoint": "/",
+    "pagination": {
+      "style": "offset",
+      "param": "$skip",
+      "records_path": "value",
+      "next_path": "next",
+      "limit_param": "$top"
+    },
+    "rate_limit_headers": {
+      "remaining": "X-RateLimit-Remaining",
+      "reset": "X-RateLimit-Reset",
+      "reset_style": "epoch_seconds"
+    },
+    "authorization_scheme": "Bearer",
+    "schema_adapter": "declared",
+    "notes": "Every request carries api-version. Work items are read org-wide through the reporting revisions feed with includeLatestOnly=true (one latest revision per work item, continuation by watermark). Work item fields are keyed by dotted reference names (System.Title, System.State, ...) which dot-path lenses cannot address, so unified Ticket fields are left unmapped and the full record stays in remote_data. Work item writes use JSON Patch documents, so none are declared. Users live on vssps.dev.azure.com / vsaex.dev.azure.com, outside this base URL. Work item field reference names contain dots (System.Title); the plugin rewrites keys inside `fields` to System__Title so mappings can address them, and remote_data keeps that escaped form. Priority (integer) and System.Tags ('; '-separated string) stay in remote_data."
+  },
+  "webhooks": {
+    "supported": false,
+    "automatic": false
+  },
+  "provenance": {
+    "author": "human:nath@datakart.ai",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://learn.microsoft.com/en-us/rest/api/azure/devops/?view=azure-devops-rest-7.1"
+  }
+}

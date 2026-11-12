@@ -1,0 +1,279 @@
+{
+  "apiVersion": "openmerge.dev/connector-schema/v1",
+  "kind": "ConnectorSchema",
+  "category": "filestorage@1",
+  "discovery": {
+    "mode": "declared",
+    "description": "Google Drive objects use the declared Merge-compatible File Storage inventory."
+  },
+  "models": {
+    "File": {
+      "mode": "unified",
+      "nativeObject": "google_drive.files",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/drive/v3/files?q=mimeType+%21%3D+%27application%2Fvnd.google-apps.folder%27+and+trashed+%3D+false&corpora=allDrives&includeItemsFromAllDrives=true&supportsAllDrives=true&pageSize=1000&fields=nextPageToken,files(id,name,mimeType,description,parents,driveId,webViewLink,thumbnailLink,createdTime,modifiedTime,size,md5Checksum,owners,trashed)",
+        "get_path": "/drive/v3/files/{remote_id}?supportsAllDrives=true&fields=id,name,mimeType,description,parents,driveId,webViewLink,thumbnailLink,createdTime,modifiedTime,size,md5Checksum,owners,trashed",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "google_drive.files",
+        "model": {
+          "ref": "File",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "mime_type": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "mimeType"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "description"
+            }
+          },
+          "file_url": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "webViewLink"
+            }
+          },
+          "file_thumbnail_url": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "thumbnailLink"
+            }
+          },
+          "folder": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Folder",
+              "path": "parents.0"
+            }
+          },
+          "drive": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Drive",
+              "path": "driveId"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "createdTime"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "modifiedTime"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified filestorage File model to Google Drive (https://developers.google.com/workspace/drive/api/reference/rest/v3)"
+        }
+      }
+    },
+    "Folder": {
+      "mode": "unified",
+      "nativeObject": "google_drive.folders",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/drive/v3/files?q=mimeType+%3D+%27application%2Fvnd.google-apps.folder%27+and+trashed+%3D+false&corpora=allDrives&includeItemsFromAllDrives=true&supportsAllDrives=true&pageSize=1000&fields=nextPageToken,files(id,name,mimeType,description,parents,driveId,webViewLink,createdTime,modifiedTime,owners,trashed)",
+        "get_path": "/drive/v3/files/{remote_id}?supportsAllDrives=true&fields=id,name,mimeType,description,parents,driveId,webViewLink,createdTime,modifiedTime,owners,trashed",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "google_drive.folders",
+        "model": {
+          "ref": "Folder",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "description"
+            }
+          },
+          "folder_url": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "webViewLink"
+            }
+          },
+          "parent_folder": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Folder",
+              "path": "parents.0"
+            }
+          },
+          "drive": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Drive",
+              "path": "driveId"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "createdTime"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "modifiedTime"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified filestorage Folder model to Google Drive (https://developers.google.com/workspace/drive/api/reference/rest/v3)"
+        }
+      }
+    },
+    "Drive": {
+      "mode": "unified",
+      "nativeObject": "google_drive.drives",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/drive/v3/drives?pageSize=100",
+        "get_path": "/drive/v3/drives/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "google_drive.drives",
+        "model": {
+          "ref": "Drive",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "createdTime"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified filestorage Drive model to Google Drive (https://developers.google.com/workspace/drive/api/reference/rest/v3)"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "apiVersion": "openmerge.dev/connector/v1",
+  "kind": "Connector",
+  "metadata": {
+    "id": "salesforce_service_cloud",
+    "version": "1.0.0",
+    "coreAbi": "2",
+    "name": "Salesforce Service Cloud",
+    "company": "Salesforce, Inc.",
+    "description": "Sync Salesforce Service Cloud cases, case comments, accounts, contacts, users, queues/groups and roles through the OpenMerge ticketing model.",
+    "logo": {
+      "url": "https://cdn.openmerge.dev/connectors/salesforce_service_cloud.svg"
+    }
+  },
+  "runtime": {
+    "entrypoint": "plugin.py:SalesforceServiceCloudPlugin"
+  },
+  "categories": [
+    "ticketing@1"
+  ],
+  "capabilities": {
+    "reads": [
+      "hash_snapshot"
+    ],
+    "writes": [],
+    "dynamicSchema": false,
+    "customFields": false
+  },
+  "auth": {
+    "type": "oauth2",
+    "driver": "oauth2",
+    "authorization_url": "https://login.salesforce.com/services/oauth2/authorize",
+    "token_url": "https://login.salesforce.com/services/oauth2/token",
+    "refresh_rotates": true,
+    "rotation_grace_seconds": 0,
+    "scopes_param": "scope",
+    "default_scopes": [
+      "api",
+      "refresh_token"
+    ],
+    "scope_catalog": [
+      {
+        "id": "api",
+        "label": "API",
+        "description": "Access Salesforce data through the REST API (SOQL query on Case, CaseComment, Account, Contact, User, Group, UserRole) with the connected user's sharing rules.",
+        "models": [
+          "Ticket",
+          "Comment",
+          "Account",
+          "Contact",
+          "User",
+          "Team",
+          "Role"
+        ],
+        "operations": [
+          "read"
+        ],
+        "recommended": true
+      },
+      {
+        "id": "refresh_token",
+        "label": "Offline access",
+        "description": "Maintain the connection and refresh access tokens when the user is offline (also granted as offline_access).",
+        "recommended": true
+      },
+      {
+        "id": "full",
+        "label": "Full access",
+        "description": "Broad access to all data the connected user can access; avoid unless required."
+      }
+    ],
+    "connection_config_fields": [
+      "instance_url"
+    ],
+    "pkce": "S256",
+    "notes": "Same connected app / External Client App conventions as the Salesforce CRM connector: S256 PKCE required by External Client Apps; sandboxes authorize at test.salesforce.com. instance_url comes from the token response. Refresh-token rotation depends on the app policy; OpenMerge treats it as rotating."
+  },
+  "setup": {
+    "oauthAppFields": [
+      {
+        "id": "client_id",
+        "component": "text",
+        "label": "Client ID",
+        "required": true
+      },
+      {
+        "id": "client_secret",
+        "component": "secret",
+        "label": "Client secret",
+        "required": true,
+        "writeOnly": true
+      }
+    ],
+    "instructions": [
+      {
+        "component": "callback_url",
+        "label": "Add this redirect URL to your Salesforce Service Cloud OAuth app"
+      }
+    ]
+  },
+  "api": {
+    "base_url": "{instance_url}",
+    "describe_endpoint": "/",
+    "pagination": {
+      "style": "cursor",
+      "param": "cursor",
+      "records_path": "records",
+      "next_path": "nextRecordsUrl"
+    },
+    "rate_limit_headers": {
+      "remaining": null,
+      "reset": null,
+      "reset_style": "auto_seconds"
+    },
+    "authorization_scheme": "Bearer",
+    "schema_adapter": "declared",
+    "notes": "All lists are SOQL queries on /services/data/v67.0/query; pages follow nextRecordsUrl (path-relative on the instance host) until done=true. Rows carry an 'attributes' object. SOQL cannot take an updated-since query parameter, so every model is a hash snapshot. Service Cloud (Case) requires a Service Cloud or Sales Cloud edition with API access. Sforce-Limit-Info reports api-usage=used/limit for a 24h rolling window (no reset header)."
+  },
+  "webhooks": {
+    "supported": false,
+    "automatic": false
+  },
+  "provenance": {
+    "author": "human:nath@datakart.ai",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_query.htm"
+  }
+}

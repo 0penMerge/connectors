@@ -1,0 +1,106 @@
+{
+  "apiVersion": "openmerge.dev/connector/v1",
+  "kind": "Connector",
+  "metadata": {
+    "id": "teamwork",
+    "version": "1.0.0",
+    "coreAbi": "2",
+    "name": "Teamwork.com",
+    "company": "Teamwork",
+    "description": "Sync Teamwork.com tasks, projects, people, teams, tags and task comments through the OpenMerge ticketing model.",
+    "logo": {
+      "url": "https://cdn.openmerge.dev/connectors/teamwork.svg"
+    }
+  },
+  "runtime": {
+    "entrypoint": "plugin.py:TeamworkPlugin"
+  },
+  "categories": [
+    "ticketing@1"
+  ],
+  "capabilities": {
+    "reads": [
+      "hash_snapshot",
+      "timestamp_delta"
+    ],
+    "writes": [
+      "update"
+    ],
+    "dynamicSchema": false,
+    "customFields": false
+  },
+  "auth": {
+    "type": "oauth2",
+    "driver": "oauth2",
+    "authorization_url": "https://www.teamwork.com/launchpad/login",
+    "token_url": "https://www.teamwork.com/launchpad/v1/token.json",
+    "refresh_rotates": false,
+    "rotation_grace_seconds": null,
+    "scopes_param": "scope",
+    "default_scopes": [
+      "default"
+    ],
+    "scope_catalog": [
+      {
+        "id": "default",
+        "label": "Site access",
+        "description": "Teamwork App Login Flow has no scopes; the token acts as the authorizing user on the selected site and does not expire (no refresh token)."
+      }
+    ],
+    "connection_config_fields": [
+      "site_host"
+    ],
+    "notes": "Teamwork App Login Flow. The code exchange is a JSON POST with code, client_id, client_secret and redirect_uri. The token response's installation.apiEndPoint (e.g. https://acme.teamwork.com/) gives the site: store its host (acme.teamwork.com, acme.eu.teamwork.com or a custom domain) as connection_config.site_host."
+  },
+  "setup": {
+    "oauthAppFields": [
+      {
+        "id": "client_id",
+        "component": "text",
+        "label": "Client ID",
+        "required": true
+      },
+      {
+        "id": "client_secret",
+        "component": "secret",
+        "label": "Client secret",
+        "required": true,
+        "writeOnly": true
+      }
+    ],
+    "instructions": [
+      {
+        "component": "callback_url",
+        "label": "Add this redirect URL to your Teamwork.com OAuth app"
+      }
+    ]
+  },
+  "api": {
+    "base_url": "https://{site_host}",
+    "describe_endpoint": "/",
+    "pagination": {
+      "style": "offset",
+      "param": "page",
+      "records_path": "tasks",
+      "next_path": "next",
+      "limit_param": "pageSize"
+    },
+    "rate_limit_headers": {
+      "remaining": null,
+      "reset": null,
+      "reset_style": "auto_seconds"
+    },
+    "authorization_scheme": "Bearer",
+    "schema_adapter": "declared",
+    "notes": "Projects API v3 (/projects/api/v3/...) for tasks, projects, people, tags and comments; teams only exist in v1 (/teams.json). Lists use page/pageSize (default 50, kept at 50 so a short page reliably means the last page). Tasks support updatedAfter (date-time) with orderBy=updatedat&orderMode=asc for incremental reads."
+  },
+  "webhooks": {
+    "supported": false,
+    "automatic": false
+  },
+  "provenance": {
+    "author": "human:nath@datakart.ai",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://apidocs.teamwork.com/docs/teamwork/v3"
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "apiVersion": "openmerge.dev/connector/v1",
+  "kind": "Connector",
+  "metadata": {
+    "id": "wrike",
+    "version": "1.0.0",
+    "coreAbi": "2",
+    "name": "Wrike",
+    "company": "Wrike",
+    "description": "Sync Wrike account tasks, folders and projects, contacts, user groups and account through the OpenMerge ticketing model.",
+    "logo": {
+      "url": "https://cdn.openmerge.dev/connectors/wrike.svg"
+    }
+  },
+  "runtime": {
+    "entrypoint": "plugin.py:WrikePlugin"
+  },
+  "categories": [
+    "ticketing@1"
+  ],
+  "capabilities": {
+    "reads": [
+      "hash_snapshot"
+    ],
+    "writes": [],
+    "dynamicSchema": false,
+    "customFields": false
+  },
+  "auth": {
+    "type": "oauth2",
+    "driver": "oauth2",
+    "authorization_url": "https://login.wrike.com/oauth2/authorize/v4",
+    "token_url": "https://login.wrike.com/oauth2/token",
+    "refresh_rotates": true,
+    "rotation_grace_seconds": 0,
+    "scopes_param": "scope",
+    "default_scopes": [
+      "Default",
+      "wsReadOnly",
+      "amReadOnlyGroup"
+    ],
+    "scope_catalog": [
+      {
+        "id": "Default",
+        "label": "Default",
+        "description": "Basic access to the account, contacts and workspace data.",
+        "models": [
+          "Account"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "wsReadOnly",
+        "label": "Read workspace",
+        "description": "Read tasks, folders, projects and contacts.",
+        "models": [
+          "Ticket",
+          "Collection",
+          "User"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "amReadOnlyGroup",
+        "label": "Read user groups",
+        "description": "Read account user groups.",
+        "models": [
+          "Team"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "wsReadWrite",
+        "label": "Write workspace",
+        "description": "Create and modify tasks, folders and comments."
+      }
+    ],
+    "connection_config_fields": [
+      "host"
+    ],
+    "scope_separator": ",",
+    "notes": "Wrike OAuth 2.0 (v4 authorize endpoint). Access tokens last one hour; each refresh returns a new refresh token and invalidates the old one. The token response carries 'host' (e.g. www.wrike.com or app-eu.wrike.com): store it as connection_config.host, since API calls must go to https://<host>/api/v4 while refresh stays on login.wrike.com."
+  },
+  "setup": {
+    "oauthAppFields": [
+      {
+        "id": "client_id",
+        "component": "text",
+        "label": "Client ID",
+        "required": true
+      },
+      {
+        "id": "client_secret",
+        "component": "secret",
+        "label": "Client secret",
+        "required": true,
+        "writeOnly": true
+      }
+    ],
+    "instructions": [
+      {
+        "component": "callback_url",
+        "label": "Add this redirect URL to your Wrike OAuth app"
+      }
+    ]
+  },
+  "api": {
+    "base_url": "https://{host}/api/v4",
+    "describe_endpoint": "/",
+    "pagination": {
+      "style": "cursor",
+      "param": "nextPageToken",
+      "records_path": "data",
+      "next_path": "nextPageToken"
+    },
+    "rate_limit_headers": {
+      "remaining": null,
+      "reset": null,
+      "reset_style": "auto_seconds"
+    },
+    "authorization_scheme": "Bearer",
+    "schema_adapter": "declared",
+    "notes": "Responses wrap records as {kind, data}. Task queries page with pageSize (max 1000) and nextPageToken, and optional fields must be repeated on every page (they live in list_path). The folder tree, contacts, groups and account endpoints return everything in one response; cursor paging stops when nextPageToken is absent. Task date filters take JSON InstantRange objects, not a plain timestamp, so reads are full hashed snapshots."
+  },
+  "webhooks": {
+    "supported": false,
+    "automatic": false
+  },
+  "provenance": {
+    "author": "human:nath@datakart.ai",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://developers.wrike.com/api/v4/"
+  }
+}

@@ -1,0 +1,448 @@
+{
+  "apiVersion": "openmerge.dev/connector-schema/v1",
+  "kind": "ConnectorSchema",
+  "category": "ticketing@1",
+  "discovery": {
+    "mode": "declared",
+    "description": "Gorgias objects use the declared Merge-compatible Ticketing inventory."
+  },
+  "models": {
+    "Ticket": {
+      "mode": "unified",
+      "nativeObject": "gorgias.tickets",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/tickets?limit=100&order_by=created_datetime:asc",
+        "get_path": "/tickets/{remote_id}",
+        "write_path": "/tickets/{remote_id}",
+        "write_method": "PUT",
+        "write_capabilities": [
+          "update"
+        ],
+        "write_paths": [
+          "priority",
+          "status",
+          "subject"
+        ]
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "gorgias.tickets",
+        "model": {
+          "ref": "Ticket",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "two_way",
+            "get": {
+              "op": "pick",
+              "path": "subject"
+            },
+            "put": {
+              "op": "assign",
+              "path": "subject"
+            }
+          },
+          "status": {
+            "mode": "two_way",
+            "get": {
+              "op": "pick",
+              "path": "status"
+            },
+            "put": {
+              "op": "assign",
+              "path": "status"
+            }
+          },
+          "priority": {
+            "mode": "two_way",
+            "get": {
+              "op": "pick",
+              "path": "priority"
+            },
+            "put": {
+              "op": "assign",
+              "path": "priority"
+            }
+          },
+          "contact": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Contact",
+              "path": "customer.id"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "created_datetime"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "updated_datetime"
+            }
+          },
+          "completed_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "closed_datetime"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Ticket model to Gorgias (https://developers.gorgias.com/reference/introduction)"
+        }
+      }
+    },
+    "Comment": {
+      "mode": "unified",
+      "nativeObject": "gorgias.messages",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/messages?limit=100&order_by=created_datetime:asc",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "gorgias.messages",
+        "model": {
+          "ref": "Comment",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "body_text"
+            }
+          },
+          "html_body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "body_html"
+            }
+          },
+          "ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "ticket_id"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "created_datetime"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Comment model to Gorgias (https://developers.gorgias.com/reference/introduction)"
+        }
+      }
+    },
+    "Contact": {
+      "mode": "unified",
+      "nativeObject": "gorgias.customers",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/customers?limit=100",
+        "get_path": "/customers/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "gorgias.customers",
+        "model": {
+          "ref": "Contact",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "email_address": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "email"
+            }
+          },
+          "details": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "note"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Contact model to Gorgias (https://developers.gorgias.com/reference/introduction)"
+        }
+      }
+    },
+    "User": {
+      "mode": "unified",
+      "nativeObject": "gorgias.users",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/users?limit=100",
+        "get_path": "/users/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "gorgias.users",
+        "model": {
+          "ref": "User",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "email_address": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "email"
+            }
+          },
+          "is_active": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "active"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing User model to Gorgias (https://developers.gorgias.com/reference/introduction)"
+        }
+      }
+    },
+    "Team": {
+      "mode": "unified",
+      "nativeObject": "gorgias.teams",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/teams?limit=100",
+        "get_path": "/teams/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "gorgias.teams",
+        "model": {
+          "ref": "Team",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "description"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Team model to Gorgias (https://developers.gorgias.com/reference/introduction)"
+        }
+      }
+    },
+    "Tag": {
+      "mode": "unified",
+      "nativeObject": "gorgias.tags",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/tags?limit=100",
+        "get_path": "/tags/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "gorgias.tags",
+        "model": {
+          "ref": "Tag",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Tag model to Gorgias (https://developers.gorgias.com/reference/introduction)"
+        }
+      }
+    }
+  }
+}

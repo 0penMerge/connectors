@@ -1,0 +1,90 @@
+{
+  "apiVersion": "openmerge.dev/connector/v1",
+  "kind": "Connector",
+  "metadata": {
+    "id": "gladly",
+    "version": "1.0.0",
+    "coreAbi": "2",
+    "name": "Gladly",
+    "company": "Gladly",
+    "description": "Sync Gladly agents, teams, inboxes and topics through the OpenMerge ticketing model.",
+    "logo": {
+      "url": "https://cdn.openmerge.dev/connectors/gladly.svg"
+    }
+  },
+  "runtime": {
+    "entrypoint": "plugin.py:GladlyPlugin"
+  },
+  "categories": [
+    "ticketing@1"
+  ],
+  "capabilities": {
+    "reads": [
+      "hash_snapshot"
+    ],
+    "writes": [],
+    "dynamicSchema": false,
+    "customFields": false
+  },
+  "auth": {
+    "type": "password",
+    "driver": "api_key",
+    "connection_config_fields": [
+      "organization"
+    ],
+    "default_scopes": [],
+    "scope_catalog": []
+  },
+  "setup": {
+    "credentialFields": [
+      {
+        "id": "organization",
+        "component": "text",
+        "label": "Organization (the <organization> in <organization>.gladly.com)",
+        "required": true,
+        "writeOnly": false
+      },
+      {
+        "id": "agent_email",
+        "component": "text",
+        "label": "API user email",
+        "required": true,
+        "writeOnly": false
+      },
+      {
+        "id": "api_token",
+        "component": "secret",
+        "label": "API token",
+        "required": true,
+        "writeOnly": true
+      }
+    ]
+  },
+  "api": {
+    "base_url": "https://{organization}.gladly.com",
+    "describe_endpoint": "/",
+    "pagination": {
+      "style": "cursor",
+      "param": "cursor",
+      "records_path": "records",
+      "next_path": "next"
+    },
+    "rate_limit_headers": {
+      "remaining": null,
+      "reset": null,
+      "reset_style": "auto_seconds"
+    },
+    "authorization_scheme": "Basic",
+    "schema_adapter": "declared",
+    "notes": "Agent, team, inbox and topic list endpoints return a bare JSON array with no pagination. Conversations and tasks are only listable per customer (GET /api/v1/customers/{customerId}/conversations|tasks) and customers can only be looked up by email/phone/externalCustomerId, so they are not inventoried here; bulk conversation data is available through the asynchronous Export API (/api/v1/export/jobs). Gladly uses token-based HTTP Basic auth: user name = the email of a Gladly user with the API User permission, password = that user's API token (Settings > API Tokens). Send 'Authorization: Basic base64(<agent_email>:<api_token>)'; the stored credential must be the base64 of that pair because the worker prefixes it with the 'Basic' scheme. Sandbox orgs live at https://<organization>.gladly.qa."
+  },
+  "webhooks": {
+    "supported": false,
+    "automatic": false
+  },
+  "provenance": {
+    "author": "human:nath@datakart.ai",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://developer.gladly.com/rest/"
+  }
+}

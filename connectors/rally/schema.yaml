@@ -1,0 +1,499 @@
+{
+  "apiVersion": "openmerge.dev/connector-schema/v1",
+  "kind": "ConnectorSchema",
+  "category": "ticketing@1",
+  "discovery": {
+    "mode": "declared",
+    "description": "Rally objects use the declared Merge-compatible Ticketing inventory."
+  },
+  "models": {
+    "Ticket": {
+      "mode": "unified",
+      "nativeObject": "rally.artifacts",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "ObjectUUID"
+      },
+      "object": {
+        "list_path": "/artifact?types=hierarchicalrequirement,defect,task&order=ObjectID&fetch=ObjectID,ObjectUUID,FormattedID,Name,Description,ScheduleState,State,Priority,Severity,CreatedBy,Owner,Parent,WorkProduct,Project,Iteration,Tags,CreationDate,LastUpdateDate,AcceptedDate,ClosedDate,Blocked",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "rally.artifacts",
+        "model": {
+          "ref": "Ticket",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Name"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Description"
+            }
+          },
+          "status": {
+            "mode": "read_only",
+            "get": {
+              "op": "coalesce",
+              "args": [
+                {
+                  "op": "pick",
+                  "path": "ScheduleState"
+                },
+                {
+                  "op": "pick",
+                  "path": "State"
+                }
+              ]
+            }
+          },
+          "priority": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Priority"
+            }
+          },
+          "ticket_type": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "_type"
+            }
+          },
+          "creator": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "CreatedBy._refObjectUUID"
+            }
+          },
+          "parent_ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "Parent._refObjectUUID"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "CreationDate"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "LastUpdateDate"
+            }
+          },
+          "completed_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "AcceptedDate"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "ObjectUUID"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Ticket model to Rally (https://rally1.rallydev.com/slm/doc/webservice/)"
+        }
+      }
+    },
+    "Collection": {
+      "mode": "unified",
+      "nativeObject": "rally.projects",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "ObjectUUID"
+      },
+      "object": {
+        "list_path": "/project?order=ObjectID&fetch=ObjectID,ObjectUUID,Name,Description,Parent,State,CreationDate",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "rally.projects",
+        "model": {
+          "ref": "Collection",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Name"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Description"
+            }
+          },
+          "parent_collection": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Collection",
+              "path": "Parent._refObjectUUID"
+            }
+          },
+          "collection_type": {
+            "mode": "read_only",
+            "get": {
+              "op": "const",
+              "value": "PROJECT"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "CreationDate"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "ObjectUUID"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Collection model to Rally (https://rally1.rallydev.com/slm/doc/webservice/)"
+        }
+      }
+    },
+    "User": {
+      "mode": "unified",
+      "nativeObject": "rally.users",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "ObjectUUID"
+      },
+      "object": {
+        "list_path": "/user?order=ObjectID&fetch=ObjectID,ObjectUUID,UserName,DisplayName,FirstName,LastName,EmailAddress,Disabled,CreationDate",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "rally.users",
+        "model": {
+          "ref": "User",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "coalesce",
+              "args": [
+                {
+                  "op": "pick",
+                  "path": "DisplayName"
+                },
+                {
+                  "op": "pick",
+                  "path": "_refObjectName"
+                },
+                {
+                  "op": "pick",
+                  "path": "UserName"
+                }
+              ]
+            }
+          },
+          "email_address": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "EmailAddress"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "ObjectUUID"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing User model to Rally (https://rally1.rallydev.com/slm/doc/webservice/)"
+        }
+      }
+    },
+    "Tag": {
+      "mode": "unified",
+      "nativeObject": "rally.tags",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "ObjectUUID"
+      },
+      "object": {
+        "list_path": "/tag?order=ObjectID&fetch=ObjectID,ObjectUUID,Name,Archived,CreationDate",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "rally.tags",
+        "model": {
+          "ref": "Tag",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Name"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "ObjectUUID"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Tag model to Rally (https://rally1.rallydev.com/slm/doc/webservice/)"
+        }
+      }
+    },
+    "Comment": {
+      "mode": "unified",
+      "nativeObject": "rally.conversationposts",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "ObjectUUID"
+      },
+      "object": {
+        "list_path": "/conversationpost?order=ObjectID&fetch=ObjectID,ObjectUUID,Artifact,User,Text,PostNumber,CreationDate",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "rally.conversationposts",
+        "model": {
+          "ref": "Comment",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "html_body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Text"
+            }
+          },
+          "ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "Artifact._refObjectUUID"
+            }
+          },
+          "user": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "User._refObjectUUID"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "CreationDate"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "ObjectUUID"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Comment model to Rally (https://knowledge.broadcom.com/external/article/57581/query-discussions-and-their-artifacts.html)"
+        }
+      }
+    },
+    "Attachment": {
+      "mode": "unified",
+      "nativeObject": "rally.attachments",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "ObjectUUID"
+      },
+      "object": {
+        "list_path": "/attachment?order=ObjectID&fetch=ObjectID,ObjectUUID,Name,ContentType,Size,Description,Artifact,User,Content,CreationDate",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "rally.attachments",
+        "model": {
+          "ref": "Attachment",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "file_name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Name"
+            }
+          },
+          "content_type": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "ContentType"
+            }
+          },
+          "ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "Artifact._refObjectUUID"
+            }
+          },
+          "uploaded_by": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "User._refObjectUUID"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "CreationDate"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "ObjectUUID"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Attachment model to Rally (https://rally1.rallydev.com/slm/doc/webservice/)"
+        }
+      }
+    }
+  }
+}
