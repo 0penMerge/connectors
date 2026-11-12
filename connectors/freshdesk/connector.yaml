@@ -74,6 +74,9 @@
     },
     "authorization_scheme": "Basic",
     "schema_adapter": "declared",
+    "auth_headers": {
+      "Authorization": "Basic base64({secret.api_key}:X)"
+    },
     "notes": "Lists return bare JSON arrays paged with page/per_page (max 100). GET /tickets only returns tickets created in the last 30 days unless updated_since is given, so the snapshot path pins updated_since to the epoch and orders by updated_at ascending; incremental reads replace updated_since with the checkpoint. Freshdesk caps ticket listing at 300 pages (30,000 tickets) per query, so initial/reconcile inventories of larger accounts are truncated. include=description costs extra API credits. Ticket status and priority are integers (status 2 Open/3 Pending/4 Resolved/5 Closed; priority 1-4) and stay in remote_data because the unified fields are strings. Ticket listing stops at 300 pages (30,000 tickets), so a full inventory cannot prove absence: tickets sync by updated_since without absence-based deletion. Freshdesk v2 has no third-party authorization-code OAuth flow; it authenticates with an agent's API key over HTTP Basic auth: Authorization: Basic base64('<api_key>:X') (any password, conventionally X). The worker sends 'Authorization: Basic <token>', so the stored token must be the Base64 of '<api_key>:X', not the raw key. Data visibility follows the key owner's agent permissions."
   },
   "webhooks": {

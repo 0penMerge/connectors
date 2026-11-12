@@ -497,6 +497,91 @@
           "reason": "Base mapping from the Merge unified ticketing Role model to Freshdesk (https://developers.freshdesk.com/api/)"
         }
       }
+    },
+    "Comment": {
+      "mode": "unified",
+      "nativeObject": "freshdesk.ticket_conversations",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/tickets/{parent_id}/conversations",
+        "parent": {
+          "model": "Ticket",
+          "inject": "_ticket_id"
+        },
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "freshdesk.ticket_conversations",
+        "model": {
+          "ref": "Comment",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "_ticket_id"
+            }
+          },
+          "body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "body_text"
+            }
+          },
+          "html_body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "body"
+            }
+          },
+          "is_private": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "private"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "created_at"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Comment model to Freshdesk (https://developers.freshdesk.com/api/#list_all_ticket_notes)"
+        }
+      }
     }
   }
 }

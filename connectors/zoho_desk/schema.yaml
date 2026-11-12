@@ -522,6 +522,85 @@
           "reason": "Base mapping from the Merge unified ticketing Role model to Zoho Desk (https://desk.zoho.com/DeskAPIDocument)"
         }
       }
+    },
+    "Comment": {
+      "mode": "unified",
+      "nativeObject": "zoho_desk.ticket_comments",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/tickets/{parent_id}/comments",
+        "parent": {
+          "model": "Ticket",
+          "inject": "_ticket_id"
+        },
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "zoho_desk.ticket_comments",
+        "model": {
+          "ref": "Comment",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "_ticket_id"
+            }
+          },
+          "user": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "commenterId"
+            }
+          },
+          "html_body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "content"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "commentedTime"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Comment model to Zoho Desk (https://desk.zoho.com/DeskAPIDocument#TicketsComments)"
+        }
+      }
     }
   }
 }

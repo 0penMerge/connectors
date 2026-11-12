@@ -208,6 +208,86 @@
           "reason": "Base mapping from the Merge unified chat Group model to Slack (https://docs.slack.dev/reference/methods)"
         }
       }
+    },
+    "Message": {
+      "mode": "unified",
+      "nativeObject": "slack.messages",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "ts"
+      },
+      "object": {
+        "list_path": "/conversations.history?channel={parent_id}&limit=200",
+        "parent": {
+          "model": "Conversation",
+          "inject": "_channel_id"
+        },
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "slack.messages",
+        "model": {
+          "ref": "Message",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "conversation_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Conversation",
+              "path": "_channel_id"
+            }
+          },
+          "user_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "user"
+            }
+          },
+          "root_message_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Message",
+              "path": "thread_ts"
+            }
+          },
+          "body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "text"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "ts"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified chat Message model to Slack (https://api.slack.com/methods/conversations.history)"
+        }
+      }
     }
   }
 }

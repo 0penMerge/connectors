@@ -51,9 +51,10 @@
         "label": "Read Jira work",
         "description": "Read issues, projects and roles.",
         "models": [
-          "Ticket",
           "Collection",
-          "Role"
+          "Comment",
+          "Role",
+          "Ticket"
         ],
         "operations": [
           "read"

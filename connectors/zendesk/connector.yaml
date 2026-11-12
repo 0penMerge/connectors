@@ -45,13 +45,14 @@
         "label": "Read",
         "description": "Read access to all Support resources (tickets, users, organizations, groups, tags, custom roles).",
         "models": [
-          "Ticket",
-          "Contact",
-          "User",
           "Account",
-          "Team",
+          "Comment",
+          "Contact",
+          "Role",
           "Tag",
-          "Role"
+          "Team",
+          "Ticket",
+          "User"
         ],
         "operations": [
           "read"

@@ -48,6 +48,7 @@
         "label": "Read tickets",
         "description": "List and read tickets.",
         "models": [
+          "Comment",
           "Ticket"
         ],
         "operations": [
@@ -106,7 +107,9 @@
         "recommended": true
       }
     ],
-    "connection_config_fields": [],
+    "connection_config_fields": [
+      "org_id"
+    ],
     "scope_separator": ",",
     "authorization_params": {
       "access_type": "offline",
@@ -154,7 +157,11 @@
     },
     "authorization_scheme": "Zoho-oauthtoken",
     "schema_adapter": "declared",
-    "notes": "BLOCKER: every Zoho Desk endpoint except /organizations requires an orgId request header (GET /api/v1/organizations lists the ids); this declarative spec cannot set it, so the runtime must inject orgId from connection config before this connector can sync. Lists page with from (zero-based index) + limit (tickets/contacts/accounts max 100; agents/departments/teams max 200; roles max 500) and wrap rows in data (teams in teams). An empty page returns HTTP 204. US data center host desk.zoho.com; other regions use desk.zoho.eu/.in/.com.au/.jp/.sa/.ae/.sg/zohocloud.ca/.com.cn. Calls cost API credits per edition."
+    "auth_headers": {
+      "Authorization": "Zoho-oauthtoken {access_token}",
+      "orgId": "{config.org_id}"
+    },
+    "notes": "Every endpoint except /organizations needs the orgId header, rendered from the org_id connection value (GET /api/v1/organizations lists the ids). Lists page with from (zero-based index) + limit (tickets/contacts/accounts max 100; agents/departments/teams max 200; roles max 500) and wrap rows in data (teams in teams). An empty page returns HTTP 204. US data center host desk.zoho.com; other regions use desk.zoho.eu/.in/.com.au/.jp/.sa/.ae/.sg/zohocloud.ca/.com.cn. Calls cost API credits per edition."
   },
   "webhooks": {
     "supported": false,

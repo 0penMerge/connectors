@@ -72,6 +72,9 @@
     },
     "authorization_scheme": "Bearer",
     "schema_adapter": "declared",
+    "auth_headers": {
+      "Authorization": "Bearer {secret.api_key}"
+    },
     "notes": "All calls go to the account-specific host. Lists use page/per_page (max 200) with records under the resource name plus a pagination object. The feature list returns a slim record unless fields= is given, so the list path requests the mapped fields explicitly. Aha! API keys are sent as Authorization: Bearer <key>. Aha! OAuth2 exists but its token endpoint is account-specific (https://<subdomain>.aha.io/oauth/token), which a fixed token_url cannot express, so an API key is used."
   },
   "webhooks": {

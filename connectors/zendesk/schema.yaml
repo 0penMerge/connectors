@@ -556,6 +556,92 @@
           "reason": "Base mapping from the Merge unified ticketing Role model to Zendesk (https://developer.zendesk.com/api-reference/ticketing/introduction/)"
         }
       }
+    },
+    "Comment": {
+      "mode": "unified",
+      "nativeObject": "zendesk.ticket_comments",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/api/v2/tickets/{parent_id}/comments?page[size]=100",
+        "parent": {
+          "model": "Ticket",
+          "inject": "_ticket_id"
+        },
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "zendesk.ticket_comments",
+        "model": {
+          "ref": "Comment",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "_ticket_id"
+            }
+          },
+          "user": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "author_id"
+            }
+          },
+          "body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "body"
+            }
+          },
+          "html_body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "html_body"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "created_at"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Comment model to Zendesk (https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/)"
+        }
+      }
     }
   }
 }

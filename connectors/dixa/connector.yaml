@@ -60,6 +60,9 @@
     },
     "authorization_scheme": "Bearer",
     "schema_adapter": "declared",
+    "auth_headers": {
+      "Authorization": "Bearer {secret.api_token}"
+    },
     "notes": "Rate limit is 10 requests/second per token with bursts of 4. Paginated lists return data[] plus meta.next, a path-relative URL carrying an opaque pageKey; teams and tags return data[] without pagination. Conversations have no plain list endpoint: GET /v1/search/conversations requires a free-text query and the full conversation export lives on a separate host (https://exports.dixa.io/v1/conversation_export), so tickets are not inventoried by this connector. Create an API token in Dixa under Settings > Integrations > API Tokens (Dixa API version v1). The token is sent in the Authorization header as 'Authorization: Bearer <api_token>' (the OpenAPI security scheme is an apiKey in the Authorization header)."
   },
   "webhooks": {

@@ -398,6 +398,85 @@
           "reason": "Base mapping from the Merge unified ticketing Collection model to Front (https://dev.frontapp.com/reference/introduction)"
         }
       }
+    },
+    "Comment": {
+      "mode": "unified",
+      "nativeObject": "front.conversation_messages",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/conversations/{parent_id}/messages?limit=100",
+        "parent": {
+          "model": "Ticket",
+          "inject": "_conversation_id"
+        },
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "front.conversation_messages",
+        "model": {
+          "ref": "Comment",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "_conversation_id"
+            }
+          },
+          "user": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "author.id"
+            }
+          },
+          "body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "text"
+            }
+          },
+          "html_body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "body"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Comment model to Front (https://dev.frontapp.com/reference/list-conversation-messages)"
+        }
+      }
     }
   }
 }

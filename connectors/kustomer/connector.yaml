@@ -71,6 +71,9 @@
     },
     "authorization_scheme": "Bearer",
     "schema_adapter": "declared",
+    "auth_headers": {
+      "Authorization": "Bearer {secret.api_key}"
+    },
     "notes": "JSON:API style responses: records are in data[] with fields under attributes and references under relationships.<name>.data.id. Lists paginate with page/pageSize and return a path-relative links.next URL (null on the last page). PATCH /v1/conversations/{id} documents Content-Type application/json-patch+json while accepting a merge object; PUT /v1/conversations/{id} with application/json is the plain alternative. Kustomer API keys are created in Settings > Security > API Keys and sent as 'Authorization: Bearer <API key>'. The key needs the read roles org.permission.conversation.read, org.permission.customer.read, org.permission.company.read, org.permission.message.read, org.permission.user.read and org.permission.team.read (or their legacy org.user.* equivalents); writes need org.permission.conversation.update."
   },
   "webhooks": {

@@ -40,7 +40,11 @@
       "im:read",
       "mpim:read",
       "users:read",
-      "usergroups:read"
+      "usergroups:read",
+      "channels:history",
+      "groups:history",
+      "im:history",
+      "mpim:history"
     ],
     "scope_catalog": [
       {
@@ -113,6 +117,50 @@
         "operations": [
           "read"
         ]
+      },
+      {
+        "id": "channels:history",
+        "label": "channels:history",
+        "models": [
+          "Message"
+        ],
+        "operations": [
+          "read"
+        ],
+        "description": "Read message history for this conversation type."
+      },
+      {
+        "id": "groups:history",
+        "label": "groups:history",
+        "models": [
+          "Message"
+        ],
+        "operations": [
+          "read"
+        ],
+        "description": "Read message history for this conversation type."
+      },
+      {
+        "id": "im:history",
+        "label": "im:history",
+        "models": [
+          "Message"
+        ],
+        "operations": [
+          "read"
+        ],
+        "description": "Read message history for this conversation type."
+      },
+      {
+        "id": "mpim:history",
+        "label": "mpim:history",
+        "models": [
+          "Message"
+        ],
+        "operations": [
+          "read"
+        ],
+        "description": "Read message history for this conversation type."
       }
     ],
     "connection_config_fields": [],

@@ -490,6 +490,77 @@
           "reason": "Base mapping from the Merge unified ticketing Collection model to Help Scout (https://developer.helpscout.com/mailbox-api/)"
         }
       }
+    },
+    "Comment": {
+      "mode": "unified",
+      "nativeObject": "help_scout.conversation_threads",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/v2/conversations/{parent_id}/threads",
+        "parent": {
+          "model": "Ticket",
+          "inject": "_conversation_id"
+        },
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "help_scout.conversation_threads",
+        "model": {
+          "ref": "Comment",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "_conversation_id"
+            }
+          },
+          "html_body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "body"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "createdAt"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Comment model to Help Scout (https://developer.helpscout.com/mailbox-api/endpoints/conversations/threads/list/)"
+        }
+      }
     }
   }
 }

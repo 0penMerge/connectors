@@ -77,7 +77,11 @@
     },
     "authorization_scheme": "Bearer",
     "schema_adapter": "declared",
-    "notes": "TRANSPORT CAVEAT: the API-credential pair must be sent as the custom client-id and client-secret headers; the worker currently only emits 'Authorization: <scheme> <token>', which SpotDraft accepts only for OAuth JWTs. Header-pair support is needed before this connector can authenticate with generated credentials. Public v2.1 list routes page with 1-based page and limit (default 10) and return {page, limit, total_results, results}. The rate limit is 10 requests/second per workspace. Keep calls on the workspace's region host. Generate an API credential in SpotDraft under Settings > Developer settings. Server-to-server calls send two headers: 'client-id: <Client ID>' and 'client-secret: <Client Secret>' (optionally 'user-email' to act as a workspace member). SpotDraft documents no OAuth authorization-code flow for third parties; the public routes also accept 'Authorization: Bearer <OAuth JWT>' for workspace-user tokens issued by SpotDraft."
+    "auth_headers": {
+      "client-id": "{secret.client_id}",
+      "client-secret": "{secret.client_secret}"
+    },
+    "notes": "Public v2.1 list routes page with 1-based page and limit (default 10) and return {page, limit, total_results, results}. The rate limit is 10 requests/second per workspace. Keep calls on the workspace's region host. Generate an API credential in SpotDraft under Settings > Developer settings. Server-to-server calls send two headers: 'client-id: <Client ID>' and 'client-secret: <Client Secret>' (optionally 'user-email' to act as a workspace member). SpotDraft documents no OAuth authorization-code flow for third parties; the public routes also accept 'Authorization: Bearer <OAuth JWT>' for workspace-user tokens issued by SpotDraft."
   },
   "webhooks": {
     "supported": false,

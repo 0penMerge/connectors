@@ -76,6 +76,9 @@
     },
     "authorization_scheme": "Basic",
     "schema_adapter": "declared",
+    "auth_headers": {
+      "Authorization": "Basic base64({secret.agent_email}:{secret.api_token})"
+    },
     "notes": "Agent, team, inbox and topic list endpoints return a bare JSON array with no pagination. Conversations and tasks are only listable per customer (GET /api/v1/customers/{customerId}/conversations|tasks) and customers can only be looked up by email/phone/externalCustomerId, so they are not inventoried here; bulk conversation data is available through the asynchronous Export API (/api/v1/export/jobs). Gladly uses token-based HTTP Basic auth: user name = the email of a Gladly user with the API User permission, password = that user's API token (Settings > API Tokens). Send 'Authorization: Basic base64(<agent_email>:<api_token>)'; the stored credential must be the base64 of that pair because the worker prefixes it with the 'Basic' scheme. Sandbox orgs live at https://<organization>.gladly.qa."
   },
   "webhooks": {

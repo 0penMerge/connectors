@@ -325,6 +325,78 @@
           "reason": "Base mapping from the Merge unified ticketing Role model to Jira (https://developer.atlassian.com/cloud/jira/platform/rest/v3/)"
         }
       }
+    },
+    "Comment": {
+      "mode": "unified",
+      "nativeObject": "jira.issue_comments",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/rest/api/3/issue/{parent_id}/comment?orderBy=created",
+        "parent": {
+          "model": "Ticket",
+          "inject": "_issue_id"
+        },
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "jira.issue_comments",
+        "model": {
+          "ref": "Comment",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "_issue_id"
+            }
+          },
+          "user": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "author.accountId"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "created"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Comment model to Jira (https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issue-comments/)"
+        }
+      }
     }
   }
 }
