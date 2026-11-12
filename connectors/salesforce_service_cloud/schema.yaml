@@ -1,0 +1,536 @@
+{
+  "apiVersion": "openmerge.dev/connector-schema/v1",
+  "kind": "ConnectorSchema",
+  "category": "ticketing@1",
+  "discovery": {
+    "mode": "declared",
+    "description": "Salesforce Service Cloud objects use the declared Merge-compatible Ticketing inventory."
+  },
+  "models": {
+    "Ticket": {
+      "mode": "unified",
+      "nativeObject": "salesforce_service_cloud.Case",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "Id"
+      },
+      "object": {
+        "list_path": "/services/data/v67.0/query?q=SELECT+Id,CaseNumber,Subject,Description,Status,Priority,Type,Origin,Reason,IsClosed,ClosedDate,AccountId,ContactId,OwnerId,ParentId,CreatedById,CreatedDate,LastModifiedDate+FROM+Case+ORDER+BY+CreatedDate+ASC",
+        "get_path": "/services/data/v67.0/sobjects/Case/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "salesforce_service_cloud.Case",
+        "model": {
+          "ref": "Ticket",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Subject"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Description"
+            }
+          },
+          "status": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Status"
+            }
+          },
+          "priority": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Priority"
+            }
+          },
+          "ticket_type": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Type"
+            }
+          },
+          "account": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Account",
+              "path": "AccountId"
+            }
+          },
+          "contact": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Contact",
+              "path": "ContactId"
+            }
+          },
+          "creator": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "CreatedById"
+            }
+          },
+          "parent_ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "ParentId"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "CreatedDate"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "LastModifiedDate"
+            }
+          },
+          "completed_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "ClosedDate"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Ticket model to Salesforce Service Cloud (https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_query.htm)"
+        }
+      }
+    },
+    "Comment": {
+      "mode": "unified",
+      "nativeObject": "salesforce_service_cloud.CaseComment",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "Id"
+      },
+      "object": {
+        "list_path": "/services/data/v67.0/query?q=SELECT+Id,ParentId,CommentBody,IsPublished,CreatedById,CreatedDate,LastModifiedDate+FROM+CaseComment+ORDER+BY+CreatedDate+ASC",
+        "get_path": "/services/data/v67.0/sobjects/CaseComment/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "salesforce_service_cloud.CaseComment",
+        "model": {
+          "ref": "Comment",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "CommentBody"
+            }
+          },
+          "ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "ParentId"
+            }
+          },
+          "user": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "CreatedById"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "CreatedDate"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Comment model to Salesforce Service Cloud (https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_query.htm)"
+        }
+      }
+    },
+    "Account": {
+      "mode": "unified",
+      "nativeObject": "salesforce_service_cloud.Account",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "Id"
+      },
+      "object": {
+        "list_path": "/services/data/v67.0/query?q=SELECT+Id,Name,Website,CreatedDate,LastModifiedDate+FROM+Account+ORDER+BY+CreatedDate+ASC",
+        "get_path": "/services/data/v67.0/sobjects/Account/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "salesforce_service_cloud.Account",
+        "model": {
+          "ref": "Account",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Name"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Account model to Salesforce Service Cloud (https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_query.htm)"
+        }
+      }
+    },
+    "Contact": {
+      "mode": "unified",
+      "nativeObject": "salesforce_service_cloud.Contact",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "Id"
+      },
+      "object": {
+        "list_path": "/services/data/v67.0/query?q=SELECT+Id,Name,Email,Phone,Description,AccountId,CreatedDate,LastModifiedDate+FROM+Contact+ORDER+BY+CreatedDate+ASC",
+        "get_path": "/services/data/v67.0/sobjects/Contact/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "salesforce_service_cloud.Contact",
+        "model": {
+          "ref": "Contact",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Name"
+            }
+          },
+          "email_address": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Email"
+            }
+          },
+          "phone_number": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Phone"
+            }
+          },
+          "details": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Description"
+            }
+          },
+          "account": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Account",
+              "path": "AccountId"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Contact model to Salesforce Service Cloud (https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_query.htm)"
+        }
+      }
+    },
+    "User": {
+      "mode": "unified",
+      "nativeObject": "salesforce_service_cloud.User",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "Id"
+      },
+      "object": {
+        "list_path": "/services/data/v67.0/query?q=SELECT+Id,Name,Email,IsActive,SmallPhotoUrl,UserRoleId,UserType,CreatedDate,LastModifiedDate+FROM+User+ORDER+BY+CreatedDate+ASC",
+        "get_path": "/services/data/v67.0/sobjects/User/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "salesforce_service_cloud.User",
+        "model": {
+          "ref": "User",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Name"
+            }
+          },
+          "email_address": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Email"
+            }
+          },
+          "is_active": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "IsActive"
+            }
+          },
+          "avatar": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "SmallPhotoUrl"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing User model to Salesforce Service Cloud (https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_query.htm)"
+        }
+      }
+    },
+    "Team": {
+      "mode": "unified",
+      "nativeObject": "salesforce_service_cloud.Group",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "Id"
+      },
+      "object": {
+        "list_path": "/services/data/v67.0/query?q=SELECT+Id,Name,DeveloperName,Type,Email,CreatedDate,LastModifiedDate+FROM+Group+WHERE+Type+IN+('Queue','Regular')+ORDER+BY+CreatedDate+ASC",
+        "get_path": "/services/data/v67.0/sobjects/Group/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "salesforce_service_cloud.Group",
+        "model": {
+          "ref": "Team",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Name"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Team model to Salesforce Service Cloud (https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_query.htm)"
+        }
+      }
+    },
+    "Role": {
+      "mode": "unified",
+      "nativeObject": "salesforce_service_cloud.UserRole",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "Id"
+      },
+      "object": {
+        "list_path": "/services/data/v67.0/query?q=SELECT+Id,Name,DeveloperName,ParentRoleId,CaseAccessForAccountOwner+FROM+UserRole+ORDER+BY+Name+ASC",
+        "get_path": "/services/data/v67.0/sobjects/UserRole/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "salesforce_service_cloud.UserRole",
+        "model": {
+          "ref": "Role",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Name"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "Id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Role model to Salesforce Service Cloud (https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_query.htm)"
+        }
+      }
+    }
+  }
+}
