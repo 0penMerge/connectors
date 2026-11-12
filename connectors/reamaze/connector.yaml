@@ -76,6 +76,9 @@
     },
     "authorization_scheme": "Basic",
     "schema_adapter": "declared",
+    "auth_headers": {
+      "Authorization": "Basic base64({secret.login_email}:{secret.api_token})"
+    },
     "notes": "Re:amaze requires either an 'Accept: application/json' header or a .json suffix on the resource URL; the declared paths use the .json suffix. Lists return a fixed page of 30 records with page_size/page_count/total_count and are paged with ?page=N (1-based). Conversations are identified by slug, staff and contacts by email (the documented list payloads carry no numeric id). Conversation status is an integer code (0 Open, 1 Responded, 2 Done, 3 Spam, 4 Archived, 5 On Hold, 6 Auto-Done, ...) and stays in remote_data. Rate limits are per API token (HTTP 429). All Re:amaze API authentication is HTTP Basic with '<login-email>:<api-token>' (token from Settings > Developer > API Token). Send 'Authorization: Basic base64(<login_email>:<api_token>)'; the stored credential must be that base64 value because the worker prefixes it with the 'Basic' scheme. Requests are brand-scoped by host."
   },
   "webhooks": {
