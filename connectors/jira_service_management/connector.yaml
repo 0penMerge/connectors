@@ -53,9 +53,10 @@
         "label": "Read Jira work",
         "description": "Read service-project issues (requests), projects and project roles through the Jira platform API.",
         "models": [
-          "Ticket",
           "Collection",
-          "Role"
+          "Comment",
+          "Role",
+          "Ticket"
         ],
         "operations": [
           "read"
