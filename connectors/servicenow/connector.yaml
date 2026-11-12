@@ -1,0 +1,107 @@
+{
+  "apiVersion": "openmerge.dev/connector/v1",
+  "kind": "Connector",
+  "metadata": {
+    "id": "servicenow",
+    "version": "1.0.0",
+    "coreAbi": "2",
+    "name": "ServiceNow",
+    "company": "ServiceNow, Inc.",
+    "description": "Sync ServiceNow incidents, journal comments, attachments, users, groups, roles and companies through the OpenMerge ticketing model.",
+    "logo": {
+      "url": "https://cdn.openmerge.dev/connectors/servicenow.svg"
+    }
+  },
+  "runtime": {
+    "entrypoint": "plugin.py:ServiceNowPlugin"
+  },
+  "categories": [
+    "ticketing@1"
+  ],
+  "capabilities": {
+    "reads": [
+      "hash_snapshot"
+    ],
+    "writes": [
+      "create",
+      "update"
+    ],
+    "dynamicSchema": false,
+    "customFields": false
+  },
+  "auth": {
+    "type": "oauth2",
+    "driver": "oauth2",
+    "authorization_url": "https://{instance}.service-now.com/oauth_auth.do",
+    "token_url": "https://{instance}.service-now.com/oauth_token.do",
+    "refresh_rotates": false,
+    "rotation_grace_seconds": null,
+    "scopes_param": "scope",
+    "default_scopes": [
+      "useraccount"
+    ],
+    "scope_catalog": [
+      {
+        "id": "useraccount",
+        "label": "User account",
+        "description": "ServiceNow's default OAuth scope: the token acts with the authorizing user's roles and ACLs on every table (incident, sys_user, sys_user_group, sys_user_role, core_company, sys_journal_field, sys_attachment). ServiceNow has no per-table OAuth scopes; access is governed by the user's roles.",
+        "recommended": true
+      }
+    ],
+    "connection_config_fields": [
+      "instance"
+    ],
+    "notes": "Per-instance OAuth: an admin registers an 'OAuth API endpoint for external clients' in System OAuth > Application Registry with redirect URL = the OpenMerge callback. Authorize at https://{instance}.service-now.com/oauth_auth.do and exchange at /oauth_token.do (client_id/client_secret in the body). instance is the subdomain (e.g. dev12345). Refresh tokens do not rotate (default lifespan 100 days, access token 30 minutes, set per registry entry). The authorizing user needs itil (incidents) plus read access to sys_journal_field and sys_attachment."
+  },
+  "setup": {
+    "oauthAppFields": [
+      {
+        "id": "client_id",
+        "component": "text",
+        "label": "Client ID",
+        "required": true
+      },
+      {
+        "id": "client_secret",
+        "component": "secret",
+        "label": "Client secret",
+        "required": true,
+        "writeOnly": true
+      }
+    ],
+    "instructions": [
+      {
+        "component": "callback_url",
+        "label": "Add this redirect URL to your ServiceNow OAuth app"
+      }
+    ]
+  },
+  "api": {
+    "base_url": "https://{instance}.service-now.com",
+    "describe_endpoint": "/",
+    "pagination": {
+      "style": "offset",
+      "param": "sysparm_offset",
+      "records_path": "result",
+      "next_path": "next",
+      "limit_param": "sysparm_limit"
+    },
+    "rate_limit_headers": {
+      "remaining": "X-RateLimit-Remaining",
+      "reset": "X-RateLimit-Reset",
+      "reset_style": "epoch_seconds"
+    },
+    "authorization_scheme": "Bearer",
+    "schema_adapter": "declared",
+    "notes": "Table API (/api/now/table/{table}) with sysparm_offset/sysparm_limit paging; records are in result. sysparm_exclude_reference_link=true makes reference fields plain sys_id strings and sysparm_display_value=false returns raw values (state/priority are choice codes such as '1'..'8', booleans are 'true'/'false' strings, unset fields are empty strings, datetimes are UTC 'YYYY-MM-DD HH:MM:SS'). Ordered by sys_created_on for stable offsets. Per-instance OAuth URLs need the connect flow to interpolate {instance} before redirecting. Instance rate limits are admin-configured (X-RateLimit-* headers only when a rate-limit rule applies)."
+  },
+  "webhooks": {
+    "supported": false,
+    "automatic": false
+  },
+  "provenance": {
+    "author": "human:nath@datakart.ai",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://developer.servicenow.com/dev.do#!/reference/api/latest/rest/c_TableAPI"
+  }
+}
