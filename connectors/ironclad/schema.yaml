@@ -1,0 +1,240 @@
+{
+  "apiVersion": "openmerge.dev/connector-schema/v1",
+  "kind": "ConnectorSchema",
+  "category": "ticketing@1",
+  "discovery": {
+    "mode": "declared",
+    "description": "Ironclad objects use the declared Merge-compatible Ticketing inventory."
+  },
+  "models": {
+    "Ticket": {
+      "mode": "unified",
+      "nativeObject": "ironclad.workflows",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        },
+        "requiredScopes": [
+          "public.workflows.readWorkflows"
+        ]
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/public/api/v1/workflows?status=active,paused,completed,cancelled",
+        "get_path": "/public/api/v1/workflows/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "ironclad.workflows",
+        "model": {
+          "ref": "Ticket",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "title"
+            }
+          },
+          "status": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "status"
+            }
+          },
+          "creator": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "creator.id"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "created"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "lastUpdated"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Ticket model to Ironclad (https://developer.ironcladapp.com/reference/list-all-workflows)"
+        }
+      }
+    },
+    "User": {
+      "mode": "unified",
+      "nativeObject": "ironclad.users",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        },
+        "requiredScopes": [
+          "scim.users.readUsers"
+        ]
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/scim/v2/Users",
+        "get_path": "/scim/v2/Users/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "ironclad.users",
+        "model": {
+          "ref": "User",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "coalesce",
+              "args": [
+                {
+                  "op": "pick",
+                  "path": "displayName"
+                },
+                {
+                  "op": "pick",
+                  "path": "userName"
+                }
+              ]
+            }
+          },
+          "email_address": {
+            "mode": "read_only",
+            "get": {
+              "op": "coalesce",
+              "args": [
+                {
+                  "op": "pick",
+                  "path": "emails.0.value"
+                },
+                {
+                  "op": "pick",
+                  "path": "userName"
+                }
+              ]
+            }
+          },
+          "is_active": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "active"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing User model to Ironclad (https://developer.ironcladapp.com/reference/retrieve-all-users)"
+        }
+      }
+    },
+    "Team": {
+      "mode": "unified",
+      "nativeObject": "ironclad.groups",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        },
+        "requiredScopes": [
+          "scim.groups.readGroups"
+        ]
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/scim/v2/Groups",
+        "get_path": "/scim/v2/Groups/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "ironclad.groups",
+        "model": {
+          "ref": "Team",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "displayName"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Team model to Ironclad (https://developer.ironcladapp.com/reference/retrieve-all-groups)"
+        }
+      }
+    }
+  }
+}
