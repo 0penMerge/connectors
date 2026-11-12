@@ -1,0 +1,90 @@
+{
+  "apiVersion": "openmerge.dev/connector/v1",
+  "kind": "Connector",
+  "metadata": {
+    "id": "reamaze",
+    "version": "1.0.0",
+    "coreAbi": "2",
+    "name": "Re:amaze",
+    "company": "Re:amaze",
+    "description": "Sync Re:amaze conversations, contacts, staff and channels through the OpenMerge ticketing model.",
+    "logo": {
+      "url": "https://cdn.openmerge.dev/connectors/reamaze.svg"
+    }
+  },
+  "runtime": {
+    "entrypoint": "plugin.py:ReamazePlugin"
+  },
+  "categories": [
+    "ticketing@1"
+  ],
+  "capabilities": {
+    "reads": [
+      "hash_snapshot"
+    ],
+    "writes": [],
+    "dynamicSchema": false,
+    "customFields": false
+  },
+  "auth": {
+    "type": "password",
+    "driver": "api_key",
+    "connection_config_fields": [
+      "brand"
+    ],
+    "default_scopes": [],
+    "scope_catalog": []
+  },
+  "setup": {
+    "credentialFields": [
+      {
+        "id": "brand",
+        "component": "text",
+        "label": "Brand (the <brand> in <brand>.reamaze.io)",
+        "required": true,
+        "writeOnly": false
+      },
+      {
+        "id": "login_email",
+        "component": "text",
+        "label": "Login email",
+        "required": true,
+        "writeOnly": false
+      },
+      {
+        "id": "api_token",
+        "component": "secret",
+        "label": "API token",
+        "required": true,
+        "writeOnly": true
+      }
+    ]
+  },
+  "api": {
+    "base_url": "https://{brand}.reamaze.io",
+    "describe_endpoint": "/",
+    "pagination": {
+      "style": "offset",
+      "param": "page",
+      "records_path": "conversations",
+      "next_path": "next"
+    },
+    "rate_limit_headers": {
+      "remaining": null,
+      "reset": null,
+      "reset_style": "auto_seconds"
+    },
+    "authorization_scheme": "Basic",
+    "schema_adapter": "declared",
+    "notes": "Re:amaze requires either an 'Accept: application/json' header or a .json suffix on the resource URL; the declared paths use the .json suffix. Lists return a fixed page of 30 records with page_size/page_count/total_count and are paged with ?page=N (1-based). Conversations are identified by slug, staff and contacts by email (the documented list payloads carry no numeric id). Conversation status is an integer code (0 Open, 1 Responded, 2 Done, 3 Spam, 4 Archived, 5 On Hold, 6 Auto-Done, ...) and stays in remote_data. Rate limits are per API token (HTTP 429). All Re:amaze API authentication is HTTP Basic with '<login-email>:<api-token>' (token from Settings > Developer > API Token). Send 'Authorization: Basic base64(<login_email>:<api_token>)'; the stored credential must be that base64 value because the worker prefixes it with the 'Basic' scheme. Requests are brand-scoped by host."
+  },
+  "webhooks": {
+    "supported": false,
+    "automatic": false
+  },
+  "provenance": {
+    "author": "human:nath@datakart.ai",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://www.reamaze.com/api"
+  }
+}
