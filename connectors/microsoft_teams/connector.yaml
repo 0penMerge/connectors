@@ -1,0 +1,143 @@
+{
+  "apiVersion": "openmerge.dev/connector/v1",
+  "kind": "Connector",
+  "metadata": {
+    "id": "microsoft_teams",
+    "version": "1.0.0",
+    "coreAbi": "2",
+    "name": "Microsoft Teams",
+    "company": "Microsoft",
+    "description": "Sync Microsoft Teams chats, teams and directory users through the OpenMerge chat model.",
+    "logo": {
+      "url": "https://cdn.openmerge.dev/connectors/microsoft_teams.svg"
+    }
+  },
+  "runtime": {
+    "entrypoint": "plugin.py:MicrosoftTeamsPlugin"
+  },
+  "categories": [
+    "chat@1"
+  ],
+  "capabilities": {
+    "reads": [
+      "hash_snapshot"
+    ],
+    "writes": [],
+    "dynamicSchema": false,
+    "customFields": false
+  },
+  "auth": {
+    "type": "oauth2",
+    "driver": "oauth2",
+    "authorization_url": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+    "token_url": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+    "refresh_rotates": true,
+    "rotation_grace_seconds": null,
+    "scopes_param": "scope",
+    "default_scopes": [
+      "offline_access",
+      "Chat.ReadBasic",
+      "Team.ReadBasic.All",
+      "User.ReadBasic.All"
+    ],
+    "scope_catalog": [
+      {
+        "id": "offline_access",
+        "label": "Offline access",
+        "description": "Issue refresh tokens so syncs keep running.",
+        "recommended": true
+      },
+      {
+        "id": "Chat.ReadBasic",
+        "label": "Read names and members of chats",
+        "description": "List the signed-in user's 1:1, group and meeting chats (no message content).",
+        "models": [
+          "Conversation"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "Team.ReadBasic.All",
+        "label": "Read the names and descriptions of teams",
+        "description": "List all teams in the organization.",
+        "models": [
+          "Group"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "User.ReadBasic.All",
+        "label": "Read all users' basic profiles",
+        "description": "List directory users.",
+        "models": [
+          "User"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "Chat.Read",
+        "label": "Read chat messages",
+        "description": "Read chat messages (passthrough only; messages are listed per chat)."
+      }
+    ],
+    "connection_config_fields": [],
+    "scope_separator": " ",
+    "notes": "Microsoft identity platform v2.0, work or school accounts only (Teams APIs do not support personal accounts). Each refresh returns a new refresh token; superseded tokens stay valid until their own expiry."
+  },
+  "setup": {
+    "oauthAppFields": [
+      {
+        "id": "client_id",
+        "component": "text",
+        "label": "Client ID",
+        "required": true
+      },
+      {
+        "id": "client_secret",
+        "component": "secret",
+        "label": "Client secret",
+        "required": true,
+        "writeOnly": true
+      }
+    ],
+    "instructions": [
+      {
+        "component": "callback_url",
+        "label": "Add this redirect URL to your Microsoft Teams OAuth app"
+      }
+    ]
+  },
+  "api": {
+    "base_url": "https://graph.microsoft.com",
+    "describe_endpoint": "/",
+    "pagination": {
+      "style": "cursor",
+      "param": "cursor",
+      "records_path": "value",
+      "next_path": "@odata.nextLink"
+    },
+    "rate_limit_headers": {
+      "remaining": null,
+      "reset": null,
+      "reset_style": "auto_seconds"
+    },
+    "authorization_scheme": "Bearer",
+    "schema_adapter": "declared",
+    "notes": "Microsoft Graph v1.0; list paths carry the /v1.0 prefix so @odata.nextLink continuation paths resolve against the host-only base_url. GET /teams populates only id, displayName, description and visibility. Conversation covers the signed-in user's chats; channels are per team and not included."
+  },
+  "webhooks": {
+    "supported": false,
+    "automatic": false
+  },
+  "provenance": {
+    "author": "human:nath@datakart.ai",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Provider descriptor for the Merge-compatible Chat category, from https://learn.microsoft.com/en-us/graph/api/resources/teams-api-overview?view=graph-rest-1.0"
+  }
+}
