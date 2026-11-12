@@ -36,21 +36,21 @@ Models: Account, Attachment, Collection, Comment, Contact, Role, Tag, Team, Tick
 | Bitbucket | `bitbucket` | OAuth 2.0 | Collection, User | — | Ticket, Comment, Attachment, Role, Team |
 | ClickUp | `clickup` | OAuth 2.0 | Ticket, Collection, Role | — | User, Team, Comment, Attachment, Tag, Account, Contact |
 | Dixa | `dixa` | API key | User, Team, Contact, Tag | — | Ticket, Comment, Attachment, Collection, Role, Account |
-| Freshdesk | `freshdesk` | API key | Ticket, Contact, User, Account, Team, Role | Ticket.create, Ticket.update | Comment, Attachment, Tag, Collection |
-| Freshservice | `freshservice` | API key | Ticket, Contact, User, Account, Team, Role | Ticket.update | Comment, Attachment, Tag, Collection |
-| Front | `front` | OAuth 2.0 | Ticket, Contact, Account, User, Team, Tag, Collection | — | Comment, Attachment, Role |
+| Freshdesk | `freshdesk` | API key | Ticket, Contact, User, Account, Team, Role, Comment | Ticket.create, Ticket.update | Attachment, Tag, Collection |
+| Freshservice | `freshservice` | API key | Ticket, Contact, User, Account, Team, Role, Comment | Ticket.update | Attachment, Tag, Collection |
+| Front | `front` | OAuth 2.0 | Ticket, Contact, Account, User, Team, Tag, Collection, Comment | — | Attachment, Role |
 | GitHub Issues | `github_issues` | OAuth 2.0 | Ticket, Collection, Team | — | User, Comment, Tag, Role, Attachment |
 | GitLab | `gitlab` | OAuth 2.0 | Ticket, Collection, Team, Tag, User | — | Comment, Role, Attachment |
 | Gladly | `gladly` | API key | User, Team, Collection, Tag | — | Ticket, Contact, Comment, Attachment, Account, Role |
 | Gorgias | `gorgias` | OAuth 2.0 | Ticket, Comment, Contact, User, Team, Tag | Ticket.update | Attachment, Account, Role, Collection |
-| Help Scout | `help_scout` | OAuth 2.0 | Ticket, Contact, Account, User, Team, Tag, Collection | — | Comment, Attachment, Role |
+| Help Scout | `help_scout` | OAuth 2.0 | Ticket, Contact, Account, User, Team, Tag, Collection, Comment | — | Attachment, Role |
 | Hive | `hive` | API key | Ticket, Collection, User, Tag, Team | — | Comment, Attachment, Role, Account, Contact |
 | HubSpot Ticketing | `hubspot_ticketing` | OAuth 2.0 | Ticket, User, Account, Contact, Collection | Ticket.create, Ticket.update | Comment, Attachment, Team, Role, Tag |
 | Intercom | `intercom` | OAuth 2.0 | Ticket, Contact, Account, User, Team, Tag | Contact.create, Contact.update | Comment, Attachment, Role, Collection |
 | Ironclad | `ironclad` | OAuth 2.0 | Ticket, User, Team | — | Comment, Attachment, Collection, Account, Contact, Role, Tag |
-| Jira | `jira` | OAuth 2.0 | Ticket, Collection, User, Role | — | — |
-| Jira Data Center | `jira_data_center` | OAuth 2.0 | Ticket, Collection, User, Role | — | Comment, Attachment, Team, Tag, Account, Contact |
-| Jira Service Management | `jira_service_management` | OAuth 2.0 | Ticket, Collection, Account, User, Role | — | Contact, Comment, Attachment, Team, Tag |
+| Jira | `jira` | OAuth 2.0 | Ticket, Collection, User, Role, Comment | — | — |
+| Jira Data Center | `jira_data_center` | OAuth 2.0 | Ticket, Collection, User, Role, Comment | — | Attachment, Team, Tag, Account, Contact |
+| Jira Service Management | `jira_service_management` | OAuth 2.0 | Ticket, Collection, Account, User, Role, Comment | — | Contact, Attachment, Team, Tag |
 | Kustomer | `kustomer` | API key | Ticket, Contact, Account, Comment, User, Team | Ticket.update | Tag, Attachment, Collection, Role |
 | Linear | `linear` | OAuth 2.0 | Ticket, Collection, Team, User, Tag, Comment, Attachment, Account | — | Role, Contact |
 | Rally | `rally` | OAuth 2.0 | Ticket, Collection, User, Tag, Comment, Attachment | — | Account, Contact, Team, Role |
@@ -62,9 +62,9 @@ Models: Account, Attachment, Collection, Comment, Contact, Role, Tag, Team, Tick
 | Teamwork.com | `teamwork` | OAuth 2.0 | Ticket, Collection, User, Tag, Team, Comment | Ticket.update | Attachment, Role, Account, Contact |
 | Trello | `trello` | API key | Ticket, Collection, Tag, User | — | Comment, Attachment, Team, Role, Account, Contact |
 | Wrike | `wrike` | OAuth 2.0 | Ticket, Collection, User, Team, Account | — | Comment, Attachment, Role, Tag, Contact |
-| Zendesk | `zendesk` | OAuth 2.0 | Ticket, Contact, User, Account, Team, Tag, Role | Ticket.update | Comment, Attachment, Collection |
+| Zendesk | `zendesk` | OAuth 2.0 | Ticket, Contact, User, Account, Team, Tag, Role, Comment | Ticket.update | Attachment, Collection |
 | Zoho BugTracker | `zoho_bugtracker` | OAuth 2.0 | Collection, User | — | Ticket, Comment, Attachment, Tag, Role, Team, Account, Contact |
-| Zoho Desk | `zoho_desk` | OAuth 2.0 | Ticket, Contact, Account, User, Collection, Team, Role | Ticket.update | Comment, Attachment, Tag |
+| Zoho Desk | `zoho_desk` | OAuth 2.0 | Ticket, Contact, Account, User, Collection, Team, Role, Comment | Ticket.update | Attachment, Tag |
 
 ### File Storage (`filestorage@1`)
 
@@ -84,8 +84,8 @@ Models: Conversation, Group, Member, Message, User
 
 | Connector | Slug | Auth | Models | Writes | Not synced |
 |---|---|---|---|---|---|
-| Microsoft Teams | `microsoft_teams` | OAuth 2.0 | Conversation, Group, User | — | Message, Member |
-| Slack | `slack` | OAuth 2.0 | Conversation, User, Group | — | Message, Member |
+| Microsoft Teams | `microsoft_teams` | OAuth 2.0 | Conversation, Group, User, Message, Member | — | — |
+| Slack | `slack` | OAuth 2.0 | Conversation, User, Group, Message | — | Member |
 
 ## Conventions
 
@@ -94,9 +94,16 @@ Models: Conversation, Group, Member, Message, User
   full-inventory reconciliation.
 - Array references (`assignees`, `collections`, `members`, …) stay in `remote_data` until
   the lens gains an array form of `ref`; scalar references are resolved through identity maps.
-- Models that a provider only exposes under a parent object (e.g. comments per issue)
-  are listed under *Not synced*, as are models the provider does not offer; nested ones need parent fan-out support in the runtime.
-- API-key connectors use the `api_key` driver; `api.notes` documents how each key is sent.
+- Models a provider only lists under a parent (comments per ticket, messages per
+  channel) declare `object.parent`; core walks every parent page, then each parent's
+  children, as one inventory, and injects the parent id (e.g. `_ticket_id`) so the
+  mapping can reference it. A child list that 404s because its parent vanished ends
+  that parent only. Models that still need a two-level parent, or that the provider
+  does not offer, are listed under *Not synced*.
+- Providers that do not take `Authorization: Bearer <token>` declare `api.auth_headers`
+  templates: `{access_token}`, `{secret.<field>}`, `{config.<field>}` and `base64(...)`
+  for HTTP Basic. Credential fields listed in `auth.connection_config_fields` are
+  stored as connection config; every other credential field is an encrypted secret.
 
 Validate a bundle locally from the OpenMerge mono-repo:
 
