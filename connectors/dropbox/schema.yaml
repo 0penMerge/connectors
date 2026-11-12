@@ -1,0 +1,252 @@
+{
+  "apiVersion": "openmerge.dev/connector-schema/v1",
+  "kind": "ConnectorSchema",
+  "category": "filestorage@1",
+  "discovery": {
+    "mode": "declared",
+    "description": "Dropbox objects use the declared Merge-compatible File Storage inventory."
+  },
+  "models": {
+    "File": {
+      "mode": "unified",
+      "nativeObject": "dropbox.files",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        },
+        "requiredScopes": [
+          "files.metadata.read"
+        ]
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/2/files/list_folder",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "dropbox.files",
+        "model": {
+          "ref": "File",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "size": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "size"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "server_modified"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified filestorage File model to Dropbox (https://www.dropbox.com/developers/documentation/http/documentation)"
+        }
+      }
+    },
+    "Folder": {
+      "mode": "unified",
+      "nativeObject": "dropbox.folders",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        },
+        "requiredScopes": [
+          "files.metadata.read"
+        ]
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/2/files/list_folder",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "dropbox.folders",
+        "model": {
+          "ref": "Folder",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified filestorage Folder model to Dropbox (https://www.dropbox.com/developers/documentation/http/documentation)"
+        }
+      }
+    },
+    "User": {
+      "mode": "unified",
+      "nativeObject": "dropbox.team_members",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        },
+        "requiredScopes": [
+          "members.read"
+        ]
+      },
+      "identity": {
+        "remoteId": "profile.team_member_id"
+      },
+      "object": {
+        "list_path": "/2/team/members/list_v2",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "dropbox.team_members",
+        "model": {
+          "ref": "User",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "profile.name.display_name"
+            }
+          },
+          "email_address": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "profile.email"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "profile.team_member_id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified filestorage User model to Dropbox (https://www.dropbox.com/developers/documentation/http/documentation)"
+        }
+      }
+    },
+    "Group": {
+      "mode": "unified",
+      "nativeObject": "dropbox.team_groups",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        },
+        "requiredScopes": [
+          "groups.read"
+        ]
+      },
+      "identity": {
+        "remoteId": "group_id"
+      },
+      "object": {
+        "list_path": "/2/team/groups/list",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "dropbox.team_groups",
+        "model": {
+          "ref": "Group",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "group_name"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "group_id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified filestorage Group model to Dropbox (https://www.dropbox.com/developers/documentation/http/documentation)"
+        }
+      }
+    }
+  }
+}
