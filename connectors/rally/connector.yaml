@@ -87,7 +87,10 @@
     },
     "authorization_scheme": "Bearer",
     "schema_adapter": "declared",
-    "notes": "TRANSPORT CAVEAT: Rally WSAPI authenticates with a ZSESSIONID header carrying the OAuth access token or an API key (prefixed with '_'); it does not document 'Authorization: Bearer'. The worker currently only emits 'Authorization: <scheme> <token>', so this connector needs ZSESSIONID header support before it can authenticate (non-SSO users can alternatively use HTTP Basic username:password for reads). Queries return {QueryResult: {Results: [...], TotalResultCount, StartIndex, PageSize}} and page with 1-based start plus pagesize (max 2000). Queries run against the authorizing user's default workspace unless a workspace=/workspace/<ObjectID> parameter is added. References are objects with _ref, _refObjectUUID and _refObjectName; records are keyed by ObjectUUID. Explicit fetch lists are used instead of fetch=true per Broadcom WSAPI best practice."
+    "auth_headers": {
+      "ZSESSIONID": "{access_token}"
+    },
+    "notes": "The OAuth access token is sent in the ZSESSIONID header (api.auth_headers). Queries return {QueryResult: {Results: [...], TotalResultCount, StartIndex, PageSize}} and page with 1-based start plus pagesize (max 2000). Queries run against the authorizing user's default workspace unless a workspace=/workspace/<ObjectID> parameter is added. References are objects with _ref, _refObjectUUID and _refObjectName; records are keyed by ObjectUUID. Explicit fetch lists are used instead of fetch=true per Broadcom WSAPI best practice."
   },
   "webhooks": {
     "supported": false,
