@@ -1,0 +1,213 @@
+{
+  "apiVersion": "openmerge.dev/connector-schema/v1",
+  "kind": "ConnectorSchema",
+  "category": "chat@1",
+  "discovery": {
+    "mode": "declared",
+    "description": "Slack objects use the declared Merge-compatible Chat inventory."
+  },
+  "models": {
+    "Conversation": {
+      "mode": "unified",
+      "nativeObject": "slack.conversations",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/conversations.list?types=public_channel,private_channel,mpim,im&exclude_archived=false&limit=200",
+        "get_path": "/conversations.info?channel={remote_id}",
+        "record_path": "channel",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "slack.conversations",
+        "model": {
+          "ref": "Conversation",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "purpose.value"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified chat Conversation model to Slack (https://docs.slack.dev/reference/methods)"
+        }
+      }
+    },
+    "User": {
+      "mode": "unified",
+      "nativeObject": "slack.users",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/users.list?limit=200",
+        "get_path": "/users.info?user={remote_id}",
+        "record_path": "user",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "slack.users",
+        "model": {
+          "ref": "User",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "username": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "display_name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "profile.display_name"
+            }
+          },
+          "first_name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "profile.first_name"
+            }
+          },
+          "last_name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "profile.last_name"
+            }
+          },
+          "is_bot": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "is_bot"
+            }
+          },
+          "avatar": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "profile.image_192"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified chat User model to Slack (https://docs.slack.dev/reference/methods)"
+        }
+      }
+    },
+    "Group": {
+      "mode": "unified",
+      "nativeObject": "slack.usergroups",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/usergroups.list?include_disabled=true",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "slack.usergroups",
+        "model": {
+          "ref": "Group",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified chat Group model to Slack (https://docs.slack.dev/reference/methods)"
+        }
+      }
+    }
+  }
+}
