@@ -1,0 +1,274 @@
+{
+  "apiVersion": "openmerge.dev/connector-schema/v1",
+  "kind": "ConnectorSchema",
+  "category": "ticketing@1",
+  "discovery": {
+    "mode": "declared",
+    "description": "GitHub Issues objects use the declared Merge-compatible Ticketing inventory."
+  },
+  "models": {
+    "Ticket": {
+      "mode": "unified",
+      "nativeObject": "github_issues.issues",
+      "read": {
+        "strategy": "timestamp_delta",
+        "cursor": {
+          "field": "updated_at",
+          "tieBreaker": "id",
+          "parameter": "since",
+          "overlapSeconds": 300,
+          "precision": "seconds"
+        },
+        "deletion": {
+          "strategy": "full_inventory",
+          "reconcileEverySeconds": 86400
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/issues?filter=all&state=all&sort=updated&direction=asc",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "github_issues.issues",
+        "model": {
+          "ref": "Ticket",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "title"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "body"
+            }
+          },
+          "status": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "state"
+            }
+          },
+          "ticket_type": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "type.name"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "created_at"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "updated_at"
+            }
+          },
+          "completed_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "closed_at"
+            }
+          },
+          "ticket_url": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "html_url"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins",
+          "cursor": "updated_at"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Ticket model to GitHub Issues (https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28)"
+        }
+      }
+    },
+    "Collection": {
+      "mode": "unified",
+      "nativeObject": "github_issues.repositories",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/user/repos?affiliation=owner,collaborator,organization_member&sort=full_name&direction=asc",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "github_issues.repositories",
+        "model": {
+          "ref": "Collection",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "full_name"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "description"
+            }
+          },
+          "access_level": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "visibility"
+            }
+          },
+          "collection_url": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "html_url"
+            }
+          },
+          "collection_type": {
+            "mode": "read_only",
+            "get": {
+              "op": "const",
+              "value": "PROJECT"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "created_at"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "updated_at"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Collection model to GitHub Issues (https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28)"
+        }
+      }
+    },
+    "Team": {
+      "mode": "unified",
+      "nativeObject": "github_issues.teams",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/user/teams",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "github_issues.teams",
+        "model": {
+          "ref": "Team",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "description"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Team model to GitHub Issues (https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28)"
+        }
+      }
+    }
+  }
+}
