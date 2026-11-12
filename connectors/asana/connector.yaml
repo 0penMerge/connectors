@@ -1,0 +1,155 @@
+{
+  "apiVersion": "openmerge.dev/connector/v1",
+  "kind": "Connector",
+  "metadata": {
+    "id": "asana",
+    "version": "1.0.0",
+    "coreAbi": "2",
+    "name": "Asana",
+    "company": "Asana",
+    "description": "Sync Asana workspace projects, users, teams and tags through the OpenMerge ticketing model.",
+    "logo": {
+      "url": "https://cdn.openmerge.dev/connectors/asana.svg"
+    }
+  },
+  "runtime": {
+    "entrypoint": "plugin.py:AsanaPlugin"
+  },
+  "categories": [
+    "ticketing@1"
+  ],
+  "capabilities": {
+    "reads": [
+      "hash_snapshot"
+    ],
+    "writes": [],
+    "dynamicSchema": false,
+    "customFields": false
+  },
+  "auth": {
+    "type": "oauth2",
+    "driver": "oauth2",
+    "authorization_url": "https://app.asana.com/-/oauth_authorize",
+    "token_url": "https://app.asana.com/-/oauth_token",
+    "refresh_rotates": false,
+    "rotation_grace_seconds": null,
+    "scopes_param": "scope",
+    "default_scopes": [
+      "users:read",
+      "projects:read",
+      "teams:read",
+      "tags:read"
+    ],
+    "scope_catalog": [
+      {
+        "id": "users:read",
+        "label": "Read users",
+        "description": "Read workspace members, names, emails and photos.",
+        "models": [
+          "User"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "projects:read",
+        "label": "Read projects",
+        "description": "Read workspace projects.",
+        "models": [
+          "Collection"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "teams:read",
+        "label": "Read teams",
+        "description": "Read teams in an organization workspace.",
+        "models": [
+          "Team"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "tags:read",
+        "label": "Read tags",
+        "description": "Read workspace tags.",
+        "models": [
+          "Tag"
+        ],
+        "operations": [
+          "read"
+        ]
+      },
+      {
+        "id": "tasks:read",
+        "label": "Read tasks",
+        "description": "Read tasks (reserved; Asana has no paginated workspace-wide task list)."
+      },
+      {
+        "id": "workspaces:read",
+        "label": "Read workspaces",
+        "description": "List the workspaces the user belongs to (used to pick workspace_gid)."
+      }
+    ],
+    "connection_config_fields": [
+      "workspace_gid"
+    ],
+    "scope_separator": " ",
+    "notes": "Asana OAuth with granular scopes (the app must be configured for specific scopes; apps on full permissions use scope 'default'). Access tokens last one hour; refresh tokens are long-lived and not rotated. workspace_gid is chosen after authorization from GET /api/1.0/workspaces."
+  },
+  "setup": {
+    "oauthAppFields": [
+      {
+        "id": "client_id",
+        "component": "text",
+        "label": "Client ID",
+        "required": true
+      },
+      {
+        "id": "client_secret",
+        "component": "secret",
+        "label": "Client secret",
+        "required": true,
+        "writeOnly": true
+      }
+    ],
+    "instructions": [
+      {
+        "component": "callback_url",
+        "label": "Add this redirect URL to your Asana OAuth app"
+      }
+    ]
+  },
+  "api": {
+    "base_url": "https://app.asana.com/api/1.0/workspaces/{workspace_gid}",
+    "describe_endpoint": "/",
+    "pagination": {
+      "style": "cursor",
+      "param": "offset",
+      "records_path": "data",
+      "next_path": "next_page.offset"
+    },
+    "rate_limit_headers": {
+      "remaining": null,
+      "reset": null,
+      "reset_style": "auto_seconds"
+    },
+    "authorization_scheme": "Bearer",
+    "schema_adapter": "declared",
+    "notes": "All lists are workspace-scoped (/workspaces/{workspace_gid}/...). Pagination requires limit (1-100) and follows next_page.offset. Compact records only carry gid/name/resource_type, so every list passes opt_fields. GET /workspaces/{gid}/teams only works for organization workspaces. GET /workspaces/{gid}/users takes no limit and returns at most 2000 users (alphabetical), following next_page.offset if present."
+  },
+  "webhooks": {
+    "supported": false,
+    "automatic": false
+  },
+  "provenance": {
+    "author": "human:nath@datakart.ai",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://developers.asana.com/reference/rest-api-reference"
+  }
+}
