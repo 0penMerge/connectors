@@ -43,10 +43,11 @@
         "label": "Read",
         "description": "View projects, issues, users and roles the authorizing user can see.",
         "models": [
-          "Ticket",
           "Collection",
-          "User",
-          "Role"
+          "Comment",
+          "Role",
+          "Ticket",
+          "User"
         ],
         "operations": [
           "read"
