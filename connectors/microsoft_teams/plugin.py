@@ -11,16 +11,22 @@ from openmerge_connectors import ConnectorPlugin, HttpRequestSpec, PullPage
 from openmerge_connectors.core.capabilities import PullMode, ReadCapability
 
 # mode: cursor | page | offset | next_url | graphql | rpc | single
-PAGING = {'*': {'mode': 'next_url', 'next': '@odata.nextLink', 'records': 'value'}}
+PAGING = {   '*': {'mode': 'next_url', 'next': '@odata.nextLink', 'records': 'value'},
+    'Member': {'mode': 'next_url', 'next': '@odata.nextLink', 'records': 'value'},
+    'Message': {'mode': 'next_url', 'next': '@odata.nextLink', 'records': 'value'}}
 
 
 class MicrosoftTeamsPlugin(ConnectorPlugin):
-    """Declarative list reads with provider-specific pagination."""
+    """Declarative list reads with provider-specific pagination.
+
+    Core owns parent fan-out (``object.parent``) and calls these page hooks for
+    the parent list and for each parent's children.
+    """
 
     def _paging(self, model):
         return PAGING.get(model) or PAGING["*"]
 
-    def build_pull_request(self, model, state):
+    def build_page_request(self, model, state):
         paging = self._paging(model)
         if paging["mode"] == "graphql":
             return self._graphql_request(model, paging, state.page_cursor)
@@ -28,7 +34,7 @@ class MicrosoftTeamsPlugin(ConnectorPlugin):
             if state.page_cursor is None:
                 return HttpRequestSpec("POST", paging["path"], json_body=dict(paging.get("body") or {}))
             return HttpRequestSpec("POST", paging["continue_path"], json_body={"cursor": state.page_cursor})
-        request = super().build_pull_request(model, replace(state, page_cursor=None))
+        request = super().build_page_request(model, replace(state, page_cursor=None))
         params = dict(request.params)
         cursor = state.page_cursor
         if paging["mode"] == "next_url" and cursor:
@@ -54,7 +60,7 @@ class MicrosoftTeamsPlugin(ConnectorPlugin):
         return HttpRequestSpec("POST", paging["path"],
                                json_body={"query": paging["query"], "variables": variables})
 
-    def parse_pull_response(self, model, state, body):
+    def parse_page_response(self, model, state, body):
         paging = self._paging(model)
         records = body if isinstance(body, list) else self._lookup(body, paging.get("records"))
         if records is None and paging.get("optional_records"):

@@ -223,6 +223,178 @@
           "reason": "Base mapping from the Merge unified chat User model to Microsoft Teams (https://learn.microsoft.com/en-us/graph/api/resources/teams-api-overview?view=graph-rest-1.0)"
         }
       }
+    },
+    "Message": {
+      "mode": "unified",
+      "nativeObject": "microsoft_teams.chat_messages",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/v1.0/chats/{parent_id}/messages?$top=50",
+        "parent": {
+          "model": "Conversation",
+          "inject": "_chat_id"
+        },
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "microsoft_teams.chat_messages",
+        "model": {
+          "ref": "Message",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "conversation_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Conversation",
+              "path": "_chat_id"
+            }
+          },
+          "user_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "from.user.id"
+            }
+          },
+          "root_message_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Message",
+              "path": "replyToId"
+            }
+          },
+          "body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "body.content"
+            }
+          },
+          "subject_line": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "subject"
+            }
+          },
+          "url": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "webUrl"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "createdDateTime"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "lastModifiedDateTime"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified chat Message model to Microsoft Teams (https://learn.microsoft.com/en-us/graph/api/chat-list-messages)"
+        }
+      }
+    },
+    "Member": {
+      "mode": "unified",
+      "nativeObject": "microsoft_teams.chat_members",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/v1.0/chats/{parent_id}/members",
+        "parent": {
+          "model": "Conversation",
+          "inject": "_chat_id"
+        },
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "microsoft_teams.chat_members",
+        "model": {
+          "ref": "Member",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "user": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "userId"
+            }
+          },
+          "visible_history_start_datetime": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "visibleHistoryStartDateTime"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified chat Member model to Microsoft Teams (https://learn.microsoft.com/en-us/graph/api/chat-list-members)"
+        }
+      }
     }
   }
 }
