@@ -60,7 +60,10 @@
     },
     "authorization_scheme": "Bearer",
     "schema_adapter": "declared",
-    "notes": "Requires the Shortcut-Token request header; the worker's Authorization header must be replaced or supplemented for this connector. Members, groups, labels and files return bare arrays without pagination; epics use the paginated endpoint (page/page_size up to 250, records under data). Stories are not declared: the search API caps paging at 1000 results and the full query endpoint is a POST, so neither yields a complete inventory. Shortcut has no public OAuth authorization-code flow; users create an API token under Settings > API Tokens. Shortcut documents the token in a Shortcut-Token header (the token query parameter is deprecated), not in Authorization."
+    "auth_headers": {
+      "Shortcut-Token": "{secret.api_token}"
+    },
+    "notes": "Members, groups, labels and files return bare arrays without pagination; epics use the paginated endpoint (page/page_size up to 250, records under data). Stories are not declared: the search API caps paging at 1000 results and the full query endpoint is a POST, so neither yields a complete inventory. Shortcut has no public OAuth authorization-code flow; users create an API token under Settings > API Tokens. Shortcut documents the token in a Shortcut-Token header (the token query parameter is deprecated), not in Authorization."
   },
   "webhooks": {
     "supported": false,
