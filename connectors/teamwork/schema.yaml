@@ -1,0 +1,495 @@
+{
+  "apiVersion": "openmerge.dev/connector-schema/v1",
+  "kind": "ConnectorSchema",
+  "category": "ticketing@1",
+  "discovery": {
+    "mode": "declared",
+    "description": "Teamwork.com objects use the declared Merge-compatible Ticketing inventory."
+  },
+  "models": {
+    "Ticket": {
+      "mode": "unified",
+      "nativeObject": "teamwork.tasks",
+      "read": {
+        "strategy": "timestamp_delta",
+        "cursor": {
+          "field": "updatedAt",
+          "tieBreaker": "id",
+          "parameter": "updatedAfter",
+          "overlapSeconds": 300,
+          "precision": "seconds",
+          "parameters": {
+            "orderBy": "updatedat",
+            "orderMode": "asc"
+          }
+        },
+        "deletion": {
+          "strategy": "full_inventory",
+          "reconcileEverySeconds": 86400
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/projects/api/v3/tasks.json?includeCompletedTasks=true&orderBy=updatedat&orderMode=asc",
+        "get_path": "/projects/api/v3/tasks/{remote_id}.json",
+        "record_path": "task",
+        "write_path": "/projects/api/v3/tasks/{remote_id}.json",
+        "write_method": "PATCH",
+        "action_record_path": "task",
+        "write_capabilities": [
+          "update"
+        ],
+        "write_paths": [
+          "task.description",
+          "task.name"
+        ]
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "teamwork.tasks",
+        "model": {
+          "ref": "Ticket",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "two_way",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            },
+            "put": {
+              "op": "assign",
+              "path": "task.name"
+            }
+          },
+          "description": {
+            "mode": "two_way",
+            "get": {
+              "op": "pick",
+              "path": "description"
+            },
+            "put": {
+              "op": "assign",
+              "path": "task.description"
+            }
+          },
+          "status": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "status"
+            }
+          },
+          "priority": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "priority"
+            }
+          },
+          "due_date": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "dueDate"
+            }
+          },
+          "completed_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "completedAt"
+            }
+          },
+          "creator": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "createdBy"
+            }
+          },
+          "parent_ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "parentTaskId"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "createdAt"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "updatedAt"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins",
+          "cursor": "updatedAt"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Ticket model to Teamwork.com (https://apidocs.teamwork.com/docs/teamwork/v3)"
+        }
+      }
+    },
+    "Collection": {
+      "mode": "unified",
+      "nativeObject": "teamwork.projects",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/projects/api/v3/projects.json?includeArchivedProjects=true",
+        "get_path": "/projects/api/v3/projects/{remote_id}.json",
+        "record_path": "project",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "teamwork.projects",
+        "model": {
+          "ref": "Collection",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "description"
+            }
+          },
+          "collection_type": {
+            "mode": "read_only",
+            "get": {
+              "op": "const",
+              "value": "PROJECT"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "createdAt"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "updatedAt"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Collection model to Teamwork.com (https://apidocs.teamwork.com/docs/teamwork/v3)"
+        }
+      }
+    },
+    "User": {
+      "mode": "unified",
+      "nativeObject": "teamwork.people",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/projects/api/v3/people.json",
+        "get_path": "/projects/api/v3/people/{remote_id}.json",
+        "record_path": "person",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "teamwork.people",
+        "model": {
+          "ref": "User",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "email_address": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "email"
+            }
+          },
+          "avatar": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "avatarUrl"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing User model to Teamwork.com (https://apidocs.teamwork.com/docs/teamwork/v3)"
+        }
+      }
+    },
+    "Tag": {
+      "mode": "unified",
+      "nativeObject": "teamwork.tags",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/projects/api/v3/tags.json",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "teamwork.tags",
+        "model": {
+          "ref": "Tag",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Tag model to Teamwork.com (https://apidocs.teamwork.com/docs/teamwork/v3)"
+        }
+      }
+    },
+    "Team": {
+      "mode": "unified",
+      "nativeObject": "teamwork.teams",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/teams.json?includeSubteams=true&includeCompanyTeams=true&includeProjectTeams=true",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "teamwork.teams",
+        "model": {
+          "ref": "Team",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "description"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Team model to Teamwork.com (https://apidocs.teamwork.com/docs/teamwork/v3)"
+        }
+      }
+    },
+    "Comment": {
+      "mode": "unified",
+      "nativeObject": "teamwork.comments",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/projects/api/v3/comments.json?objectTypes=task",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "teamwork.comments",
+        "model": {
+          "ref": "Comment",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "body"
+            }
+          },
+          "html_body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "htmlBody"
+            }
+          },
+          "user": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "postedByUserId"
+            }
+          },
+          "ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "objectId"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "postedDateTime"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Comment model to Teamwork.com (https://apidocs.teamwork.com/docs/teamwork/v3)"
+        }
+      }
+    }
+  }
+}
