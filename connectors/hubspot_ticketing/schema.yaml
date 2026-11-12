@@ -1,0 +1,382 @@
+{
+  "apiVersion": "openmerge.dev/connector-schema/v1",
+  "kind": "ConnectorSchema",
+  "category": "ticketing@1",
+  "discovery": {
+    "mode": "declared",
+    "description": "HubSpot Ticketing objects use the declared Merge-compatible Ticketing inventory."
+  },
+  "models": {
+    "Ticket": {
+      "mode": "unified",
+      "nativeObject": "hubspot_ticketing.tickets",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/crm/v3/objects/tickets?limit=100&properties=subject,content,hs_pipeline,hs_pipeline_stage,hs_ticket_priority,hs_ticket_category,hubspot_owner_id,closed_date,createdate,hs_lastmodifieddate",
+        "get_path": "/crm/v3/objects/tickets/{remote_id}?properties=subject,content,hs_pipeline,hs_pipeline_stage,hs_ticket_priority,hs_ticket_category,hubspot_owner_id,closed_date,createdate,hs_lastmodifieddate",
+        "create_path": "/crm/v3/objects/tickets",
+        "create_method": "POST",
+        "write_path": "/crm/v3/objects/tickets/{remote_id}",
+        "write_method": "PATCH",
+        "write_capabilities": [
+          "create",
+          "update"
+        ],
+        "write_paths": [
+          "properties.content",
+          "properties.hs_pipeline_stage",
+          "properties.hs_ticket_priority",
+          "properties.subject"
+        ]
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "hubspot_ticketing.tickets",
+        "model": {
+          "ref": "Ticket",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "two_way",
+            "get": {
+              "op": "pick",
+              "path": "properties.subject"
+            },
+            "put": {
+              "op": "assign",
+              "path": "properties.subject"
+            }
+          },
+          "description": {
+            "mode": "two_way",
+            "get": {
+              "op": "pick",
+              "path": "properties.content"
+            },
+            "put": {
+              "op": "assign",
+              "path": "properties.content"
+            }
+          },
+          "status": {
+            "mode": "two_way",
+            "get": {
+              "op": "pick",
+              "path": "properties.hs_pipeline_stage"
+            },
+            "put": {
+              "op": "assign",
+              "path": "properties.hs_pipeline_stage"
+            }
+          },
+          "priority": {
+            "mode": "two_way",
+            "get": {
+              "op": "pick",
+              "path": "properties.hs_ticket_priority"
+            },
+            "put": {
+              "op": "assign",
+              "path": "properties.hs_ticket_priority"
+            }
+          },
+          "ticket_type": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "properties.hs_ticket_category"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "createdAt"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "updatedAt"
+            }
+          },
+          "completed_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "properties.closed_date"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Ticket model to HubSpot Ticketing (https://developers.hubspot.com/docs/guides/api/crm/objects/tickets)"
+        }
+      }
+    },
+    "User": {
+      "mode": "unified",
+      "nativeObject": "hubspot_ticketing.owners",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/crm/v3/owners?limit=100",
+        "get_path": "/crm/v3/owners/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "hubspot_ticketing.owners",
+        "model": {
+          "ref": "User",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "email_address": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "email"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing User model to HubSpot Ticketing (https://developers.hubspot.com/docs/guides/api/crm/objects/tickets)"
+        }
+      }
+    },
+    "Account": {
+      "mode": "unified",
+      "nativeObject": "hubspot_ticketing.companies",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/crm/v3/objects/companies?limit=100&properties=name,domain,createdate,hs_lastmodifieddate",
+        "get_path": "/crm/v3/objects/companies/{remote_id}?properties=name,domain,createdate,hs_lastmodifieddate",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "hubspot_ticketing.companies",
+        "model": {
+          "ref": "Account",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "properties.name"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Account model to HubSpot Ticketing (https://developers.hubspot.com/docs/guides/api/crm/objects/tickets)"
+        }
+      }
+    },
+    "Contact": {
+      "mode": "unified",
+      "nativeObject": "hubspot_ticketing.contacts",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/crm/v3/objects/contacts?limit=100&properties=firstname,lastname,email,phone,associatedcompanyid,createdate,lastmodifieddate",
+        "get_path": "/crm/v3/objects/contacts/{remote_id}?properties=firstname,lastname,email,phone,associatedcompanyid,createdate,lastmodifieddate",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "hubspot_ticketing.contacts",
+        "model": {
+          "ref": "Contact",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "email_address": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "properties.email"
+            }
+          },
+          "phone_number": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "properties.phone"
+            }
+          },
+          "account": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Account",
+              "path": "properties.associatedcompanyid"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Contact model to HubSpot Ticketing (https://developers.hubspot.com/docs/guides/api/crm/objects/tickets)"
+        }
+      }
+    },
+    "Collection": {
+      "mode": "unified",
+      "nativeObject": "hubspot_ticketing.ticket_pipelines",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/crm/v3/pipelines/tickets",
+        "get_path": "/crm/v3/pipelines/tickets/{remote_id}",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "hubspot_ticketing.ticket_pipelines",
+        "model": {
+          "ref": "Collection",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "label"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "createdAt"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "updatedAt"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Collection model to HubSpot Ticketing (https://developers.hubspot.com/docs/guides/api/crm/objects/tickets)"
+        }
+      }
+    }
+  }
+}
