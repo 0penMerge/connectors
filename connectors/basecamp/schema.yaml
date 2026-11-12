@@ -1,0 +1,336 @@
+{
+  "apiVersion": "openmerge.dev/connector-schema/v1",
+  "kind": "ConnectorSchema",
+  "category": "ticketing@1",
+  "discovery": {
+    "mode": "declared",
+    "description": "Basecamp objects use the declared Merge-compatible Ticketing inventory."
+  },
+  "models": {
+    "Ticket": {
+      "mode": "unified",
+      "nativeObject": "basecamp.todos",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/projects/recordings.json?type=Todo&sort=created_at&direction=asc",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "basecamp.todos",
+        "model": {
+          "ref": "Ticket",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "title"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "description"
+            }
+          },
+          "due_date": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "due_on"
+            }
+          },
+          "creator": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "creator.id"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "created_at"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "updated_at"
+            }
+          },
+          "ticket_url": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "app_url"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Ticket model to Basecamp (https://github.com/basecamp/bc3-api)"
+        }
+      }
+    },
+    "Comment": {
+      "mode": "unified",
+      "nativeObject": "basecamp.comments",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/projects/recordings.json?type=Comment&sort=created_at&direction=asc",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "basecamp.comments",
+        "model": {
+          "ref": "Comment",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "html_body": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "content"
+            }
+          },
+          "user": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "User",
+              "path": "creator.id"
+            }
+          },
+          "ticket": {
+            "mode": "read_only",
+            "get": {
+              "op": "ref",
+              "model": "Ticket",
+              "path": "parent.id"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "created_at"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Comment model to Basecamp (https://github.com/basecamp/bc3-api)"
+        }
+      }
+    },
+    "Collection": {
+      "mode": "unified",
+      "nativeObject": "basecamp.projects",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/projects.json",
+        "get_path": "/projects/{remote_id}.json",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "basecamp.projects",
+        "model": {
+          "ref": "Collection",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "description": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "description"
+            }
+          },
+          "collection_type": {
+            "mode": "read_only",
+            "get": {
+              "op": "const",
+              "value": "PROJECT"
+            }
+          },
+          "collection_url": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "app_url"
+            }
+          },
+          "remote_created_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "created_at"
+            }
+          },
+          "remote_updated_at": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "updated_at"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing Collection model to Basecamp (https://github.com/basecamp/bc3-api)"
+        }
+      }
+    },
+    "User": {
+      "mode": "unified",
+      "nativeObject": "basecamp.people",
+      "read": {
+        "strategy": "hash_snapshot",
+        "deletion": {
+          "strategy": "full_inventory"
+        }
+      },
+      "identity": {
+        "remoteId": "id"
+      },
+      "object": {
+        "list_path": "/people.json",
+        "get_path": "/people/{remote_id}.json",
+        "write_capabilities": [],
+        "write_paths": []
+      },
+      "mapping": {
+        "kind": "mapping",
+        "source": "basecamp.people",
+        "model": {
+          "ref": "User",
+          "scope": "default",
+          "version": 1
+        },
+        "fields": {
+          "name": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "name"
+            }
+          },
+          "email_address": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "email_address"
+            }
+          },
+          "avatar": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "avatar_url"
+            }
+          },
+          "remote_id": {
+            "mode": "read_only",
+            "get": {
+              "op": "pick",
+              "path": "id"
+            }
+          }
+        },
+        "sync": {
+          "conflict": "source_wins"
+        },
+        "passthrough": true,
+        "provenance": {
+          "author": "human:nath@datakart.ai",
+          "created_at": "2026-11-12T00:00:00Z",
+          "reason": "Base mapping from the Merge unified ticketing User model to Basecamp (https://github.com/basecamp/bc3-api)"
+        }
+      }
+    }
+  }
+}
