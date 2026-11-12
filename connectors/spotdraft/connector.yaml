@@ -1,0 +1,91 @@
+{
+  "apiVersion": "openmerge.dev/connector/v1",
+  "kind": "Connector",
+  "metadata": {
+    "id": "spotdraft",
+    "version": "1.0.0",
+    "coreAbi": "2",
+    "name": "SpotDraft",
+    "company": "SpotDraft",
+    "description": "Sync SpotDraft contracts (as tickets), counterparties, users and roles through the OpenMerge ticketing model.",
+    "logo": {
+      "url": "https://cdn.openmerge.dev/connectors/spotdraft.svg"
+    }
+  },
+  "runtime": {
+    "entrypoint": "plugin.py:SpotDraftPlugin"
+  },
+  "categories": [
+    "ticketing@1"
+  ],
+  "capabilities": {
+    "reads": [
+      "hash_snapshot"
+    ],
+    "writes": [],
+    "dynamicSchema": false,
+    "customFields": false
+  },
+  "auth": {
+    "type": "password",
+    "driver": "api_key",
+    "connection_config_fields": [
+      "region_host"
+    ],
+    "default_scopes": [],
+    "scope_catalog": []
+  },
+  "setup": {
+    "credentialFields": [
+      {
+        "id": "region_host",
+        "component": "text",
+        "label": "Regional API host (api.us.spotdraft.com, api.eu.spotdraft.com, api.in.spotdraft.com or api.me.spotdraft.com)",
+        "required": true,
+        "writeOnly": false
+      },
+      {
+        "id": "client_id",
+        "component": "text",
+        "label": "Client ID",
+        "required": true,
+        "writeOnly": false
+      },
+      {
+        "id": "client_secret",
+        "component": "secret",
+        "label": "Client secret",
+        "required": true,
+        "writeOnly": true
+      }
+    ]
+  },
+  "api": {
+    "base_url": "https://{region_host}",
+    "describe_endpoint": "/",
+    "pagination": {
+      "style": "offset",
+      "param": "page",
+      "records_path": "results",
+      "next_path": "next",
+      "limit_param": "limit"
+    },
+    "rate_limit_headers": {
+      "remaining": null,
+      "reset": null,
+      "reset_style": "auto_seconds"
+    },
+    "authorization_scheme": "Bearer",
+    "schema_adapter": "declared",
+    "notes": "TRANSPORT CAVEAT: the API-credential pair must be sent as the custom client-id and client-secret headers; the worker currently only emits 'Authorization: <scheme> <token>', which SpotDraft accepts only for OAuth JWTs. Header-pair support is needed before this connector can authenticate with generated credentials. Public v2.1 list routes page with 1-based page and limit (default 10) and return {page, limit, total_results, results}. The rate limit is 10 requests/second per workspace. Keep calls on the workspace's region host. Generate an API credential in SpotDraft under Settings > Developer settings. Server-to-server calls send two headers: 'client-id: <Client ID>' and 'client-secret: <Client Secret>' (optionally 'user-email' to act as a workspace member). SpotDraft documents no OAuth authorization-code flow for third parties; the public routes also accept 'Authorization: Bearer <OAuth JWT>' for workspace-user tokens issued by SpotDraft."
+  },
+  "webhooks": {
+    "supported": false,
+    "automatic": false
+  },
+  "provenance": {
+    "author": "human:nath@datakart.ai",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://api.spotdraft.com/api/docs"
+  }
+}
