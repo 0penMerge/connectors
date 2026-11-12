@@ -76,6 +76,9 @@
     },
     "authorization_scheme": "OAuth",
     "schema_adapter": "declared",
+    "auth_headers": {
+      "Authorization": "OAuth oauth_consumer_key=\"{secret.api_key}\", oauth_token=\"{secret.api_token}\""
+    },
     "notes": "One connection per board: every list is board-scoped (/1/boards/{board_id}/...). Responses are bare JSON arrays. Trello caps list results at 1000 per request and only pages with before/since object ids, so boards with more than 1000 cards return the first 1000 only. Card creation dates are encoded in the card id and not exposed as a field. Trello uses a Power-Up API key plus a user token (authorized at https://trello.com/1/authorize?key=...&scope=read&expiration=never&response_type=token). Both are sent in one header: 'Authorization: OAuth oauth_consumer_key=\"<api_key>\", oauth_token=\"<api_token>\"' (authorization_scheme OAuth; the stored credential value is the part after 'OAuth '), or alternatively as key/token query parameters. board_id is the board's id or short link."
   },
   "webhooks": {
