@@ -1,0 +1,49 @@
+{
+  "kind": "model",
+  "id": "Group",
+  "version": 1,
+  "scope": "default",
+  "fields": {
+    "name": {
+      "type": "string",
+      "nullable": true
+    },
+    "remote_created_at": {
+      "type": "datetime",
+      "nullable": true
+    },
+    "remote_data": {
+      "type": "object",
+      "nullable": true
+    },
+    "remote_data_path": {
+      "type": "string",
+      "nullable": true
+    },
+    "remote_fields": {
+      "type": "object",
+      "nullable": true
+    },
+    "remote_id": {
+      "type": "string"
+    },
+    "remote_updated_at": {
+      "type": "datetime",
+      "nullable": true
+    },
+    "users": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "ref": "User"
+      },
+      "nullable": true
+    }
+  },
+  "provenance": {
+    "author": "seed:merge-unified-openapi@owner-directed",
+    "created_at": "2026-11-12T00:00:00Z",
+    "reason": "Canonical chat model compiled from the Merge unified chat OpenAPI common model 'Group' at the repository owner's direction",
+    "evidence": "sha256:557d81da3ed89504a739a49a272f4dd09885bdeb709ddf8a3470e5e3c63be9de"
+  }
+}
