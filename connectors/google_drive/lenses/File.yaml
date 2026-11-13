@@ -1,0 +1,16 @@
+lens: google_drive.files -> filestorage.File@1
+read:
+  from: GET /drive/v3/files?q=mimeType+%21%3D+%27application%2Fvnd.google-apps.folder%27+and+trashed+%3D+false&corpora=allDrives&includeItemsFromAllDrives=true&supportsAllDrives=true&pageSize=1000&fields=nextPageToken,files(id,name,mimeType,description,parents,driveId,webViewLink,thumbnailLink,createdTime,modifiedTime,size,md5Checksum,owners,trashed)
+  get: GET /drive/v3/files/{id}?supportsAllDrives=true&fields=id,name,mimeType,description,parents,driveId,webViewLink,thumbnailLink,createdTime,modifiedTime,size,md5Checksum,owners,trashed
+  strategy: hash_snapshot
+fields:
+  name: name
+  mime_type: mimeType
+  description: description
+  file_url: webViewLink
+  file_thumbnail_url: thumbnailLink
+  folder: {ref: Folder, from: parents.0}
+  drive: {ref: Drive, from: driveId}
+  remote_created_at: createdTime
+  remote_updated_at: modifiedTime
+  size: {from: size, as: integer}
