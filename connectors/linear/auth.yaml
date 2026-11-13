@@ -1,0 +1,30 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://linear.app/oauth/authorize
+  params: {actor: user}
+token:
+  url: https://api.linear.app/oauth/token
+scopes:
+  param: scope
+  separator: ','
+  default: [read]
+refresh:
+  rotates: true
+  grace_seconds: 1800
+scope_catalog:
+- id: read
+  label: Read
+  description: Read access to the workspace's issues, projects, teams, users, labels, comments, attachments and
+    customers. Always granted.
+  models: [Ticket, Collection, Team, User, Tag, Comment, Attachment, Account]
+  operations: [read]
+  recommended: true
+- {id: write, label: Write, description: Write access to the user's account.}
+- id: issues:create
+  label: Create issues
+  description: Create issues and their attachments.
+- {id: 'comments:create', label: Create comments, description: Create issue comments.}
+notes: Linear OAuth 2.0 authorization code flow; scopes are comma-separated in the authorize request. Access tokens
+  expire after 24 hours; refresh tokens rotate on every refresh (30-day lifetime) and a replayed refresh within
+  30 minutes returns the same replacement credentials. PKCE (S256) is supported.
