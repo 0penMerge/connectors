@@ -1,0 +1,7 @@
+lens: gladly.inboxes -> ticketing.Collection@1
+read:
+  from: GET /api/v1/inboxes
+  get: GET /api/v1/inboxes/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
