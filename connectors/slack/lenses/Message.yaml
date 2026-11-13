@@ -1,0 +1,18 @@
+lens: slack.messages -> chat.Message@1
+read:
+  from: GET /conversations.history?channel={parent_id}&limit=200
+  records: messages
+  page:
+    has_more: has_more
+    mode: cursor
+    next: response_metadata.next_cursor
+    param: cursor
+  strategy: hash_snapshot
+parent: {model: Conversation, inject: _channel_id}
+id: ts
+fields:
+  conversation_id: {ref: Conversation, from: _channel_id}
+  user_id: {ref: User, from: user}
+  root_message_id: {ref: Message, from: thread_ts}
+  body: text
+  remote_created_at: {from: ts, as: datetime, from_format: epoch_seconds}
