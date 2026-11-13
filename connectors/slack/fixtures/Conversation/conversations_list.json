@@ -1,0 +1,35 @@
+{
+  "response": {
+    "ok": true,
+    "channels": [
+      {
+        "id": "C012AB3CD",
+        "name": "general",
+        "is_channel": true,
+        "created": 1449252889,
+        "purpose": {
+          "value": "This part of the workspace is for fun."
+        }
+      }
+    ],
+    "response_metadata": {
+      "next_cursor": ""
+    }
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "C012AB3CD",
+    "name": "general",
+    "is_channel": true,
+    "created": 1449252889,
+    "purpose": {
+      "value": "This part of the workspace is for fun."
+    }
+  },
+  "unified": {
+    "name": "general",
+    "description": "This part of the workspace is for fun.",
+    "remote_created_at": "2015-12-04T18:14:49Z"
+  }
+}
