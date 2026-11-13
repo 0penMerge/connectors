@@ -1,0 +1,9 @@
+lens: reamaze.contacts -> ticketing.Contact@1
+read:
+  from: GET /api/v1/contacts.json?type=email
+  records: contacts
+  strategy: hash_snapshot
+id: email
+fields:
+  name: {coalesce: [name, friendly_name]}
+  email_address: email
