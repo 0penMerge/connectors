@@ -1,0 +1,15 @@
+type: recipe
+use: basic
+inputs:
+- {id: username, remove: true}
+- {id: password, remove: true}
+- id: brand
+  label: Brand (the <brand> in <brand>.reamaze.io)
+  pattern: '[a-z0-9][a-z0-9-]{0,62}'
+  stage: credentials
+- {id: login_email, label: Login email, secret: true, component: text}
+- {id: api_token, label: API token, secret: true, component: secret}
+basic:
+  username: '{secret.login_email}'
+  password: '{secret.api_token}'
+base_url: https://{config.brand}.reamaze.io
