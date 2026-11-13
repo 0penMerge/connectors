@@ -1,0 +1,28 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://bitbucket.org/site/oauth2/authorize
+token:
+  url: https://bitbucket.org/site/oauth2/access_token
+  client_auth: client_secret_basic
+scopes:
+  param: scope
+  separator: ' '
+  default: [default]
+refresh:
+  rotates: true
+  grace_seconds: 0
+discover:
+  steps:
+  - id: workspace
+    request: {url: 'https://api.bitbucket.org/2.0/user/permissions/workspaces'}
+    choose: {list: values, value: workspace.slug, label: workspace.name, into: config.workspace}
+  identity: {tenant_id: '{config.workspace}'}
+base_url: https://api.bitbucket.org/2.0/workspaces/{config.workspace}
+scope_catalog:
+- id: default
+  label: Consumer scopes
+  description: 'Bitbucket Cloud does not accept a scope parameter on the grant; the OAuth consumer itself must be
+    configured with Account: Read and Projects: Read (plus Repositories and Issues: Read for passthrough calls).'
+notes: Bitbucket Cloud OAuth consumer, authorization code grant. Access tokens expire after 1 hour; refresh tokens
+  rotate on use. workspace is the workspace slug chosen by the user after authorization.
