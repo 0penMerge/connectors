@@ -1,0 +1,10 @@
+lens: intercom.admins -> ticketing.User@1
+read:
+  from: GET /admins
+  records: admins
+  page: {mode: single}
+  get: GET /admins/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  email_address: email
