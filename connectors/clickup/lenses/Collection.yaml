@@ -1,0 +1,8 @@
+lens: clickup.spaces -> ticketing.Collection@1
+read:
+  from: GET /space
+  records: spaces
+  strategy: hash_snapshot
+fields:
+  name: name
+  collection_type: {const: PROJECT}
