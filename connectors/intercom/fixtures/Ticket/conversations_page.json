@@ -1,0 +1,96 @@
+{
+  "response": {
+    "type": "conversation.list",
+    "conversations": [
+      {
+        "type": "conversation",
+        "id": "1295",
+        "title": "Pricing question",
+        "created_at": 1663597223,
+        "updated_at": 1663597260,
+        "state": "snoozed",
+        "priority": "priority",
+        "admin_assignee_id": 991267,
+        "team_assignee_id": 5017691,
+        "source": {
+          "body": "<p>How much is the pro plan?</p>"
+        },
+        "contacts": {
+          "type": "contact.list",
+          "contacts": [
+            {
+              "type": "contact",
+              "id": "6329bd9ffe4e2e91dac76188"
+            }
+          ]
+        },
+        "tags": {
+          "type": "tag.list",
+          "tags": [
+            {
+              "id": "123",
+              "name": "pricing"
+            }
+          ]
+        }
+      }
+    ],
+    "pages": {
+      "type": "pages",
+      "page": 1,
+      "per_page": 50,
+      "total_pages": 1
+    }
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "type": "conversation",
+    "id": "1295",
+    "title": "Pricing question",
+    "created_at": 1663597223,
+    "updated_at": 1663597260,
+    "state": "snoozed",
+    "priority": "priority",
+    "admin_assignee_id": 991267,
+    "team_assignee_id": 5017691,
+    "source": {
+      "body": "<p>How much is the pro plan?</p>"
+    },
+    "contacts": {
+      "type": "contact.list",
+      "contacts": [
+        {
+          "type": "contact",
+          "id": "6329bd9ffe4e2e91dac76188"
+        }
+      ]
+    },
+    "tags": {
+      "type": "tag.list",
+      "tags": [
+        {
+          "id": "123",
+          "name": "pricing"
+        }
+      ]
+    }
+  },
+  "unified": {
+    "name": "Pricing question",
+    "status": "ON_HOLD",
+    "priority": "HIGH",
+    "contact": "6329bd9ffe4e2e91dac76188",
+    "assignees": [
+      "991267"
+    ],
+    "assigned_teams": [
+      "5017691"
+    ],
+    "tags": [
+      "pricing"
+    ],
+    "remote_created_at": "2022-09-19T14:20:23Z",
+    "remote_updated_at": "2022-09-19T14:21:00Z"
+  }
+}
