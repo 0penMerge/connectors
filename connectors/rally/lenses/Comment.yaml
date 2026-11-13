@@ -1,0 +1,10 @@
+lens: rally.conversationposts -> ticketing.Comment@1
+read:
+  from: GET /conversationpost?order=ObjectID&fetch=ObjectID,ObjectUUID,Artifact,User,Text,PostNumber,CreationDate
+  strategy: hash_snapshot
+id: ObjectUUID
+fields:
+  html_body: Text
+  ticket: {ref: Ticket, from: Artifact._refObjectUUID}
+  user: {ref: User, from: User._refObjectUUID}
+  remote_created_at: CreationDate
