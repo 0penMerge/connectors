@@ -1,0 +1,28 @@
+lens: gitlab.issues -> ticketing.Ticket@1
+read:
+  from: GET /issues?scope=all&order_by=updated_at&sort=asc
+  strategy: timestamp_delta
+  cursor:
+    field: updated_at
+    tieBreaker: id
+    parameter: updated_after
+    overlapSeconds: 300
+    precision: seconds
+  reconcile_every: 86400
+  scopes: [read_api]
+fields:
+  name: title
+  description: description
+  status:
+    from: state
+    map: {opened: OPEN, closed: CLOSED}
+  ticket_type: issue_type
+  due_date: due_date
+  creator: {ref: User, from: author.id}
+  tags: labels
+  remote_created_at: created_at
+  remote_updated_at: updated_at
+  completed_at: closed_at
+  ticket_url: web_url
+  assignees: {refs: User, from: 'assignees[*].id'}
+  collections: {refs: Collection, from: project_id}
