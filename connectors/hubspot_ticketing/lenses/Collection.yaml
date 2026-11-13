@@ -1,0 +1,11 @@
+lens: hubspot_ticketing.ticket_pipelines -> ticketing.Collection@1
+read:
+  from: GET /crm/v3/pipelines/tickets
+  records: results
+  page: {mode: single}
+  get: GET /crm/v3/pipelines/tickets/{id}
+  strategy: hash_snapshot
+fields:
+  name: label
+  remote_created_at: createdAt
+  remote_updated_at: updatedAt
