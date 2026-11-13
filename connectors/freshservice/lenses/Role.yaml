@@ -1,0 +1,8 @@
+lens: freshservice.roles -> ticketing.Role@1
+read:
+  from: GET /roles
+  records: roles
+  get: GET /roles/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
