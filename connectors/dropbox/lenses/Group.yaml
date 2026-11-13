@@ -1,0 +1,16 @@
+lens: dropbox.team_groups -> filestorage.Group@1
+read:
+  from: GET /2/team/groups/list
+  records: groups
+  page:
+    body: {limit: 1000}
+    continue_path: /2/team/groups/list/continue
+    has_more: has_more
+    mode: rpc
+    next: cursor
+    path: /2/team/groups/list
+  strategy: hash_snapshot
+  scopes: [groups.read]
+id: group_id
+fields:
+  name: group_name
