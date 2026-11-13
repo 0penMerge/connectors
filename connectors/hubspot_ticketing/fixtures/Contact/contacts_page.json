@@ -1,0 +1,33 @@
+{
+  "response": {
+    "results": [
+      {
+        "id": "151",
+        "properties": {
+          "firstname": "Maria",
+          "lastname": "Johnson",
+          "email": "maria@acme.test",
+          "phone": "+1 555 0100",
+          "associatedcompanyid": "88"
+        }
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "151",
+    "properties": {
+      "firstname": "Maria",
+      "lastname": "Johnson",
+      "email": "maria@acme.test",
+      "phone": "+1 555 0100",
+      "associatedcompanyid": "88"
+    }
+  },
+  "unified": {
+    "name": "Maria Johnson",
+    "email_address": "maria@acme.test",
+    "account": "88"
+  }
+}
