@@ -1,0 +1,9 @@
+lens: zoho_bugtracker.projects -> ticketing.Collection@1
+read:
+  from: GET /projects/
+  strategy: hash_snapshot
+id: id_string
+fields:
+  name: name
+  description: description
+  collection_type: {const: PROJECT}
