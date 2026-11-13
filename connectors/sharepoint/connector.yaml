@@ -1,132 +1,42 @@
-{
-  "apiVersion": "openmerge.dev/connector/v1",
-  "kind": "Connector",
-  "metadata": {
-    "id": "sharepoint",
-    "version": "1.0.0",
-    "coreAbi": "2",
-    "name": "SharePoint",
-    "company": "Microsoft",
-    "description": "Sync SharePoint tenant users and groups through the OpenMerge file storage model.",
-    "logo": {
-      "url": "https://cdn.openmerge.dev/connectors/sharepoint.svg"
-    }
-  },
-  "runtime": {
-    "entrypoint": "plugin.py:SharePointPlugin"
-  },
-  "categories": [
-    "filestorage@1"
-  ],
-  "capabilities": {
-    "reads": [
-      "hash_snapshot"
-    ],
-    "writes": [],
-    "dynamicSchema": false,
-    "customFields": false
-  },
-  "auth": {
-    "type": "oauth2",
-    "driver": "oauth2",
-    "authorization_url": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
-    "token_url": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
-    "refresh_rotates": true,
-    "rotation_grace_seconds": null,
-    "scopes_param": "scope",
-    "default_scopes": [
-      "offline_access",
-      "Sites.Read.All",
-      "User.ReadBasic.All",
-      "GroupMember.Read.All"
-    ],
-    "scope_catalog": [
-      {
-        "id": "offline_access",
-        "label": "Offline access",
-        "description": "Issue refresh tokens so syncs keep running.",
-        "recommended": true
-      },
-      {
-        "id": "Sites.Read.All",
-        "label": "Read items in all site collections",
-        "description": "Read SharePoint sites, document libraries and files (passthrough)."
-      },
-      {
-        "id": "User.ReadBasic.All",
-        "label": "Read all users' basic profiles",
-        "description": "List directory users (display name, email, UPN).",
-        "models": [
-          "User"
-        ],
-        "operations": [
-          "read"
-        ]
-      },
-      {
-        "id": "GroupMember.Read.All",
-        "label": "Read group memberships",
-        "description": "List directory groups. Requires admin consent.",
-        "models": [
-          "Group"
-        ],
-        "operations": [
-          "read"
-        ]
-      }
-    ],
-    "connection_config_fields": [],
-    "scope_separator": " ",
-    "notes": "Microsoft identity platform v2.0 (work or school accounts). Each refresh returns a new refresh token; superseded tokens stay valid until their own expiry. GroupMember.Read.All needs tenant admin consent."
-  },
-  "setup": {
-    "oauthAppFields": [
-      {
-        "id": "client_id",
-        "component": "text",
-        "label": "Client ID",
-        "required": true
-      },
-      {
-        "id": "client_secret",
-        "component": "secret",
-        "label": "Client secret",
-        "required": true,
-        "writeOnly": true
-      }
-    ],
-    "instructions": [
-      {
-        "component": "callback_url",
-        "label": "Add this redirect URL to your SharePoint OAuth app"
-      }
-    ]
-  },
-  "api": {
-    "base_url": "https://graph.microsoft.com",
-    "describe_endpoint": "/",
-    "pagination": {
-      "style": "cursor",
-      "param": "cursor",
-      "records_path": "value",
-      "next_path": "@odata.nextLink"
-    },
-    "rate_limit_headers": {
-      "remaining": null,
-      "reset": null,
-      "reset_style": "auto_seconds"
-    },
-    "authorization_scheme": "Bearer",
-    "schema_adapter": "declared",
-    "notes": "Microsoft Graph v1.0; list paths carry the /v1.0 prefix so @odata.nextLink continuation paths resolve against the host-only base_url."
-  },
-  "webhooks": {
-    "supported": false,
-    "automatic": false
-  },
-  "provenance": {
-    "author": "human:nath@datakart.ai",
-    "created_at": "2026-11-12T00:00:00Z",
-    "reason": "Provider descriptor for the Merge-compatible File Storage category, from https://learn.microsoft.com/en-us/graph/api/resources/sharepoint?view=graph-rest-1.0"
-  }
-}
+apiVersion: openmerge.dev/connector/v1
+kind: Connector
+metadata:
+  id: sharepoint
+  version: 1.0.0
+  coreAbi: '3'
+  name: SharePoint
+  company: Microsoft
+  description: Sync SharePoint tenant users and groups through the OpenMerge file storage model.
+  logo: {url: 'https://cdn.openmerge.dev/connectors/sharepoint.svg'}
+categories: [filestorage@1]
+capabilities:
+  reads: [hash_snapshot]
+  writes: []
+  dynamicSchema: false
+  customFields: false
+setup:
+  oauthAppFields:
+  - {id: client_id, component: text, label: Client ID, required: true}
+  - id: client_secret
+    component: secret
+    label: Client secret
+    required: true
+    writeOnly: true
+  instructions:
+  - {component: callback_url, label: Add this redirect URL to your SharePoint OAuth app}
+api:
+  base_url: https://graph.microsoft.com
+  describe_endpoint: /
+  pagination: {mode: next_url, next_path: '@odata.nextLink', records_path: value}
+  rate_limit_headers: {remaining: null, reset: null, reset_style: auto_seconds}
+  authorization_scheme: Bearer
+  schema_adapter: declared
+  notes: Microsoft Graph v1.0; list paths carry the /v1.0 prefix so @odata.nextLink continuation paths resolve against
+    the host-only base_url.
+webhooks:
+  supported: false
+  automatic: false
+provenance:
+  author: human:nath@datakart.ai
+  created_at: '2026-11-12T00:00:00Z'
+  reason: Provider descriptor for the Merge-compatible File Storage category, from https://learn.microsoft.com/en-us/graph/api/resources/sharepoint?view=graph-rest-1.0
