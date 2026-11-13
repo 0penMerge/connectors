@@ -1,220 +1,48 @@
-{
-  "apiVersion": "openmerge.dev/connector/v1",
-  "kind": "Connector",
-  "metadata": {
-    "id": "slack",
-    "version": "1.0.0",
-    "coreAbi": "2",
-    "name": "Slack",
-    "company": "Salesforce",
-    "description": "Sync Slack conversations, users and user groups through the OpenMerge chat model.",
-    "logo": {
-      "url": "https://cdn.openmerge.dev/connectors/slack.svg"
-    }
-  },
-  "runtime": {
-    "entrypoint": "plugin.py:SlackPlugin"
-  },
-  "categories": [
-    "chat@1"
-  ],
-  "capabilities": {
-    "reads": [
-      "hash_snapshot"
-    ],
-    "writes": [],
-    "dynamicSchema": false,
-    "customFields": false
-  },
-  "auth": {
-    "type": "oauth2",
-    "driver": "oauth2",
-    "authorization_url": "https://slack.com/oauth/v2/authorize",
-    "token_url": "https://slack.com/api/oauth.v2.access",
-    "refresh_rotates": false,
-    "rotation_grace_seconds": null,
-    "scopes_param": "scope",
-    "default_scopes": [
-      "channels:read",
-      "groups:read",
-      "im:read",
-      "mpim:read",
-      "users:read",
-      "usergroups:read",
-      "channels:history",
-      "groups:history",
-      "im:history",
-      "mpim:history"
-    ],
-    "scope_catalog": [
-      {
-        "id": "channels:read",
-        "label": "View public channels",
-        "description": "List public channels in the workspace.",
-        "models": [
-          "Conversation"
-        ],
-        "operations": [
-          "read"
-        ]
-      },
-      {
-        "id": "groups:read",
-        "label": "View private channels",
-        "description": "List private channels the app has been added to.",
-        "models": [
-          "Conversation"
-        ],
-        "operations": [
-          "read"
-        ]
-      },
-      {
-        "id": "im:read",
-        "label": "View direct messages",
-        "description": "List direct message conversations the app is part of.",
-        "models": [
-          "Conversation"
-        ],
-        "operations": [
-          "read"
-        ]
-      },
-      {
-        "id": "mpim:read",
-        "label": "View group direct messages",
-        "description": "List multi-person direct messages the app is part of.",
-        "models": [
-          "Conversation"
-        ],
-        "operations": [
-          "read"
-        ]
-      },
-      {
-        "id": "users:read",
-        "label": "View people",
-        "description": "List workspace members and their profiles.",
-        "models": [
-          "User"
-        ],
-        "operations": [
-          "read"
-        ]
-      },
-      {
-        "id": "users:read.email",
-        "label": "View email addresses",
-        "description": "Include profile.email on users (requires users:read)."
-      },
-      {
-        "id": "usergroups:read",
-        "label": "View user groups",
-        "description": "List workspace user groups.",
-        "models": [
-          "Group"
-        ],
-        "operations": [
-          "read"
-        ]
-      },
-      {
-        "id": "channels:history",
-        "label": "channels:history",
-        "models": [
-          "Message"
-        ],
-        "operations": [
-          "read"
-        ],
-        "description": "Read message history for this conversation type."
-      },
-      {
-        "id": "groups:history",
-        "label": "groups:history",
-        "models": [
-          "Message"
-        ],
-        "operations": [
-          "read"
-        ],
-        "description": "Read message history for this conversation type."
-      },
-      {
-        "id": "im:history",
-        "label": "im:history",
-        "models": [
-          "Message"
-        ],
-        "operations": [
-          "read"
-        ],
-        "description": "Read message history for this conversation type."
-      },
-      {
-        "id": "mpim:history",
-        "label": "mpim:history",
-        "models": [
-          "Message"
-        ],
-        "operations": [
-          "read"
-        ],
-        "description": "Read message history for this conversation type."
-      }
-    ],
-    "connection_config_fields": [],
-    "scope_separator": ",",
-    "notes": "Slack OAuth v2 with bot-token scopes (comma-separated scope parameter). Bot tokens do not expire unless token rotation is enabled on the Slack app; if rotation is enabled, refresh tokens rotate on every refresh."
-  },
-  "setup": {
-    "oauthAppFields": [
-      {
-        "id": "client_id",
-        "component": "text",
-        "label": "Client ID",
-        "required": true
-      },
-      {
-        "id": "client_secret",
-        "component": "secret",
-        "label": "Client secret",
-        "required": true,
-        "writeOnly": true
-      }
-    ],
-    "instructions": [
-      {
-        "component": "callback_url",
-        "label": "Add this redirect URL to your Slack OAuth app"
-      }
-    ]
-  },
-  "api": {
-    "base_url": "https://slack.com/api",
-    "describe_endpoint": "/",
-    "pagination": {
-      "style": "cursor",
-      "param": "cursor",
-      "records_path": "channels",
-      "next_path": "response_metadata.next_cursor"
-    },
-    "rate_limit_headers": {
-      "remaining": null,
-      "reset": null,
-      "reset_style": "auto_seconds"
-    },
-    "authorization_scheme": "Bearer",
-    "schema_adapter": "declared",
-    "notes": "Slack Web API methods accept GET with query arguments. conversations.list and users.list use cursor paging (cursor / response_metadata.next_cursor, empty string at the end). Slack returns HTTP 200 with ok=false on errors; timestamps are epoch numbers, so created/updated are left in remote_data. Rate limits are per method tier and signalled with HTTP 429 + Retry-After."
-  },
-  "webhooks": {
-    "supported": false,
-    "automatic": false
-  },
-  "provenance": {
-    "author": "human:nath@datakart.ai",
-    "created_at": "2026-11-12T00:00:00Z",
-    "reason": "Provider descriptor for the Merge-compatible Chat category, from https://docs.slack.dev/reference/methods"
-  }
-}
+apiVersion: openmerge.dev/connector/v1
+kind: Connector
+metadata:
+  id: slack
+  version: 1.0.0
+  coreAbi: '3'
+  name: Slack
+  company: Salesforce
+  description: Sync Slack conversations, users and user groups through the OpenMerge chat model.
+  logo: {url: 'https://cdn.openmerge.dev/connectors/slack.svg'}
+categories: [chat@1]
+capabilities:
+  reads: [hash_snapshot]
+  writes: []
+  dynamicSchema: false
+  customFields: false
+setup:
+  oauthAppFields:
+  - {id: client_id, component: text, label: Client ID, required: true}
+  - id: client_secret
+    component: secret
+    label: Client secret
+    required: true
+    writeOnly: true
+  instructions:
+  - {component: callback_url, label: Add this redirect URL to your Slack OAuth app}
+api:
+  base_url: https://slack.com/api
+  describe_endpoint: /
+  pagination:
+    mode: cursor
+    next_path: response_metadata.next_cursor
+    param: cursor
+    records_path: channels
+  rate_limit_headers: {remaining: null, reset: null, reset_style: auto_seconds}
+  authorization_scheme: Bearer
+  schema_adapter: declared
+  notes: Slack Web API methods accept GET with query arguments. conversations.list and users.list use cursor paging
+    (cursor / response_metadata.next_cursor, empty string at the end). Slack returns HTTP 200 with ok=false on errors;
+    timestamps are epoch numbers, so created/updated are left in remote_data. Rate limits are per method tier and
+    signalled with HTTP 429 + Retry-After.
+webhooks:
+  supported: false
+  automatic: false
+provenance:
+  author: human:nath@datakart.ai
+  created_at: '2026-11-12T00:00:00Z'
+  reason: Provider descriptor for the Merge-compatible Chat category, from https://docs.slack.dev/reference/methods
