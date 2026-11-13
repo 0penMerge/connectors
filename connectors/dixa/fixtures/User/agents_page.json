@@ -1,0 +1,27 @@
+{
+  "response": {
+    "data": [
+      {
+        "id": "4b0d8b7c-6b2e-4bd4-9a59-1d8c3e0b1a11",
+        "displayName": "Ann Agent",
+        "email": "ann@acme.test",
+        "avatarUrl": "https://cdn.dixa.io/a.png"
+      }
+    ],
+    "meta": {
+      "next": null
+    }
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "4b0d8b7c-6b2e-4bd4-9a59-1d8c3e0b1a11",
+    "displayName": "Ann Agent",
+    "email": "ann@acme.test",
+    "avatarUrl": "https://cdn.dixa.io/a.png"
+  },
+  "unified": {
+    "name": "Ann Agent",
+    "email_address": "ann@acme.test"
+  }
+}
