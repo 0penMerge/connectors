@@ -1,0 +1,9 @@
+type: recipe
+use: api_key
+inputs:
+- {id: workspace_id, label: Workspace ID, pattern: '[A-Za-z0-9]{1,64}'}
+api_key:
+  in: header
+  name: api_key
+  prefix: ''
+base_url: https://app.hive.com/api/v2/workspaces/{config.workspace_id}
