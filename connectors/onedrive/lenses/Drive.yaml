@@ -1,0 +1,11 @@
+lens: onedrive.drives -> filestorage.Drive@1
+read:
+  from: GET /v1.0/me/drives
+  get: GET /v1.0/drives/{id}
+  strategy: hash_snapshot
+  scopes: [Files.Read]
+fields:
+  name: name
+  drive_url: webUrl
+  remote_created_at: createdDateTime
+  size: quota.used
