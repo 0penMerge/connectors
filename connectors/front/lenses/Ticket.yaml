@@ -1,0 +1,14 @@
+lens: front.conversations -> ticketing.Ticket@1
+read:
+  from: GET /conversations?limit=100
+  keep: status != 'deleted'
+  get: GET /conversations/{id}
+  strategy: hash_snapshot
+fields:
+  name: subject
+  status:
+    from: status
+    map: {unassigned: OPEN, assigned: IN_PROGRESS, archived: CLOSED}
+  assignees: {refs: User, from: assignee.id}
+  tags: tags[*].name
+  remote_created_at: {from: created_at, as: datetime, from_format: epoch_seconds}
