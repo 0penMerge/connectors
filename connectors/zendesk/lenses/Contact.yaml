@@ -1,0 +1,11 @@
+lens: zendesk.end_users -> ticketing.Contact@1
+read:
+  from: GET /api/v2/users?role=end-user&page[size]=100
+  get: GET /api/v2/users/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  email_address: email
+  phone_number: phone
+  details: details
+  account: {ref: Account, from: organization_id}
