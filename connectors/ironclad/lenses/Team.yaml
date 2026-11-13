@@ -1,0 +1,10 @@
+lens: ironclad.groups -> ticketing.Team@1
+read:
+  from: GET /scim/v2/Groups
+  records: Resources
+  page: {first: 1, mode: offset, param: startIndex, size: 200, limit_param: count}
+  get: GET /scim/v2/Groups/{id}
+  strategy: hash_snapshot
+  scopes: [scim.groups.readGroups]
+fields:
+  name: displayName
