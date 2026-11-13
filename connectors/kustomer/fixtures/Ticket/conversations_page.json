@@ -1,0 +1,66 @@
+{
+  "response": {
+    "data": [
+      {
+        "type": "conversation",
+        "id": "5b6b47f1cbf05300139e5a6f",
+        "attributes": {
+          "name": "Order missing",
+          "status": "open",
+          "createdAt": "2018-08-08T19:42:41.432Z",
+          "updatedAt": "2018-08-08T19:42:42.000Z"
+        },
+        "relationships": {
+          "customer": {
+            "data": {
+              "type": "customer",
+              "id": "5b6b47f0cbf05300139e5a6e"
+            }
+          },
+          "createdBy": {
+            "data": {
+              "type": "user",
+              "id": "5a8f2bd8f0a1460001f2e3f1"
+            }
+          }
+        }
+      }
+    ],
+    "links": {
+      "self": "/v1/conversations?page=1&pageSize=100",
+      "next": null
+    }
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "type": "conversation",
+    "id": "5b6b47f1cbf05300139e5a6f",
+    "attributes": {
+      "name": "Order missing",
+      "status": "open",
+      "createdAt": "2018-08-08T19:42:41.432Z",
+      "updatedAt": "2018-08-08T19:42:42.000Z"
+    },
+    "relationships": {
+      "customer": {
+        "data": {
+          "type": "customer",
+          "id": "5b6b47f0cbf05300139e5a6e"
+        }
+      },
+      "createdBy": {
+        "data": {
+          "type": "user",
+          "id": "5a8f2bd8f0a1460001f2e3f1"
+        }
+      }
+    }
+  },
+  "unified": {
+    "name": "Order missing",
+    "status": "OPEN",
+    "contact": "5b6b47f0cbf05300139e5a6e",
+    "creator": "5a8f2bd8f0a1460001f2e3f1"
+  }
+}
