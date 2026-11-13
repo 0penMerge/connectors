@@ -1,0 +1,8 @@
+lens: microsoft_teams.teams -> chat.Group@1
+read:
+  from: GET /v1.0/teams
+  get: GET /v1.0/teams/{id}
+  strategy: hash_snapshot
+  scopes: [Team.ReadBasic.All]
+fields:
+  name: displayName
