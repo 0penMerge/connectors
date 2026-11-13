@@ -1,0 +1,8 @@
+lens: sharepoint.groups -> filestorage.Group@1
+read:
+  from: GET /v1.0/groups?$top=999&$select=id,displayName,description,mail,createdDateTime,groupTypes
+  get: GET /v1.0/groups/{id}
+  strategy: hash_snapshot
+  scopes: [GroupMember.Read.All]
+fields:
+  name: displayName
