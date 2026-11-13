@@ -1,0 +1,7 @@
+lens: front.tags -> ticketing.Tag@1
+read:
+  from: GET /tags?limit=100
+  get: GET /tags/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
