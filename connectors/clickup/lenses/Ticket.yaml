@@ -1,0 +1,22 @@
+lens: clickup.tasks -> ticketing.Ticket@1
+read:
+  from: GET /task?include_closed=true&subtasks=true&order_by=created
+  records: tasks
+  page: {first: 0, mode: page, param: page, size: 100}
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: {coalesce: [text_content, description]}
+  status:
+    from: status.type
+    map: {open: OPEN, custom: IN_PROGRESS, done: CLOSED, closed: CLOSED}
+  priority:
+    from: priority.priority
+    map: {urgent: URGENT, high: HIGH, normal: NORMAL, low: LOW}
+  parent_ticket: {ref: Ticket, from: parent}
+  ticket_url: url
+  due_date: {from: due_date, as: datetime, from_format: epoch_millis}
+  completed_at: {from: date_closed, as: datetime, from_format: epoch_millis}
+  remote_created_at: {from: date_created, as: datetime, from_format: epoch_millis}
+  remote_updated_at: {from: date_updated, as: datetime, from_format: epoch_millis}
+  tags: tags[*].name

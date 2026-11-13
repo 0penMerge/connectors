@@ -1,0 +1,10 @@
+lens: freshservice.agents -> ticketing.User@1
+read:
+  from: GET /agents
+  records: agents
+  get: GET /agents/{id}
+  strategy: hash_snapshot
+fields:
+  email_address: email
+  is_active: active
+  name: {join: [first_name, last_name], sep: ' '}

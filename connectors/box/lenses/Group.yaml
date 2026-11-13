@@ -1,0 +1,7 @@
+lens: box.groups -> filestorage.Group@1
+read:
+  from: GET /2.0/groups?fields=id,type,name,description,created_at,modified_at
+  get: GET /2.0/groups/{id}
+  strategy: hash_snapshot
+fields:
+  name: name

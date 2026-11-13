@@ -1,0 +1,42 @@
+{
+  "response": {
+    "startAt": 0,
+    "maxResults": 100,
+    "total": 1,
+    "comments": [
+      {
+        "id": "10000",
+        "author": {
+          "accountId": "5b10a2844c20165700ede21g",
+          "displayName": "Mia Krystof"
+        },
+        "body": {
+          "type": "doc",
+          "version": 1,
+          "content": []
+        },
+        "created": "2021-01-17T12:34:00.000+0000"
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "10000",
+    "author": {
+      "accountId": "5b10a2844c20165700ede21g",
+      "displayName": "Mia Krystof"
+    },
+    "body": {
+      "type": "doc",
+      "version": 1,
+      "content": []
+    },
+    "created": "2021-01-17T12:34:00.000+0000",
+    "_issue_id": "10002"
+  },
+  "unified": {
+    "ticket": "10002",
+    "user": "5b10a2844c20165700ede21g"
+  }
+}

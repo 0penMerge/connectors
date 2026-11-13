@@ -1,0 +1,6 @@
+lens: trello.labels -> ticketing.Tag@1
+read:
+  from: GET /labels?limit=1000
+  strategy: hash_snapshot
+fields:
+  name: name

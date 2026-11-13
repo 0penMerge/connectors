@@ -1,0 +1,12 @@
+lens: bitbucket.projects -> ticketing.Collection@1
+read:
+  from: GET /projects
+  strategy: hash_snapshot
+id: uuid
+fields:
+  name: name
+  description: description
+  collection_url: links.html.href
+  collection_type: {const: PROJECT}
+  remote_created_at: created_on
+  remote_updated_at: updated_on

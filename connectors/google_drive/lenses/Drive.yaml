@@ -1,0 +1,9 @@
+lens: google_drive.drives -> filestorage.Drive@1
+read:
+  from: GET /drive/v3/drives?pageSize=100
+  records: drives
+  get: GET /drive/v3/drives/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  remote_created_at: createdTime

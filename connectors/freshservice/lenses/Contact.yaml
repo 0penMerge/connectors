@@ -1,0 +1,10 @@
+lens: freshservice.requesters -> ticketing.Contact@1
+read:
+  from: GET /requesters
+  records: requesters
+  get: GET /requesters/{id}
+  strategy: hash_snapshot
+fields:
+  email_address: primary_email
+  phone_number: {coalesce: [work_phone_number, mobile_phone_number]}
+  name: {join: [first_name, last_name], sep: ' '}

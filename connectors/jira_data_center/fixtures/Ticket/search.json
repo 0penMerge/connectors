@@ -1,0 +1,89 @@
+{
+  "response": {
+    "startAt": 0,
+    "maxResults": 100,
+    "total": 1,
+    "issues": [
+      {
+        "id": "10100",
+        "key": "OPS-7",
+        "fields": {
+          "summary": "Rotate certificates",
+          "description": "Before May",
+          "status": {
+            "name": "Done",
+            "statusCategory": {
+              "key": "done"
+            }
+          },
+          "issuetype": {
+            "name": "Task"
+          },
+          "priority": {
+            "name": "Low"
+          },
+          "creator": {
+            "key": "JIRAUSER10000"
+          },
+          "assignee": {
+            "key": "JIRAUSER10001"
+          },
+          "project": {
+            "id": "10200"
+          },
+          "labels": [
+            "security"
+          ],
+          "resolutiondate": "2024-04-30T17:00:00.000+0000"
+        }
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "10100",
+    "key": "OPS-7",
+    "fields": {
+      "summary": "Rotate certificates",
+      "description": "Before May",
+      "status": {
+        "name": "Done",
+        "statusCategory": {
+          "key": "done"
+        }
+      },
+      "issuetype": {
+        "name": "Task"
+      },
+      "priority": {
+        "name": "Low"
+      },
+      "creator": {
+        "key": "JIRAUSER10000"
+      },
+      "assignee": {
+        "key": "JIRAUSER10001"
+      },
+      "project": {
+        "id": "10200"
+      },
+      "labels": [
+        "security"
+      ],
+      "resolutiondate": "2024-04-30T17:00:00.000+0000"
+    }
+  },
+  "unified": {
+    "name": "Rotate certificates",
+    "status": "CLOSED",
+    "priority": "LOW",
+    "creator": "JIRAUSER10000",
+    "assignees": [
+      "JIRAUSER10001"
+    ],
+    "tags": [
+      "security"
+    ]
+  }
+}

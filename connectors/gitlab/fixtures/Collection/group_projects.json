@@ -1,0 +1,27 @@
+{
+  "response": [
+    {
+      "id": 8,
+      "name_with_namespace": "My Group / My Project",
+      "description": null,
+      "visibility": "internal",
+      "web_url": "http://gitlab.example.com/my-group/my-project",
+      "created_at": "2016-01-04T15:31:51.081Z"
+    }
+  ],
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": 8,
+    "name_with_namespace": "My Group / My Project",
+    "description": null,
+    "visibility": "internal",
+    "web_url": "http://gitlab.example.com/my-group/my-project",
+    "created_at": "2016-01-04T15:31:51.081Z"
+  },
+  "unified": {
+    "name": "My Group / My Project",
+    "access_level": "COMPANY",
+    "collection_type": "PROJECT"
+  }
+}

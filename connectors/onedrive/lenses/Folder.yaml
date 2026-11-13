@@ -1,0 +1,16 @@
+lens: onedrive.driveItems_folders -> filestorage.Folder@1
+read:
+  from: GET /v1.0/me/drive/root/delta
+  keep: exists folder and not exists deleted
+  get: GET /v1.0/me/drive/items/{id}
+  strategy: hash_snapshot
+  scopes: [Files.Read]
+fields:
+  name: name
+  folder_url: webUrl
+  size: size
+  parent_folder: {ref: Folder, from: parentReference.id}
+  remote_created_at: createdDateTime
+  remote_updated_at: lastModifiedDateTime
+  description: description
+  drive: {ref: Drive, from: parentReference.driveId}

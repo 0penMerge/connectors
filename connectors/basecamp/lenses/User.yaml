@@ -1,0 +1,9 @@
+lens: basecamp.people -> ticketing.User@1
+read:
+  from: GET /people.json
+  get: GET /people/{id}.json
+  strategy: hash_snapshot
+fields:
+  name: name
+  email_address: email_address
+  avatar: avatar_url

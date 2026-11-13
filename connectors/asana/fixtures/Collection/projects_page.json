@@ -1,0 +1,36 @@
+{
+  "response": {
+    "data": [
+      {
+        "gid": "1331",
+        "name": "Stuff to buy",
+        "notes": "These are things we need to purchase.",
+        "created_at": "2012-02-22T02:06:58.147Z",
+        "modified_at": "2012-02-22T02:06:58.147Z",
+        "permalink_url": "https://app.asana.com/0/resource/123456789/list",
+        "archived": false
+      }
+    ],
+    "next_page": {
+      "offset": "eyJ0eXAiOJiKV1iQLCJhbGciOiJIUzI1NiJ9",
+      "path": "/projects?offset=eyJ0",
+      "uri": "https://app.asana.com/api/1.0/projects?offset=eyJ0"
+    }
+  },
+  "expected_records": 1,
+  "expected_next": "eyJ0eXAiOJiKV1iQLCJhbGciOiJIUzI1NiJ9",
+  "native": {
+    "gid": "1331",
+    "name": "Stuff to buy",
+    "notes": "These are things we need to purchase.",
+    "created_at": "2012-02-22T02:06:58.147Z",
+    "modified_at": "2012-02-22T02:06:58.147Z",
+    "permalink_url": "https://app.asana.com/0/resource/123456789/list",
+    "archived": false
+  },
+  "unified": {
+    "name": "Stuff to buy",
+    "description": "These are things we need to purchase.",
+    "collection_type": "PROJECT"
+  }
+}

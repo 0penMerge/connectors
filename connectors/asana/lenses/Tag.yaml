@@ -1,0 +1,8 @@
+lens: asana.tags -> ticketing.Tag@1
+read:
+  from: GET /tags?limit=100&opt_fields=name
+  strategy: hash_snapshot
+  scopes: ['tags:read']
+id: gid
+fields:
+  name: name

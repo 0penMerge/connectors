@@ -1,0 +1,20 @@
+lens: linear.attachments -> ticketing.Attachment@1
+read:
+  from: GET /graphql
+  records: data.attachments.nodes
+  page:
+    has_more: data.attachments.pageInfo.hasNextPage
+    mode: graphql
+    next: data.attachments.pageInfo.endCursor
+    path: /graphql
+    query: query($first:Int!,$after:String){attachments(first:$first,after:$after){nodes{id title subtitle url sourceType
+      createdAt updatedAt issue{id} creator{id}} pageInfo{hasNextPage endCursor}}}
+    size: 100
+  strategy: hash_snapshot
+  scopes: [read]
+fields:
+  file_name: title
+  file_url: url
+  ticket: {ref: Ticket, from: issue.id}
+  uploaded_by: {ref: User, from: creator.id}
+  remote_created_at: createdAt

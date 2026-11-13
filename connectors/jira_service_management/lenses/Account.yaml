@@ -1,0 +1,9 @@
+lens: jira_service_management.organizations -> ticketing.Account@1
+read:
+  from: GET /rest/servicedeskapi/organization
+  records: values
+  page: {mode: offset, param: start, size: 50, limit_param: limit}
+  get: GET /rest/servicedeskapi/organization/{id}
+  strategy: hash_snapshot
+fields:
+  name: name

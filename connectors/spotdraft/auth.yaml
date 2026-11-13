@@ -1,0 +1,23 @@
+type: recipe
+use: api_key
+inputs:
+- {id: api_key, remove: true}
+- id: region_host
+  label: Regional API host
+  component: select
+  pattern: api\.(?:us|eu|in|me)\.spotdraft\.com
+  options:
+  - {value: api.us.spotdraft.com, label: United States}
+  - {value: api.eu.spotdraft.com, label: Europe}
+  - {value: api.in.spotdraft.com, label: India}
+  - {value: api.me.spotdraft.com, label: Middle East}
+- {id: client_id, label: Client ID, secret: true, component: text}
+- {id: client_secret, label: Client secret, secret: true, component: secret}
+api_key:
+  in: header
+  name: client-secret
+  prefix: ''
+  value: '{secret.client_secret}'
+apply:
+  headers: {client-id: '{secret.client_id}'}
+base_url: https://{config.region_host}

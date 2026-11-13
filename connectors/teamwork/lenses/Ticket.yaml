@@ -1,0 +1,31 @@
+lens: teamwork.tasks -> ticketing.Ticket@1
+read:
+  from: GET /projects/api/v3/tasks.json?includeCompletedTasks=true&orderBy=updatedat&orderMode=asc
+  get: GET /projects/api/v3/tasks/{id}.json
+  strategy: timestamp_delta
+  cursor:
+    field: updatedAt
+    tieBreaker: id
+    parameter: updatedAfter
+    overlapSeconds: 300
+    precision: seconds
+    parameters: {orderBy: updatedat, orderMode: asc}
+  reconcile_every: 86400
+fields:
+  name: name
+  description: description
+  status: {from: status, read: only}
+  priority:
+    from: priority
+    map: {high: HIGH, medium: NORMAL, low: LOW}
+    read: only
+  due_date: {from: dueDate, read: only}
+  completed_at: {from: completedAt, read: only}
+  creator: {ref: User, from: createdBy, read: only}
+  parent_ticket: {ref: Ticket, from: parentTaskId, read: only}
+  remote_created_at: {from: createdAt, read: only}
+  remote_updated_at: {from: updatedAt, read: only}
+write:
+  update: PATCH /projects/api/v3/tasks/{id}.json
+  body: task
+  record: task

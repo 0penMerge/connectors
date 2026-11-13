@@ -1,0 +1,10 @@
+lens: help_scout.mailboxes -> ticketing.Collection@1
+read:
+  from: GET /v2/mailboxes
+  records: _embedded.mailboxes
+  get: GET /v2/mailboxes/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  remote_created_at: createdAt
+  remote_updated_at: updatedAt

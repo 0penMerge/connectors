@@ -1,0 +1,7 @@
+lens: help_scout.teams -> ticketing.Team@1
+read:
+  from: GET /v2/teams
+  records: _embedded.teams
+  strategy: hash_snapshot
+fields:
+  name: name

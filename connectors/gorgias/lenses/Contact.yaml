@@ -1,0 +1,9 @@
+lens: gorgias.customers -> ticketing.Contact@1
+read:
+  from: GET /customers?limit=100
+  get: GET /customers/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  email_address: email
+  details: note

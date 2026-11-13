@@ -1,0 +1,15 @@
+lens: zendesk.ticket_comments -> ticketing.Comment@1
+read:
+  from: GET /api/v2/tickets/{parent_id}/comments?page[size]=100
+  records: comments
+  strategy: hash_snapshot
+parent: {model: Ticket, inject: _ticket_id}
+fields:
+  ticket: {ref: Ticket, from: _ticket_id}
+  user: {ref: User, from: author_id}
+  body: body
+  html_body: html_body
+  remote_created_at: created_at
+  is_private:
+    from: public
+    map: {'true': false, 'false': true}

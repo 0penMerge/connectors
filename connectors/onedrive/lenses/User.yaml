@@ -1,0 +1,9 @@
+lens: onedrive.users -> filestorage.User@1
+read:
+  from: GET /v1.0/users?$top=999&$select=id,displayName,givenName,surname,mail,userPrincipalName
+  get: GET /v1.0/users/{id}?$select=id,displayName,givenName,surname,mail,userPrincipalName
+  strategy: hash_snapshot
+  scopes: [User.ReadBasic.All]
+fields:
+  name: displayName
+  email_address: {coalesce: [mail, userPrincipalName]}

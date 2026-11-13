@@ -1,0 +1,8 @@
+lens: spotdraft.users -> ticketing.User@1
+read:
+  from: GET /api/v2.1/public/auth/users/
+  strategy: hash_snapshot
+fields:
+  name: name
+  email_address: email
+  is_active: is_active

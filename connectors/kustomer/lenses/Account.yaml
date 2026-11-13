@@ -1,0 +1,9 @@
+lens: kustomer.companies -> ticketing.Account@1
+read:
+  from: GET /v1/companies?pageSize=100
+  get: GET /v1/companies/{id}
+  strategy: hash_snapshot
+fields:
+  name: attributes.name
+write:
+  record: data

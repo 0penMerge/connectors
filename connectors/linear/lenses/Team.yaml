@@ -1,0 +1,17 @@
+lens: linear.teams -> ticketing.Team@1
+read:
+  from: GET /graphql
+  records: data.teams.nodes
+  page:
+    has_more: data.teams.pageInfo.hasNextPage
+    mode: graphql
+    next: data.teams.pageInfo.endCursor
+    path: /graphql
+    query: query($first:Int!,$after:String){teams(first:$first,after:$after){nodes{id key name description private
+      createdAt updatedAt} pageInfo{hasNextPage endCursor}}}
+    size: 100
+  strategy: hash_snapshot
+  scopes: [read]
+fields:
+  name: name
+  description: description

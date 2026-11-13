@@ -1,0 +1,9 @@
+lens: help_scout.organizations -> ticketing.Account@1
+read:
+  from: GET /v2/organizations
+  records: _embedded.organizations
+  get: GET /v2/organizations/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  domains: domains

@@ -1,0 +1,8 @@
+lens: shortcut.groups -> ticketing.Team@1
+read:
+  from: GET /groups
+  get: GET /groups/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: description

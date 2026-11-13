@@ -1,0 +1,64 @@
+{
+  "response": {
+    "issues": [
+      {
+        "id": "20001",
+        "fields": {
+          "summary": "Laptop will not boot",
+          "status": {
+            "name": "Waiting for support",
+            "statusCategory": {
+              "key": "new"
+            }
+          },
+          "issuetype": {
+            "name": "IT Help"
+          },
+          "priority": {
+            "name": "Medium"
+          },
+          "project": {
+            "id": "10010"
+          },
+          "labels": [],
+          "created": "2024-05-01T09:00:00.000+0000"
+        }
+      }
+    ],
+    "isLast": true
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "20001",
+    "fields": {
+      "summary": "Laptop will not boot",
+      "status": {
+        "name": "Waiting for support",
+        "statusCategory": {
+          "key": "new"
+        }
+      },
+      "issuetype": {
+        "name": "IT Help"
+      },
+      "priority": {
+        "name": "Medium"
+      },
+      "project": {
+        "id": "10010"
+      },
+      "labels": [],
+      "created": "2024-05-01T09:00:00.000+0000"
+    }
+  },
+  "unified": {
+    "name": "Laptop will not boot",
+    "status": "OPEN",
+    "priority": "NORMAL",
+    "ticket_type": "IT Help",
+    "collections": [
+      "10010"
+    ]
+  }
+}

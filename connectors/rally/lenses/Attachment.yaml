@@ -1,0 +1,11 @@
+lens: rally.attachments -> ticketing.Attachment@1
+read:
+  from: GET /attachment?order=ObjectID&fetch=ObjectID,ObjectUUID,Name,ContentType,Size,Description,Artifact,User,Content,CreationDate
+  strategy: hash_snapshot
+id: ObjectUUID
+fields:
+  file_name: Name
+  content_type: ContentType
+  ticket: {ref: Ticket, from: Artifact._refObjectUUID}
+  uploaded_by: {ref: User, from: User._refObjectUUID}
+  remote_created_at: CreationDate

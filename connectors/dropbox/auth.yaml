@@ -1,0 +1,34 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://www.dropbox.com/oauth2/authorize
+  params: {token_access_type: offline}
+token:
+  url: https://api.dropboxapi.com/oauth2/token
+scopes:
+  param: scope
+  separator: ' '
+  default: [account_info.read, files.metadata.read]
+identity_from_token:
+  user_id: {path: account_id, required: false}
+  tenant_id: {path: team_id, required: false}
+scope_catalog:
+- id: account_info.read
+  label: Read account info
+  description: Read the connected account's basic profile.
+- id: files.metadata.read
+  label: Read file metadata
+  description: List files and folders (list_folder).
+  models: [File, Folder]
+  operations: [read]
+- id: members.read
+  label: Read team members
+  description: List team members (Dropbox Business team-linked apps only).
+  models: [User]
+  operations: [read]
+- id: groups.read
+  label: Read team groups
+  description: List team groups (Dropbox Business team-linked apps only).
+  models: [Group]
+  operations: [read]
+notes: Dropbox OAuth 2 code flow; token_access_type=offline returns a long-lived refresh token that does not rotate.

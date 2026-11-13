@@ -1,0 +1,12 @@
+type: recipe
+use: api_key
+inputs:
+- {id: api_key, remove: true}
+- {id: api_token, label: API token, secret: true, component: secret}
+api_key:
+  in: header
+  name: Shortcut-Token
+  prefix: ''
+  value: '{secret.api_token}'
+probe:
+  request: {url: 'https://api.app.shortcut.com/api/v3/member'}

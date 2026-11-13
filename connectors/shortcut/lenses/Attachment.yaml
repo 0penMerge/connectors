@@ -1,0 +1,11 @@
+lens: shortcut.files -> ticketing.Attachment@1
+read:
+  from: GET /files
+  get: GET /files/{id}
+  strategy: hash_snapshot
+fields:
+  file_name: name
+  content_type: content_type
+  file_url: url
+  uploaded_by: {ref: User, from: uploader_id}
+  remote_created_at: created_at

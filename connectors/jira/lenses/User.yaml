@@ -1,0 +1,13 @@
+lens: jira.users -> ticketing.User@1
+read:
+  from: GET /rest/api/3/users/search
+  records: $
+  page: {mode: offset, param: startAt, size: 100, limit_param: maxResults}
+  get: GET /rest/api/3/user?accountId={id}
+  strategy: hash_snapshot
+id: accountId
+fields:
+  name: displayName
+  email_address: emailAddress
+  is_active: active
+  avatar: avatarUrls.48x48

@@ -1,0 +1,14 @@
+type: recipe
+use: api_key
+inputs:
+- id: subdomain
+  label: Account subdomain (<subdomain>.aha.io)
+  pattern: '[a-z0-9][a-z0-9-]{0,62}'
+  stage: credentials
+api_key:
+  in: header
+  name: Authorization
+  prefix: 'Bearer '
+base_url: https://{config.subdomain}.aha.io/api/v1
+probe:
+  request: {url: 'https://{config.subdomain}.aha.io/api/v1/me'}

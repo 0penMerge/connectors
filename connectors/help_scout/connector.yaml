@@ -1,101 +1,47 @@
-{
-  "apiVersion": "openmerge.dev/connector/v1",
-  "kind": "Connector",
-  "metadata": {
-    "id": "help_scout",
-    "version": "1.0.0",
-    "coreAbi": "2",
-    "name": "Help Scout",
-    "company": "Help Scout",
-    "description": "Sync Help Scout conversations, customers, organizations, users, teams, tags and mailboxes through the OpenMerge ticketing model.",
-    "logo": {
-      "url": "https://cdn.openmerge.dev/connectors/help_scout.svg"
-    }
-  },
-  "runtime": {
-    "entrypoint": "plugin.py:HelpScoutPlugin"
-  },
-  "categories": [
-    "ticketing@1"
-  ],
-  "capabilities": {
-    "reads": [
-      "hash_snapshot",
-      "timestamp_delta"
-    ],
-    "writes": [],
-    "dynamicSchema": false,
-    "customFields": false
-  },
-  "auth": {
-    "type": "oauth2",
-    "driver": "oauth2",
-    "authorization_url": "https://secure.helpscout.net/authentication/authorizeClientApplication",
-    "token_url": "https://api.helpscout.net/v2/oauth2/token",
-    "refresh_rotates": true,
-    "rotation_grace_seconds": 0,
-    "scopes_param": "scope",
-    "default_scopes": [
-      "default"
-    ],
-    "scope_catalog": [
-      {
-        "id": "default",
-        "label": "Default access",
-        "description": "Help Scout OAuth has no scopes: the token acts as the authorizing user and sees whatever that user's role allows (organizations additionally need the 'Access the contacts and companies directory' permission)."
-      }
-    ],
-    "connection_config_fields": [],
-    "notes": "Authorization-code flow (Mailbox API 2.0). Access tokens last 2 days; each refresh returns a new refresh token that must replace the stored one."
-  },
-  "setup": {
-    "oauthAppFields": [
-      {
-        "id": "client_id",
-        "component": "text",
-        "label": "Client ID",
-        "required": true
-      },
-      {
-        "id": "client_secret",
-        "component": "secret",
-        "label": "Client secret",
-        "required": true,
-        "writeOnly": true
-      }
-    ],
-    "instructions": [
-      {
-        "component": "callback_url",
-        "label": "Add this redirect URL to your Help Scout OAuth app"
-      }
-    ]
-  },
-  "api": {
-    "base_url": "https://api.helpscout.net",
-    "describe_endpoint": "/",
-    "pagination": {
-      "style": "cursor",
-      "param": "cursor",
-      "records_path": "_embedded.conversations",
-      "next_path": "_links.next.href"
-    },
-    "rate_limit_headers": {
-      "remaining": null,
-      "reset": null,
-      "reset_style": "auto_seconds"
-    },
-    "authorization_scheme": "Bearer",
-    "schema_adapter": "declared",
-    "notes": "HAL responses: records under _embedded.<collection>, continuation in _links.next.href (absent on the last page). Conversations page at 25, everything else at 50. Conversations need status=all (default is active only) and read incrementally with modifiedSince + sortField=modifiedAt asc; the record carries userUpdatedAt (<= modifiedAt), which is used as the checkpoint, so overlap re-reads are possible but nothing is skipped. Customers use the cursor-based v3 list Help Scout recommends. Customers and users have firstName/lastName only, so the unified name is left to remote_data."
-  },
-  "webhooks": {
-    "supported": false,
-    "automatic": false
-  },
-  "provenance": {
-    "author": "human:nath@datakart.ai",
-    "created_at": "2026-11-12T00:00:00Z",
-    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://developer.helpscout.com/mailbox-api/"
-  }
-}
+apiVersion: openmerge.dev/connector/v1
+kind: Connector
+metadata:
+  id: help_scout
+  version: 1.0.0
+  coreAbi: '3'
+  name: Help Scout
+  company: Help Scout
+  description: Sync Help Scout conversations, customers, organizations, users, teams, tags and mailboxes through
+    the OpenMerge ticketing model.
+  logo: {url: 'https://cdn.openmerge.dev/connectors/help_scout.svg'}
+categories: [ticketing@1]
+capabilities:
+  reads: [hash_snapshot, timestamp_delta]
+  writes: []
+  dynamicSchema: false
+  customFields: false
+setup:
+  oauthAppFields:
+  - {id: client_id, component: text, label: Client ID, required: true}
+  - id: client_secret
+    component: secret
+    label: Client secret
+    required: true
+    writeOnly: true
+  instructions:
+  - {component: callback_url, label: Add this redirect URL to your Help Scout OAuth app}
+api:
+  base_url: https://api.helpscout.net
+  describe_endpoint: /
+  pagination: {mode: next_url, next_path: _links.next.href, records_path: _embedded.conversations}
+  rate_limit_headers: {remaining: null, reset: null, reset_style: auto_seconds}
+  authorization_scheme: Bearer
+  schema_adapter: declared
+  notes: 'HAL responses: records under _embedded.<collection>, continuation in _links.next.href (absent on the last
+    page). Conversations page at 25, everything else at 50. Conversations need status=all (default is active only)
+    and read incrementally with modifiedSince + sortField=modifiedAt asc; the record carries userUpdatedAt (<= modifiedAt),
+    which is used as the checkpoint, so overlap re-reads are possible but nothing is skipped. Customers use the
+    cursor-based v3 list Help Scout recommends. Customers and users have firstName/lastName only, so the unified
+    name is left to remote_data.'
+webhooks:
+  supported: false
+  automatic: false
+provenance:
+  author: human:nath@datakart.ai
+  created_at: '2026-11-12T00:00:00Z'
+  reason: Provider descriptor for the Merge-compatible Ticketing category, from https://developer.helpscout.com/mailbox-api/

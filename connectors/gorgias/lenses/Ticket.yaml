@@ -1,0 +1,22 @@
+lens: gorgias.tickets -> ticketing.Ticket@1
+read:
+  from: GET /tickets?limit=100&order_by=created_datetime:asc
+  get: GET /tickets/{id}
+  strategy: hash_snapshot
+fields:
+  name: subject
+  status:
+    from: status
+    map: {open: OPEN, closed: CLOSED}
+  priority:
+    from: priority
+    map: {critical: URGENT, high: HIGH, normal: NORMAL, low: LOW}
+  contact: {ref: Contact, from: customer.id, read: only}
+  remote_created_at: {from: created_datetime, read: only}
+  remote_updated_at: {from: updated_datetime, read: only}
+  completed_at: {from: closed_datetime, read: only}
+  assignees: {refs: User, from: assignee_user.id, read: only}
+  assigned_teams: {refs: Team, from: assignee_team.id, read: only}
+  tags: {from: 'tags[*].name', read: only}
+write:
+  update: PUT /tickets/{id}

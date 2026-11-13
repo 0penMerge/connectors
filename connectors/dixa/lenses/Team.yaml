@@ -1,0 +1,11 @@
+lens: dixa.teams -> ticketing.Team@1
+read:
+  from: GET /v1/teams
+  records: data
+  page: {mode: single}
+  get: GET /v1/teams/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+write:
+  record: data

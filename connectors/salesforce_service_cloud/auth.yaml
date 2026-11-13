@@ -1,0 +1,35 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://login.salesforce.com/services/oauth2/authorize
+token:
+  url: https://login.salesforce.com/services/oauth2/token
+scopes:
+  param: scope
+  separator: ' '
+  default: [api, refresh_token]
+refresh:
+  rotates: true
+  grace_seconds: 0
+pkce: S256
+config_from_token:
+  instance_url: instance_url
+base_url: '{config.instance_url}'
+scope_catalog:
+- id: api
+  label: API
+  description: Access Salesforce data through the REST API (SOQL query on Case, CaseComment, Account, Contact, User,
+    Group, UserRole) with the connected user's sharing rules.
+  models: [Ticket, Comment, Account, Contact, User, Team, Role]
+  operations: [read]
+  recommended: true
+- id: refresh_token
+  label: Offline access
+  description: Maintain the connection and refresh access tokens when the user is offline (also granted as offline_access).
+  recommended: true
+- id: full
+  label: Full access
+  description: Broad access to all data the connected user can access; avoid unless required.
+notes: 'Same connected app / External Client App conventions as the Salesforce CRM connector: S256 PKCE required
+  by External Client Apps; sandboxes authorize at test.salesforce.com. instance_url comes from the token response.
+  Refresh-token rotation depends on the app policy; OpenMerge treats it as rotating.'

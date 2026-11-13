@@ -1,0 +1,16 @@
+lens: linear.issue_labels -> ticketing.Tag@1
+read:
+  from: GET /graphql
+  records: data.issueLabels.nodes
+  page:
+    has_more: data.issueLabels.pageInfo.hasNextPage
+    mode: graphql
+    next: data.issueLabels.pageInfo.endCursor
+    path: /graphql
+    query: query($first:Int!,$after:String){issueLabels(first:$first,after:$after){nodes{id name color description
+      team{id} parent{id} createdAt updatedAt} pageInfo{hasNextPage endCursor}}}
+    size: 100
+  strategy: hash_snapshot
+  scopes: [read]
+fields:
+  name: name

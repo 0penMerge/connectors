@@ -1,0 +1,7 @@
+lens: gitlab.labels -> ticketing.Tag@1
+read:
+  from: GET /labels?include_descendant_groups=true&include_ancestor_groups=true
+  strategy: hash_snapshot
+  scopes: [read_api]
+fields:
+  name: name

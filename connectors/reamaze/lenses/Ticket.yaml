@@ -1,0 +1,12 @@
+lens: reamaze.conversations -> ticketing.Ticket@1
+read:
+  from: GET /api/v1/conversations.json?filter=all
+  get: GET /api/v1/conversations/{id}.json
+  strategy: hash_snapshot
+id: slug
+fields:
+  name: subject
+  description: message.body
+  tags: tag_list
+  contact: {ref: Contact, from: author.email}
+  remote_created_at: created_at

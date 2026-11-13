@@ -1,0 +1,36 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://gitlab.com/oauth/authorize
+token:
+  url: https://gitlab.com/oauth/token
+scopes:
+  param: scope
+  separator: ' '
+  default: [read_api]
+refresh:
+  rotates: true
+  grace_seconds: 0
+discover:
+  steps:
+  - id: group
+    request:
+      url: https://gitlab.com/api/v4/groups
+      query: {min_access_level: '10'}
+    choose: {list: $, value: id, label: full_path, into: config.group_id}
+  identity: {tenant_id: '{config.group_id}'}
+base_url: https://gitlab.com/api/v4/groups/{config.group_id}
+scope_catalog:
+- id: read_api
+  label: Read API
+  description: Read issues, projects, groups, labels and members.
+  models: [Ticket, Collection, Team, Tag, User]
+  operations: [read]
+  recommended: true
+- id: api
+  label: Full API
+  description: Read and write access to the API, including issues and notes.
+- {id: read_user, label: Read user, description: Read the authenticated user's profile.}
+notes: GitLab.com OAuth 2.0 authorization code flow (PKCE recommended). Access tokens last 2 hours; each refresh
+  revokes the previous access and refresh tokens. group_id is the top-level group's numeric id or URL-encoded full
+  path, chosen by the user after authorization.

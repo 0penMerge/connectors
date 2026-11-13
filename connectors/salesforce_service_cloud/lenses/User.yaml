@@ -1,0 +1,11 @@
+lens: salesforce_service_cloud.User -> ticketing.User@1
+read:
+  from: GET /services/data/v67.0/query?q=SELECT+Id,Name,Email,IsActive,SmallPhotoUrl,UserRoleId,UserType,CreatedDate,LastModifiedDate+FROM+User+ORDER+BY+CreatedDate+ASC
+  get: GET /services/data/v67.0/sobjects/User/{id}
+  strategy: hash_snapshot
+id: Id
+fields:
+  name: Name
+  email_address: Email
+  is_active: IsActive
+  avatar: SmallPhotoUrl

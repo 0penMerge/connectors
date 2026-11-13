@@ -1,168 +1,46 @@
-{
-  "apiVersion": "openmerge.dev/connector/v1",
-  "kind": "Connector",
-  "metadata": {
-    "id": "gorgias",
-    "version": "1.0.0",
-    "coreAbi": "2",
-    "name": "Gorgias",
-    "company": "Gorgias",
-    "description": "Sync Gorgias tickets, messages, customers, users, teams and tags through the OpenMerge ticketing model.",
-    "logo": {
-      "url": "https://cdn.openmerge.dev/connectors/gorgias.svg"
-    }
-  },
-  "runtime": {
-    "entrypoint": "plugin.py:GorgiasPlugin"
-  },
-  "categories": [
-    "ticketing@1"
-  ],
-  "capabilities": {
-    "reads": [
-      "hash_snapshot"
-    ],
-    "writes": [
-      "update"
-    ],
-    "dynamicSchema": false,
-    "customFields": false
-  },
-  "auth": {
-    "type": "oauth2",
-    "driver": "oauth2",
-    "authorization_url": "https://{subdomain}.gorgias.com/oauth/authorize",
-    "token_url": "https://{subdomain}.gorgias.com/oauth/token",
-    "refresh_rotates": false,
-    "rotation_grace_seconds": null,
-    "scopes_param": "scope",
-    "default_scopes": [
-      "openid",
-      "offline",
-      "tickets:read",
-      "customers:read",
-      "users:read",
-      "tags:read"
-    ],
-    "scope_catalog": [
-      {
-        "id": "openid",
-        "label": "OpenID",
-        "description": "Base OpenID Connect scope required by the Gorgias authorization server."
-      },
-      {
-        "id": "offline",
-        "label": "Offline access",
-        "description": "Issue a refresh token so syncs keep running after the 24-hour access token expires.",
-        "recommended": true
-      },
-      {
-        "id": "tickets:read",
-        "label": "Read tickets",
-        "description": "Read tickets and ticket messages.",
-        "models": [
-          "Ticket",
-          "Comment"
-        ],
-        "operations": [
-          "read"
-        ]
-      },
-      {
-        "id": "tickets:write",
-        "label": "Write tickets",
-        "description": "Update ticket subject, status and priority."
-      },
-      {
-        "id": "customers:read",
-        "label": "Read customers",
-        "description": "Read customers.",
-        "models": [
-          "Contact"
-        ],
-        "operations": [
-          "read"
-        ]
-      },
-      {
-        "id": "users:read",
-        "label": "Read users",
-        "description": "Read helpdesk users (agents) and teams.",
-        "models": [
-          "User",
-          "Team"
-        ],
-        "operations": [
-          "read"
-        ]
-      },
-      {
-        "id": "tags:read",
-        "label": "Read tags",
-        "description": "Read tags.",
-        "models": [
-          "Tag"
-        ],
-        "operations": [
-          "read"
-        ]
-      }
-    ],
-    "connection_config_fields": [
-      "subdomain"
-    ],
-    "scope_separator": " ",
-    "token_endpoint_auth": "client_secret_basic",
-    "notes": "Per-tenant OAuth on {subdomain}.gorgias.com: the subdomain must be collected before redirecting (the token response does not return it). Token requests use HTTP Basic client_id:client_secret. Access tokens last 24 hours; refresh tokens (offline scope) do not expire and rotation is undocumented. state and nonce are recommended authorize parameters; PKCE is not supported."
-  },
-  "setup": {
-    "oauthAppFields": [
-      {
-        "id": "client_id",
-        "component": "text",
-        "label": "Client ID",
-        "required": true
-      },
-      {
-        "id": "client_secret",
-        "component": "secret",
-        "label": "Client secret",
-        "required": true,
-        "writeOnly": true
-      }
-    ],
-    "instructions": [
-      {
-        "component": "callback_url",
-        "label": "Add this redirect URL to your Gorgias OAuth app"
-      }
-    ]
-  },
-  "api": {
-    "base_url": "https://{subdomain}.gorgias.com/api",
-    "describe_endpoint": "/",
-    "pagination": {
-      "style": "cursor",
-      "param": "cursor",
-      "records_path": "data",
-      "next_path": "meta.next_cursor"
-    },
-    "rate_limit_headers": {
-      "remaining": null,
-      "reset": null,
-      "reset_style": "auto_seconds"
-    },
-    "authorization_scheme": "Bearer",
-    "schema_adapter": "declared",
-    "notes": "Lists return {data:[...], meta:{next_cursor, prev_cursor}} with cursor/limit (max 100). No updated-since filter exists on list endpoints, so every model is a full hash snapshot. GET /tickets includes trashed tickets by default (trashed=true). Ticket messages are listed account-wide via GET /messages. Message 'public' (false = internal note) and sender ids (user or customer, depending on from_agent) stay in remote_data because they cannot be mapped without inversion/branching."
-  },
-  "webhooks": {
-    "supported": false,
-    "automatic": false
-  },
-  "provenance": {
-    "author": "human:nath@datakart.ai",
-    "created_at": "2026-11-12T00:00:00Z",
-    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://developers.gorgias.com/reference/introduction"
-  }
-}
+apiVersion: openmerge.dev/connector/v1
+kind: Connector
+metadata:
+  id: gorgias
+  version: 1.0.0
+  coreAbi: '3'
+  name: Gorgias
+  company: Gorgias
+  description: Sync Gorgias tickets, messages, customers, users, teams and tags through the OpenMerge ticketing
+    model.
+  logo: {url: 'https://cdn.openmerge.dev/connectors/gorgias.svg'}
+categories: [ticketing@1]
+capabilities:
+  reads: [hash_snapshot]
+  writes: [update]
+  dynamicSchema: false
+  customFields: false
+setup:
+  oauthAppFields:
+  - {id: client_id, component: text, label: Client ID, required: true}
+  - id: client_secret
+    component: secret
+    label: Client secret
+    required: true
+    writeOnly: true
+  instructions:
+  - {component: callback_url, label: Add this redirect URL to your Gorgias OAuth app}
+api:
+  base_url: https://{subdomain}.gorgias.com/api
+  describe_endpoint: /
+  pagination: {mode: cursor, next_path: meta.next_cursor, param: cursor, records_path: data}
+  rate_limit_headers: {remaining: null, reset: null, reset_style: auto_seconds}
+  authorization_scheme: Bearer
+  schema_adapter: declared
+  notes: Lists return {data:[...], meta:{next_cursor, prev_cursor}} with cursor/limit (max 100). No updated-since
+    filter exists on list endpoints, so every model is a full hash snapshot. GET /tickets includes trashed tickets
+    by default (trashed=true). Ticket messages are listed account-wide via GET /messages. Message 'public' (false
+    = internal note) and sender ids (user or customer, depending on from_agent) stay in remote_data because they
+    cannot be mapped without inversion/branching.
+webhooks:
+  supported: false
+  automatic: false
+provenance:
+  author: human:nath@datakart.ai
+  created_at: '2026-11-12T00:00:00Z'
+  reason: Provider descriptor for the Merge-compatible Ticketing category, from https://developers.gorgias.com/reference/introduction

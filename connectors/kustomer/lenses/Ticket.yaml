@@ -1,0 +1,17 @@
+lens: kustomer.conversations -> ticketing.Ticket@1
+read:
+  from: GET /v1/conversations?pageSize=100
+  get: GET /v1/conversations/{id}
+  strategy: hash_snapshot
+fields:
+  name: {from: attributes.name, read: only}
+  status:
+    from: attributes.status
+    map: {open: OPEN, snoozed: ON_HOLD, done: CLOSED}
+    read: only
+  contact: {ref: Contact, from: relationships.customer.data.id, read: only}
+  creator: {ref: User, from: relationships.createdBy.data.id, read: only}
+  remote_created_at: {from: attributes.createdAt, read: only}
+  remote_updated_at: {from: attributes.updatedAt, read: only}
+write:
+  record: data

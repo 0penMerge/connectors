@@ -1,0 +1,10 @@
+lens: help_scout.conversation_threads -> ticketing.Comment@1
+read:
+  from: GET /v2/conversations/{parent_id}/threads
+  records: _embedded.threads
+  strategy: hash_snapshot
+parent: {model: Ticket, inject: _conversation_id}
+fields:
+  ticket: {ref: Ticket, from: _conversation_id}
+  html_body: body
+  remote_created_at: createdAt

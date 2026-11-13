@@ -1,0 +1,32 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
+token:
+  url: https://login.microsoftonline.com/common/oauth2/v2.0/token
+scopes:
+  param: scope
+  separator: ' '
+  default: [offline_access, Sites.Read.All, User.ReadBasic.All, GroupMember.Read.All]
+refresh:
+  rotates: true
+scope_catalog:
+- id: offline_access
+  label: Offline access
+  description: Issue refresh tokens so syncs keep running.
+  recommended: true
+- id: Sites.Read.All
+  label: Read items in all site collections
+  description: Read SharePoint sites, document libraries and files (passthrough).
+- id: User.ReadBasic.All
+  label: Read all users' basic profiles
+  description: List directory users (display name, email, UPN).
+  models: [User]
+  operations: [read]
+- id: GroupMember.Read.All
+  label: Read group memberships
+  description: List directory groups. Requires admin consent.
+  models: [Group]
+  operations: [read]
+notes: Microsoft identity platform v2.0 (work or school accounts). Each refresh returns a new refresh token; superseded
+  tokens stay valid until their own expiry. GroupMember.Read.All needs tenant admin consent.

@@ -1,0 +1,11 @@
+lens: kustomer.customers -> ticketing.Contact@1
+read:
+  from: GET /v1/customers?pageSize=100&sort=updatedAt
+  get: GET /v1/customers/{id}
+  strategy: hash_snapshot
+fields:
+  name: attributes.name
+  email_address: attributes.emails.0.email
+  phone_number: attributes.phones.0.phone
+write:
+  record: data

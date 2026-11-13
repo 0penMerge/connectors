@@ -1,0 +1,8 @@
+lens: gladly.agents -> ticketing.User@1
+read:
+  from: GET /api/v1/agents
+  get: GET /api/v1/agents/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  email_address: emailAddress

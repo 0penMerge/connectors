@@ -1,0 +1,37 @@
+{
+  "response": {
+    "cursor": "ZtkX9_EHj3x7PMkVuFIhwKYXEpwpLwyxp9vMKomUhllil9q7eWiAu",
+    "has_more": true,
+    "entries": [
+      {
+        ".tag": "file",
+        "id": "id:a4ayc_80_OEAAAAAAAAAXw",
+        "name": "Prime_Numbers.txt",
+        "path_display": "/Homework/math/Prime_Numbers.txt",
+        "size": 7212,
+        "server_modified": "2015-05-12T15:50:38Z"
+      },
+      {
+        ".tag": "folder",
+        "id": "id:a4ayc_80_OEAAAAAAAAAXz",
+        "name": "math",
+        "path_display": "/Homework/math"
+      }
+    ]
+  },
+  "expected_records": 2,
+  "expected_next": "ZtkX9_EHj3x7PMkVuFIhwKYXEpwpLwyxp9vMKomUhllil9q7eWiAu",
+  "native": {
+    ".tag": "file",
+    "id": "id:a4ayc_80_OEAAAAAAAAAXw",
+    "name": "Prime_Numbers.txt",
+    "path_display": "/Homework/math/Prime_Numbers.txt",
+    "size": 7212,
+    "server_modified": "2015-05-12T15:50:38Z"
+  },
+  "unified": {
+    "name": "Prime_Numbers.txt",
+    "size": 7212,
+    "remote_updated_at": "2015-05-12T15:50:38Z"
+  }
+}

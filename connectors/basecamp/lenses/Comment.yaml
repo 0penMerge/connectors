@@ -1,0 +1,9 @@
+lens: basecamp.comments -> ticketing.Comment@1
+read:
+  from: GET /projects/recordings.json?type=Comment&sort=created_at&direction=asc
+  strategy: hash_snapshot
+fields:
+  html_body: content
+  user: {ref: User, from: creator.id}
+  ticket: {ref: Ticket, from: parent.id}
+  remote_created_at: created_at

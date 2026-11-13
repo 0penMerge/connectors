@@ -1,0 +1,61 @@
+{
+  "response": {
+    "totalSize": 1,
+    "done": false,
+    "nextRecordsUrl": "/services/data/v67.0/query/01gD0000002HU6KIAW-2000",
+    "records": [
+      {
+        "attributes": {
+          "type": "Case"
+        },
+        "Id": "500D000000QNbDbIAL",
+        "CaseNumber": "00001001",
+        "Subject": "Starting generator after electrical failure",
+        "Description": "",
+        "Status": "Working",
+        "Priority": "High",
+        "Type": "Electrical",
+        "AccountId": "001D000000IqhSLIAZ",
+        "ContactId": "003D000000QOSKBIA5",
+        "OwnerId": "005D0000001QHMlIAO",
+        "CreatedById": "005D0000001QHMlIAO",
+        "ParentId": null,
+        "CreatedDate": "2024-01-02T10:00:00.000+0000",
+        "LastModifiedDate": "2024-01-03T10:00:00.000+0000",
+        "ClosedDate": null
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": "/services/data/v67.0/query/01gD0000002HU6KIAW-2000",
+  "native": {
+    "attributes": {
+      "type": "Case"
+    },
+    "Id": "500D000000QNbDbIAL",
+    "CaseNumber": "00001001",
+    "Subject": "Starting generator after electrical failure",
+    "Description": "",
+    "Status": "Working",
+    "Priority": "High",
+    "Type": "Electrical",
+    "AccountId": "001D000000IqhSLIAZ",
+    "ContactId": "003D000000QOSKBIA5",
+    "OwnerId": "005D0000001QHMlIAO",
+    "CreatedById": "005D0000001QHMlIAO",
+    "ParentId": null,
+    "CreatedDate": "2024-01-02T10:00:00.000+0000",
+    "LastModifiedDate": "2024-01-03T10:00:00.000+0000",
+    "ClosedDate": null
+  },
+  "unified": {
+    "name": "Starting generator after electrical failure",
+    "status": "IN_PROGRESS",
+    "priority": "HIGH",
+    "account": "001D000000IqhSLIAZ",
+    "contact": "003D000000QOSKBIA5",
+    "assignees": [
+      "005D0000001QHMlIAO"
+    ]
+  }
+}

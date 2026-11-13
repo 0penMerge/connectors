@@ -1,0 +1,85 @@
+{
+  "response": {
+    "_embedded": {
+      "conversations": [
+        {
+          "id": 10,
+          "subject": "Need help with setup",
+          "status": "active",
+          "type": "email",
+          "primaryCustomer": {
+            "id": 112
+          },
+          "assignee": {
+            "id": 256
+          },
+          "tags": [
+            {
+              "id": 9150,
+              "tag": "setup"
+            }
+          ],
+          "createdAt": "2012-10-10T12:00:00Z",
+          "userUpdatedAt": "2012-10-11T12:00:00Z",
+          "closedAt": null,
+          "_links": {
+            "web": {
+              "href": "https://secure.helpscout.net/conversation/10/"
+            }
+          }
+        }
+      ]
+    },
+    "_links": {
+      "next": {
+        "href": "https://api.helpscout.net/v2/conversations?page=2"
+      }
+    },
+    "page": {
+      "size": 25,
+      "totalElements": 26,
+      "totalPages": 2,
+      "number": 1
+    }
+  },
+  "expected_records": 1,
+  "expected_next": "https://api.helpscout.net/v2/conversations?page=2",
+  "native": {
+    "id": 10,
+    "subject": "Need help with setup",
+    "status": "active",
+    "type": "email",
+    "primaryCustomer": {
+      "id": 112
+    },
+    "assignee": {
+      "id": 256
+    },
+    "tags": [
+      {
+        "id": 9150,
+        "tag": "setup"
+      }
+    ],
+    "createdAt": "2012-10-10T12:00:00Z",
+    "userUpdatedAt": "2012-10-11T12:00:00Z",
+    "closedAt": null,
+    "_links": {
+      "web": {
+        "href": "https://secure.helpscout.net/conversation/10/"
+      }
+    }
+  },
+  "unified": {
+    "name": "Need help with setup",
+    "status": "OPEN",
+    "ticket_type": "email",
+    "contact": "112",
+    "assignees": [
+      "256"
+    ],
+    "tags": [
+      "setup"
+    ]
+  }
+}

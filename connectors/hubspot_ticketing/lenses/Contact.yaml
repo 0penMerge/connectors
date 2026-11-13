@@ -1,0 +1,10 @@
+lens: hubspot_ticketing.contacts -> ticketing.Contact@1
+read:
+  from: GET /crm/v3/objects/contacts?limit=100&properties=firstname,lastname,email,phone,associatedcompanyid,createdate,lastmodifieddate
+  get: GET /crm/v3/objects/contacts/{id}?properties=firstname,lastname,email,phone,associatedcompanyid,createdate,lastmodifieddate
+  strategy: hash_snapshot
+fields:
+  email_address: properties.email
+  phone_number: properties.phone
+  account: {ref: Account, from: properties.associatedcompanyid}
+  name: {join: [properties.firstname, properties.lastname], sep: ' '}

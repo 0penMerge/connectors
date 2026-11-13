@@ -1,0 +1,11 @@
+lens: zoho_desk.agents -> ticketing.User@1
+read:
+  from: GET /agents
+  records: data
+  page: {first: 0, mode: offset, param: from, size: 200, limit_param: limit}
+  get: GET /agents/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  email_address: emailId
+  avatar: photoURL

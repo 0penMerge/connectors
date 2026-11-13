@@ -1,0 +1,30 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://{config.instance}.service-now.com/oauth_auth.do
+token:
+  url: https://{config.instance}.service-now.com/oauth_token.do
+scopes:
+  param: scope
+  separator: ' '
+  default: [useraccount]
+inputs:
+- id: instance
+  label: ServiceNow instance (the part before .service-now.com)
+  pattern: '[a-z0-9][a-z0-9-]{0,62}'
+  stage: before_redirect
+discover:
+  identity: {tenant_id: '{config.instance}'}
+base_url: https://{config.instance}.service-now.com
+scope_catalog:
+- id: useraccount
+  label: User account
+  description: 'ServiceNow''s default OAuth scope: the token acts with the authorizing user''s roles and ACLs on
+    every table (incident, sys_user, sys_user_group, sys_user_role, core_company, sys_journal_field, sys_attachment).
+    ServiceNow has no per-table OAuth scopes; access is governed by the user''s roles.'
+  recommended: true
+notes: 'Per-instance OAuth: an admin registers an ''OAuth API endpoint for external clients'' in System OAuth >
+  Application Registry with redirect URL = the OpenMerge callback. Authorize at https://{instance}.service-now.com/oauth_auth.do
+  and exchange at /oauth_token.do (client_id/client_secret in the body). instance is the subdomain (e.g. dev12345).
+  Refresh tokens do not rotate (default lifespan 100 days, access token 30 minutes, set per registry entry). The
+  authorizing user needs itil (incidents) plus read access to sys_journal_field and sys_attachment.'

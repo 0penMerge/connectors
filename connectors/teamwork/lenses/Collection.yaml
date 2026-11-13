@@ -1,0 +1,14 @@
+lens: teamwork.projects -> ticketing.Collection@1
+read:
+  from: GET /projects/api/v3/projects.json?includeArchivedProjects=true
+  records: projects
+  get: GET /projects/api/v3/projects/{id}.json
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: description
+  collection_type: {const: PROJECT}
+  remote_created_at: createdAt
+  remote_updated_at: updatedAt
+write:
+  record: project

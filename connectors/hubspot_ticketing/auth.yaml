@@ -1,0 +1,38 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://app.hubspot.com/oauth/authorize
+token:
+  url: https://api.hubapi.com/oauth/v3/token
+scopes:
+  param: scope
+  separator: ' '
+  default: [oauth, tickets, crm.objects.owners.read, crm.objects.companies.read, crm.objects.contacts.read]
+scope_catalog:
+- id: oauth
+  label: OAuth identity
+  description: Complete and identify the HubSpot OAuth installation.
+  recommended: true
+- id: tickets
+  label: Tickets
+  description: Read, create and update tickets; read ticket pipelines.
+  models: [Ticket, Collection]
+  operations: [read, create, update]
+  recommended: true
+- id: crm.objects.owners.read
+  label: Read owners
+  description: Read HubSpot owners (users that tickets are assigned to).
+  models: [User]
+  operations: [read]
+- id: crm.objects.companies.read
+  label: Read companies
+  description: Read companies.
+  models: [Account]
+  operations: [read]
+- id: crm.objects.contacts.read
+  label: Read contacts
+  description: Read contacts.
+  models: [Contact]
+  operations: [read]
+notes: HubSpot public app OAuth (same app conventions as the HubSpot CRM connector). Refresh tokens do not rotate;
+  access tokens live 30 minutes.

@@ -1,0 +1,13 @@
+lens: intercom.contacts -> ticketing.Contact@1
+read:
+  from: GET /contacts?per_page=150
+  get: GET /contacts/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  email_address: email
+  phone_number: phone
+  account: {ref: Account, from: companies.data.0.id, read: only}
+write:
+  create: POST /contacts
+  update: PUT /contacts/{id}

@@ -1,0 +1,33 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://accounts.google.com/o/oauth2/v2/auth
+  params: {access_type: offline, prompt: consent, include_granted_scopes: 'true'}
+token:
+  url: https://oauth2.googleapis.com/token
+scopes:
+  param: scope
+  separator: ' '
+  default: ['https://www.googleapis.com/auth/drive.metadata.readonly']
+discover:
+  steps:
+  - id: about
+    request:
+      url: https://www.googleapis.com/drive/v3/about
+      query: {fields: user}
+    save:
+      identity.user_id: {path: user.permissionId, required: false}
+      identity.email: {path: user.emailAddress, required: false}
+      identity.display_name: {path: user.displayName, required: false}
+scope_catalog:
+- id: https://www.googleapis.com/auth/drive.metadata.readonly
+  label: Read Drive metadata
+  description: List file, folder and shared drive metadata (no file content).
+  models: [File, Folder, Drive]
+  operations: [read]
+  recommended: true
+- id: https://www.googleapis.com/auth/drive.readonly
+  label: Read Drive files
+  description: Read file metadata and content (needed only for downloads via passthrough).
+notes: Google OAuth 2.0 web-server flow. access_type=offline with prompt=consent guarantees a refresh token; refresh
+  tokens do not rotate. Drive metadata scopes are restricted and require Google app verification for external users.

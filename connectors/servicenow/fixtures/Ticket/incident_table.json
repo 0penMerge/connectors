@@ -1,0 +1,49 @@
+{
+  "response": {
+    "result": [
+      {
+        "sys_id": "9d385017c611228701d22104cc95c371",
+        "number": "INC0000001",
+        "short_description": "Can't read email",
+        "description": "User can't access email",
+        "state": "2",
+        "priority": "1",
+        "category": "network",
+        "opened_by": "681ccaf9c0a8016400b98a06818d57c7",
+        "assigned_to": "46d44a23a9fe19810012d100cca80666",
+        "assignment_group": "287ebd7da9fe198100f92cc8d1d2154e",
+        "company": "",
+        "sys_created_on": "2023-01-01 10:00:00",
+        "sys_updated_on": "2023-01-02 10:00:00"
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "sys_id": "9d385017c611228701d22104cc95c371",
+    "number": "INC0000001",
+    "short_description": "Can't read email",
+    "description": "User can't access email",
+    "state": "2",
+    "priority": "1",
+    "category": "network",
+    "opened_by": "681ccaf9c0a8016400b98a06818d57c7",
+    "assigned_to": "46d44a23a9fe19810012d100cca80666",
+    "assignment_group": "287ebd7da9fe198100f92cc8d1d2154e",
+    "company": "",
+    "sys_created_on": "2023-01-01 10:00:00",
+    "sys_updated_on": "2023-01-02 10:00:00"
+  },
+  "unified": {
+    "name": "Can't read email",
+    "status": "IN_PROGRESS",
+    "priority": "URGENT",
+    "assignees": [
+      "46d44a23a9fe19810012d100cca80666"
+    ],
+    "assigned_teams": [
+      "287ebd7da9fe198100f92cc8d1d2154e"
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "response": {
+    "results": [
+      {
+        "id": "512",
+        "properties": {
+          "subject": "Troubleshoot report",
+          "content": "The report does not load",
+          "hs_pipeline": "0",
+          "hs_pipeline_stage": "1",
+          "hs_ticket_priority": "HIGH",
+          "hs_ticket_category": "PRODUCT_ISSUE",
+          "hubspot_owner_id": "910901",
+          "closed_date": null
+        },
+        "createdAt": "2019-10-30T03:30:17.883Z",
+        "updatedAt": "2019-12-07T16:50:06.678Z",
+        "archived": false
+      }
+    ],
+    "paging": {
+      "next": {
+        "after": "NTI1Cg%3D%3D",
+        "link": "?after=NTI1Cg%3D%3D"
+      }
+    }
+  },
+  "expected_records": 1,
+  "expected_next": "NTI1Cg%3D%3D",
+  "native": {
+    "id": "512",
+    "properties": {
+      "subject": "Troubleshoot report",
+      "content": "The report does not load",
+      "hs_pipeline": "0",
+      "hs_pipeline_stage": "1",
+      "hs_ticket_priority": "HIGH",
+      "hs_ticket_category": "PRODUCT_ISSUE",
+      "hubspot_owner_id": "910901",
+      "closed_date": null
+    },
+    "createdAt": "2019-10-30T03:30:17.883Z",
+    "updatedAt": "2019-12-07T16:50:06.678Z",
+    "archived": false
+  },
+  "unified": {
+    "name": "Troubleshoot report",
+    "description": "The report does not load",
+    "status": "OPEN",
+    "priority": "HIGH",
+    "ticket_type": "PRODUCT_ISSUE",
+    "assignees": [
+      "910901"
+    ],
+    "collections": [
+      "0"
+    ]
+  }
+}

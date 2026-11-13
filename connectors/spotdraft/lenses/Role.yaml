@@ -1,0 +1,8 @@
+lens: spotdraft.roles -> ticketing.Role@1
+read:
+  from: GET /api/v2.1/public/auth/roles/
+  records: active_roles
+  page: {mode: single}
+  strategy: hash_snapshot
+fields:
+  name: name

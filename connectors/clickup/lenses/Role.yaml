@@ -1,0 +1,7 @@
+lens: clickup.custom_roles -> ticketing.Role@1
+read:
+  from: GET /customroles
+  records: custom_roles
+  strategy: hash_snapshot
+fields:
+  name: name

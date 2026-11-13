@@ -1,0 +1,11 @@
+lens: spotdraft.contracts -> ticketing.Ticket@1
+read:
+  from: GET /api/v2.1/public/contracts/?sort=filter__created_at
+  strategy: hash_snapshot
+fields:
+  name: contract_name
+  status: contract_status
+  ticket_type: contract_type_name
+  ticket_url: contract_link
+  creator: {ref: User, from: created_by}
+  remote_created_at: created

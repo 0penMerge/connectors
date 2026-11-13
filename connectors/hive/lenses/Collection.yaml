@@ -1,0 +1,12 @@
+lens: hive.projects -> ticketing.Collection@1
+read:
+  from: GET /projects?first=200&sortBy=createdAt%20asc
+  strategy: hash_snapshot
+id: node._id
+fields:
+  name: node.name
+  description: node.description
+  collection_type: {const: PROJECT}
+  parent_collection: {ref: Collection, from: node.parentProject}
+  remote_created_at: node.createdAt
+  remote_updated_at: node.modifiedAt

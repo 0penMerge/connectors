@@ -1,0 +1,7 @@
+lens: github_issues.teams -> ticketing.Team@1
+read:
+  from: GET /user/teams
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: description

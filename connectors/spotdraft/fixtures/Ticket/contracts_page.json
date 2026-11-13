@@ -1,0 +1,34 @@
+{
+  "response": {
+    "count": 1,
+    "next": null,
+    "results": [
+      {
+        "id": 4411,
+        "contract_name": "NDA - Acme",
+        "contract_status": "EXECUTED",
+        "contract_type_name": "NDA",
+        "contract_link": "https://app.spotdraft.com/contracts/4411",
+        "created_by": 77,
+        "created": "2024-01-05T00:00:00Z"
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": 4411,
+    "contract_name": "NDA - Acme",
+    "contract_status": "EXECUTED",
+    "contract_type_name": "NDA",
+    "contract_link": "https://app.spotdraft.com/contracts/4411",
+    "created_by": 77,
+    "created": "2024-01-05T00:00:00Z"
+  },
+  "unified": {
+    "name": "NDA - Acme",
+    "status": "EXECUTED",
+    "ticket_type": "NDA",
+    "creator": "77"
+  }
+}

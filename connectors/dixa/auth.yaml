@@ -1,0 +1,10 @@
+type: recipe
+use: api_key
+inputs:
+- {id: api_key, remove: true}
+- {id: api_token, label: API token, secret: true, component: secret}
+api_key:
+  in: header
+  name: Authorization
+  prefix: 'Bearer '
+  value: '{secret.api_token}'

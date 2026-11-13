@@ -1,0 +1,8 @@
+lens: salesforce_service_cloud.Group -> ticketing.Team@1
+read:
+  from: GET /services/data/v67.0/query?q=SELECT+Id,Name,DeveloperName,Type,Email,CreatedDate,LastModifiedDate+FROM+Group+WHERE+Type+IN+('Queue','Regular')+ORDER+BY+CreatedDate+ASC
+  get: GET /services/data/v67.0/sobjects/Group/{id}
+  strategy: hash_snapshot
+id: Id
+fields:
+  name: Name

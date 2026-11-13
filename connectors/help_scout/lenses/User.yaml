@@ -1,0 +1,10 @@
+lens: help_scout.users -> ticketing.User@1
+read:
+  from: GET /v2/users
+  records: _embedded.users
+  get: GET /v2/users/{id}
+  strategy: hash_snapshot
+fields:
+  email_address: email
+  avatar: photoUrl
+  name: {join: [firstName, lastName], sep: ' '}

@@ -1,0 +1,8 @@
+lens: rally.users -> ticketing.User@1
+read:
+  from: GET /user?order=ObjectID&fetch=ObjectID,ObjectUUID,UserName,DisplayName,FirstName,LastName,EmailAddress,Disabled,CreationDate
+  strategy: hash_snapshot
+id: ObjectUUID
+fields:
+  name: {coalesce: [DisplayName, _refObjectName, UserName]}
+  email_address: EmailAddress

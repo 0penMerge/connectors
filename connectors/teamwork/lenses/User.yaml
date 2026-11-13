@@ -1,0 +1,12 @@
+lens: teamwork.people -> ticketing.User@1
+read:
+  from: GET /projects/api/v3/people.json
+  records: people
+  get: GET /projects/api/v3/people/{id}.json
+  strategy: hash_snapshot
+fields:
+  email_address: email
+  avatar: avatarUrl
+  name: {join: [firstName, lastName], sep: ' '}
+write:
+  record: person

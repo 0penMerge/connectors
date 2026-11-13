@@ -1,0 +1,8 @@
+lens: hubspot_ticketing.owners -> ticketing.User@1
+read:
+  from: GET /crm/v3/owners?limit=100
+  get: GET /crm/v3/owners/{id}
+  strategy: hash_snapshot
+fields:
+  email_address: email
+  name: {join: [firstName, lastName], sep: ' '}

@@ -1,0 +1,29 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://www.teamwork.com/launchpad/login
+token:
+  url: https://www.teamwork.com/launchpad/v1/token.json
+  encoding: json
+scopes:
+  param: scope
+  separator: ' '
+  default: [default]
+config_from_token:
+  api_endpoint: installation.apiEndPoint
+identity_from_token:
+  tenant_id: installation.id
+  user_id: user.id
+  email: {path: user.email, required: false}
+base_url: '{config.api_endpoint}'
+refresh:
+  'on': []
+  run: none
+scope_catalog:
+- id: default
+  label: Site access
+  description: Teamwork App Login Flow has no scopes; the token acts as the authorizing user on the selected site
+    and does not expire (no refresh token).
+notes: 'Teamwork App Login Flow. The code exchange is a JSON POST with code, client_id, client_secret and redirect_uri.
+  The token response''s installation.apiEndPoint (e.g. https://acme.teamwork.com/) gives the site: store its host
+  (acme.teamwork.com, acme.eu.teamwork.com or a custom domain) as connection_config.site_host.'

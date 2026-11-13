@@ -1,0 +1,43 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://login.wrike.com/oauth2/authorize/v4
+token:
+  url: https://login.wrike.com/oauth2/token
+scopes:
+  param: scope
+  separator: ','
+  default: [Default, wsReadOnly, amReadOnlyGroup]
+refresh:
+  rotates: true
+  grace_seconds: 0
+inputs:
+- id: host
+  label: Wrike API host (returned by the token endpoint)
+  pattern: (?:www|app-[a-z0-9]{1,8})\.wrike\.com
+  required: false
+config_from_token:
+  host: host
+base_url: https://{config.host}/api/v4
+scope_catalog:
+- id: Default
+  label: Default
+  description: Basic access to the account, contacts and workspace data.
+  models: [Account]
+  operations: [read]
+- id: wsReadOnly
+  label: Read workspace
+  description: Read tasks, folders, projects and contacts.
+  models: [Ticket, Collection, User]
+  operations: [read]
+- id: amReadOnlyGroup
+  label: Read user groups
+  description: Read account user groups.
+  models: [Team]
+  operations: [read]
+- id: wsReadWrite
+  label: Write workspace
+  description: Create and modify tasks, folders and comments.
+notes: 'Wrike OAuth 2.0 (v4 authorize endpoint). Access tokens last one hour; each refresh returns a new refresh
+  token and invalidates the old one. The token response carries ''host'' (e.g. www.wrike.com or app-eu.wrike.com):
+  store it as connection_config.host, since API calls must go to https://<host>/api/v4 while refresh stays on login.wrike.com.'

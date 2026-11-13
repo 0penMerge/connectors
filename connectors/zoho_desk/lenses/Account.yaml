@@ -1,0 +1,7 @@
+lens: zoho_desk.accounts -> ticketing.Account@1
+read:
+  from: GET /accounts?sortBy=createdTime
+  get: GET /accounts/{id}
+  strategy: hash_snapshot
+fields:
+  name: accountName

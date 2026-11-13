@@ -1,0 +1,24 @@
+lens: wrike.tasks -> ticketing.Ticket@1
+read:
+  from: GET /tasks?pageSize=1000&fields=%5B%22description%22%2C%22authorIds%22%2C%22superTaskIds%22%5D
+  get: GET /tasks/{id}
+  strategy: hash_snapshot
+  scopes: [wsReadOnly]
+fields:
+  name: title
+  description: description
+  status:
+    from: status
+    map: {Active: OPEN, Deferred: ON_HOLD, Completed: CLOSED, Cancelled: CLOSED}
+  priority:
+    from: importance
+    map: {High: HIGH, Normal: NORMAL, Low: LOW}
+  due_date: dates.due
+  completed_at: completedDate
+  creator: {ref: User, from: authorIds.0}
+  parent_ticket: {ref: Ticket, from: superTaskIds.0}
+  remote_created_at: createdDate
+  remote_updated_at: updatedDate
+  ticket_url: permalink
+  assignees: {refs: User, from: responsibleIds}
+  collections: {refs: Collection, from: parentIds}

@@ -1,0 +1,10 @@
+lens: zoho_desk.teams -> ticketing.Team@1
+read:
+  from: GET /teams
+  records: teams
+  page: {first: 0, mode: offset, param: from, size: 200, limit_param: limit}
+  get: GET /teams/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: description

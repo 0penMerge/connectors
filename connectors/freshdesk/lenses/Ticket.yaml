@@ -1,0 +1,36 @@
+lens: freshdesk.tickets -> ticketing.Ticket@1
+read:
+  from: GET /tickets?updated_since=1970-01-01T00:00:00Z&order_by=updated_at&order_type=asc&include=description
+  get: GET /tickets/{id}
+  strategy: timestamp_delta
+  cursor:
+    field: updated_at
+    tieBreaker: id
+    parameter: updated_since
+    overlapSeconds: 300
+    precision: seconds
+    parameters: {order_by: updated_at, order_type: asc}
+  delete_by: none
+fields:
+  name: subject
+  description: description
+  ticket_type: type
+  due_date: {from: due_by, read: only}
+  tags: tags
+  contact: {ref: Contact, from: requester_id}
+  account: {ref: Account, from: company_id, read: only}
+  remote_created_at: {from: created_at, read: only}
+  remote_updated_at: {from: updated_at, read: only}
+  status:
+    from: status
+    map: {'2': OPEN, '3': ON_HOLD, '4': CLOSED, '5': CLOSED}
+    put: {OPEN: 2, IN_PROGRESS: 2, ON_HOLD: 3, CLOSED: 5}
+  priority:
+    from: priority
+    map: {'1': LOW, '2': NORMAL, '3': HIGH, '4': URGENT}
+    put: {LOW: 1, NORMAL: 2, HIGH: 3, URGENT: 4}
+  assignees: {refs: User, from: responder_id, read: only}
+  assigned_teams: {refs: Team, from: group_id, read: only}
+write:
+  create: POST /tickets
+  update: PUT /tickets/{id}

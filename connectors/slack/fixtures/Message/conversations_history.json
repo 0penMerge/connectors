@@ -1,0 +1,35 @@
+{
+  "response": {
+    "ok": true,
+    "messages": [
+      {
+        "type": "message",
+        "user": "U012AB3CDE",
+        "text": "I find you punny and would like to smell your nose letter",
+        "ts": "1512085950.000216",
+        "thread_ts": "1512085950.000216"
+      }
+    ],
+    "has_more": true,
+    "response_metadata": {
+      "next_cursor": "bmV4dF90czoxNTEyMDg1ODYxMDAwNTQz"
+    }
+  },
+  "expected_records": 1,
+  "expected_next": "bmV4dF90czoxNTEyMDg1ODYxMDAwNTQz",
+  "native": {
+    "type": "message",
+    "user": "U012AB3CDE",
+    "text": "I find you punny and would like to smell your nose letter",
+    "ts": "1512085950.000216",
+    "thread_ts": "1512085950.000216",
+    "_channel_id": "C123ABC456"
+  },
+  "unified": {
+    "conversation_id": "C123ABC456",
+    "user_id": "U012AB3CDE",
+    "root_message_id": "1512085950.000216",
+    "body": "I find you punny and would like to smell your nose letter",
+    "remote_created_at": "2017-11-30T23:52:30.000216Z"
+  }
+}

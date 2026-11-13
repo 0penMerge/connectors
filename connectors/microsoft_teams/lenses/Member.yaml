@@ -1,0 +1,8 @@
+lens: microsoft_teams.chat_members -> chat.Member@1
+read:
+  from: GET /v1.0/chats/{parent_id}/members
+  strategy: hash_snapshot
+parent: {model: Conversation, inject: _chat_id}
+fields:
+  user: {ref: User, from: userId}
+  visible_history_start_datetime: visibleHistoryStartDateTime

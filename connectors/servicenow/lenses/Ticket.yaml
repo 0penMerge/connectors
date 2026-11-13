@@ -1,0 +1,31 @@
+lens: servicenow.incident -> ticketing.Ticket@1
+read:
+  from: GET /api/now/table/incident?sysparm_display_value=false&sysparm_exclude_reference_link=true&sysparm_query=ORDERBYsys_created_on
+  get: GET /api/now/table/incident/{id}?sysparm_exclude_reference_link=true
+  strategy: hash_snapshot
+id: sys_id
+fields:
+  name: short_description
+  description: description
+  status:
+    from: state
+    map: {'1': OPEN, '2': IN_PROGRESS, '3': ON_HOLD, '6': CLOSED, '7': CLOSED, '8': CLOSED}
+    read: only
+  priority:
+    from: priority
+    map: {'1': URGENT, '2': HIGH, '3': NORMAL, '4': LOW, '5': LOW}
+    read: only
+  ticket_type: {from: category, read: only}
+  due_date: {from: due_date, read: only}
+  creator: {ref: User, from: opened_by, read: only}
+  account: {ref: Account, from: company, read: only}
+  parent_ticket: {ref: Ticket, from: parent_incident, read: only}
+  remote_created_at: {from: sys_created_on, read: only}
+  remote_updated_at: {from: sys_updated_on, read: only}
+  completed_at: {from: closed_at, read: only}
+  assignees: {refs: User, from: assigned_to, read: only}
+  assigned_teams: {refs: Team, from: assignment_group, read: only}
+write:
+  create: POST /api/now/table/incident?sysparm_exclude_reference_link=true
+  update: PATCH /api/now/table/incident/{id}?sysparm_exclude_reference_link=true
+  record: result

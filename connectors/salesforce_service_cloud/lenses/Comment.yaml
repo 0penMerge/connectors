@@ -1,0 +1,14 @@
+lens: salesforce_service_cloud.CaseComment -> ticketing.Comment@1
+read:
+  from: GET /services/data/v67.0/query?q=SELECT+Id,ParentId,CommentBody,IsPublished,CreatedById,CreatedDate,LastModifiedDate+FROM+CaseComment+ORDER+BY+CreatedDate+ASC
+  get: GET /services/data/v67.0/sobjects/CaseComment/{id}
+  strategy: hash_snapshot
+id: Id
+fields:
+  body: CommentBody
+  ticket: {ref: Ticket, from: ParentId}
+  user: {ref: User, from: CreatedById}
+  remote_created_at: CreatedDate
+  is_private:
+    from: IsPublished
+    map: {'true': false, 'false': true}

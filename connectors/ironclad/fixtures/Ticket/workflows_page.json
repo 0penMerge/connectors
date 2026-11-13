@@ -1,0 +1,36 @@
+{
+  "response": {
+    "page": 0,
+    "pageSize": 100,
+    "count": 1,
+    "list": [
+      {
+        "id": "6b2f7c1f0b0e4a0001a1b2c3",
+        "title": "MSA with Acme",
+        "status": "paused",
+        "creator": {
+          "id": "u-12"
+        },
+        "created": "2024-03-01T12:00:00.000Z",
+        "lastUpdated": "2024-03-02T12:00:00.000Z"
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "6b2f7c1f0b0e4a0001a1b2c3",
+    "title": "MSA with Acme",
+    "status": "paused",
+    "creator": {
+      "id": "u-12"
+    },
+    "created": "2024-03-01T12:00:00.000Z",
+    "lastUpdated": "2024-03-02T12:00:00.000Z"
+  },
+  "unified": {
+    "name": "MSA with Acme",
+    "status": "ON_HOLD",
+    "creator": "u-12"
+  }
+}

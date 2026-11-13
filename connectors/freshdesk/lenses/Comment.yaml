@@ -1,0 +1,11 @@
+lens: freshdesk.ticket_conversations -> ticketing.Comment@1
+read:
+  from: GET /tickets/{parent_id}/conversations
+  strategy: hash_snapshot
+parent: {model: Ticket, inject: _ticket_id}
+fields:
+  ticket: {ref: Ticket, from: _ticket_id}
+  body: body_text
+  html_body: body
+  is_private: private
+  remote_created_at: created_at

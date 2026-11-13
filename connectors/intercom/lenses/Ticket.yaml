@@ -1,0 +1,21 @@
+lens: intercom.conversations -> ticketing.Ticket@1
+read:
+  from: GET /conversations?per_page=50
+  records: conversations
+  get: GET /conversations/{id}
+  strategy: hash_snapshot
+fields:
+  name: title
+  status:
+    from: state
+    map: {open: OPEN, snoozed: ON_HOLD, closed: CLOSED}
+  priority:
+    from: priority
+    map: {priority: HIGH, not_priority: NORMAL}
+  description: source.body
+  contact: {ref: Contact, from: contacts.contacts.0.id}
+  assignees: {refs: User, from: admin_assignee_id}
+  assigned_teams: {refs: Team, from: team_assignee_id}
+  tags: tags.tags[*].name
+  remote_created_at: {from: created_at, as: datetime, from_format: epoch_seconds}
+  remote_updated_at: {from: updated_at, as: datetime, from_format: epoch_seconds}

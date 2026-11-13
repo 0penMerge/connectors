@@ -1,0 +1,11 @@
+lens: aha.products -> ticketing.Collection@1
+read:
+  from: GET /products
+  records: products
+  get: GET /products/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  collection_url: url
+  collection_type: {const: PROJECT}
+  remote_created_at: created_at

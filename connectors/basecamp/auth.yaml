@@ -1,0 +1,34 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://launchpad.37signals.com/authorization/new
+  params: {type: web_server}
+token:
+  url: https://launchpad.37signals.com/authorization/token
+  extra: {type: web_server}
+  omit: [grant_type]
+scopes:
+  param: scope
+  separator: ' '
+  default: [default]
+discover:
+  steps:
+  - id: account
+    request: {url: 'https://launchpad.37signals.com/authorization.json'}
+    choose: {list: accounts, value: id, label: name, into: config.account_id}
+    save:
+      identity.user_id: identity.id
+      identity.email: {path: identity.email_address, required: false}
+  identity: {tenant_id: '{config.account_id}'}
+base_url: https://3.basecampapi.com/{config.account_id}
+refresh:
+  extra: {type: refresh}
+  omit: [grant_type]
+scope_catalog:
+- id: default
+  label: Account access
+  description: 37signals Launchpad OAuth has no scopes; the token grants the authorizing person's access to their
+    Basecamp accounts.
+notes: 37signals Launchpad OAuth 2. Launchpad expects type=web_server on the authorize and code-exchange requests
+  and type=refresh (with refresh_token) on refresh. Access tokens last two weeks; refresh tokens are long-lived.
+  account_id comes from GET https://launchpad.37signals.com/authorization.json (accounts[].id with product bc3).

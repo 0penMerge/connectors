@@ -1,0 +1,33 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://ironcladapp.com/oauth/authorize
+token:
+  url: https://ironcladapp.com/oauth/token
+scopes:
+  param: scope
+  separator: ' '
+  default: [public.workflows.readWorkflows, scim.users.readUsers, scim.groups.readGroups]
+refresh:
+  rotates: true
+  grace_seconds: 0
+scope_catalog:
+- id: public.workflows.readWorkflows
+  label: Read workflows
+  description: List and read contract workflows.
+  models: [Ticket]
+  operations: [read]
+- id: scim.users.readUsers
+  label: Read users (SCIM)
+  description: List users through the SCIM 2.0 API.
+  models: [User]
+  operations: [read]
+- id: scim.groups.readGroups
+  label: Read groups (SCIM)
+  description: List groups through the SCIM 2.0 API.
+  models: [Team]
+  operations: [read]
+notes: 'Register an OAuth client app in Ironclad (Company Settings > API). Authorization-code grant: GET https://ironcladapp.com/oauth/authorize
+  (response_type=code, client_id, redirect_uri, space-separated scope, state) and POST https://ironcladapp.com/oauth/token
+  with client_id/client_secret. Access tokens last 6 hours; each refresh returns a new refresh token (rotation).
+  EU (eu1.ironcladapp.com) and demo (demo.ironcladapp.com) need their own app registration and host.'

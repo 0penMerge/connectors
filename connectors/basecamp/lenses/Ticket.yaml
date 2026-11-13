@@ -1,0 +1,17 @@
+lens: basecamp.todos -> ticketing.Ticket@1
+read:
+  from: GET /projects/recordings.json?type=Todo&sort=created_at&direction=asc
+  strategy: hash_snapshot
+fields:
+  name: title
+  description: description
+  due_date: due_on
+  creator: {ref: User, from: creator.id}
+  remote_created_at: created_at
+  remote_updated_at: updated_at
+  ticket_url: app_url
+  status:
+    from: completed
+    map: {'true': CLOSED, 'false': OPEN}
+  assignees: {refs: User, from: 'assignees[*].id'}
+  collections: {refs: Collection, from: bucket.id}

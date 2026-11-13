@@ -1,86 +1,44 @@
-{
-  "apiVersion": "openmerge.dev/connector/v1",
-  "kind": "Connector",
-  "metadata": {
-    "id": "hive",
-    "version": "1.0.0",
-    "coreAbi": "2",
-    "name": "Hive",
-    "company": "Hive",
-    "description": "Sync Hive workspace actions, projects, users, labels and teams through the OpenMerge ticketing model.",
-    "logo": {
-      "url": "https://cdn.openmerge.dev/connectors/hive.svg"
-    }
-  },
-  "runtime": {
-    "entrypoint": "plugin.py:HivePlugin"
-  },
-  "categories": [
-    "ticketing@1"
-  ],
-  "capabilities": {
-    "reads": [
-      "hash_snapshot"
-    ],
-    "writes": [],
-    "dynamicSchema": false,
-    "customFields": false
-  },
-  "auth": {
-    "type": "password",
-    "driver": "api_key",
-    "connection_config_fields": [
-      "workspace_id"
-    ],
-    "default_scopes": [],
-    "scope_catalog": []
-  },
-  "setup": {
-    "credentialFields": [
-      {
-        "id": "workspace_id",
-        "component": "text",
-        "label": "Workspace ID",
-        "required": true,
-        "writeOnly": false
-      },
-      {
-        "id": "api_key",
-        "component": "secret",
-        "label": "API key",
-        "required": true,
-        "writeOnly": true
-      }
-    ]
-  },
-  "api": {
-    "base_url": "https://app.hive.com/api/v2/workspaces/{workspace_id}",
-    "describe_endpoint": "/",
-    "pagination": {
-      "style": "cursor",
-      "param": "after",
-      "records_path": "edges",
-      "next_path": "pageInfo.endCursor"
-    },
-    "rate_limit_headers": {
-      "remaining": null,
-      "reset": null,
-      "reset_style": "auto_seconds"
-    },
-    "authorization_scheme": "Bearer",
-    "schema_adapter": "declared",
-    "auth_headers": {
-      "api_key": "{secret.api_key}"
-    },
-    "notes": "Hive REST API v2. Every list is workspace-scoped and returns a connection object {edges:[{cursor,node}], pageInfo:{endCursor,hasNextPage}}; records are the edges, so mapped fields read from node.*. Pages request first=200 (the maximum) and follow pageInfo.endCursor via 'after'. There is no updated-since filter, so reads are hashed snapshots. Node schemas are untyped in the v2 spec; field names follow the documented Hive object model (_id, title, deadline, checkedDate, createdBy, ...). Hive API keys are generated under Profile > API info (which also shows the workspace id). The v2 API accepts either an 'api_key' header or 'Authorization: Bearer <token>'; this connector sends the key as a Bearer token. If a key is rejected as Bearer, the runtime must send it in the api_key header instead."
-  },
-  "webhooks": {
-    "supported": false,
-    "automatic": false
-  },
-  "provenance": {
-    "author": "human:nath@datakart.ai",
-    "created_at": "2026-11-12T00:00:00Z",
-    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://developers.hive.com/reference"
-  }
-}
+apiVersion: openmerge.dev/connector/v1
+kind: Connector
+metadata:
+  id: hive
+  version: 1.0.0
+  coreAbi: '3'
+  name: Hive
+  company: Hive
+  description: Sync Hive workspace actions, projects, users, labels and teams through the OpenMerge ticketing model.
+  logo: {url: 'https://cdn.openmerge.dev/connectors/hive.svg'}
+categories: [ticketing@1]
+capabilities:
+  reads: [hash_snapshot]
+  writes: []
+  dynamicSchema: false
+  customFields: false
+setup: {}
+api:
+  base_url: https://app.hive.com/api/v2/workspaces/{workspace_id}
+  describe_endpoint: /
+  pagination:
+    has_more_path: pageInfo.hasNextPage
+    mode: cursor
+    next_path: pageInfo.endCursor
+    param: after
+    records_path: edges
+  rate_limit_headers: {remaining: null, reset: null, reset_style: auto_seconds}
+  authorization_scheme: Bearer
+  schema_adapter: declared
+  notes: 'Hive REST API v2. Every list is workspace-scoped and returns a connection object {edges:[{cursor,node}],
+    pageInfo:{endCursor,hasNextPage}}; records are the edges, so mapped fields read from node.*. Pages request first=200
+    (the maximum) and follow pageInfo.endCursor via ''after''. There is no updated-since filter, so reads are hashed
+    snapshots. Node schemas are untyped in the v2 spec; field names follow the documented Hive object model (_id,
+    title, deadline, checkedDate, createdBy, ...). Hive API keys are generated under Profile > API info (which also
+    shows the workspace id). The v2 API accepts either an ''api_key'' header or ''Authorization: Bearer <token>'';
+    this connector sends the key as a Bearer token. If a key is rejected as Bearer, the runtime must send it in
+    the api_key header instead.'
+webhooks:
+  supported: false
+  automatic: false
+provenance:
+  author: human:nath@datakart.ai
+  created_at: '2026-11-12T00:00:00Z'
+  reason: Provider descriptor for the Merge-compatible Ticketing category, from https://developers.hive.com/reference

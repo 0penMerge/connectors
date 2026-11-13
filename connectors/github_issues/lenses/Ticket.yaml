@@ -1,0 +1,25 @@
+lens: github_issues.issues -> ticketing.Ticket@1
+read:
+  from: GET /issues?filter=all&state=all&sort=updated&direction=asc
+  keep: not exists pull_request
+  strategy: timestamp_delta
+  cursor:
+    field: updated_at
+    tieBreaker: id
+    parameter: since
+    overlapSeconds: 300
+    precision: seconds
+  reconcile_every: 86400
+fields:
+  name: title
+  description: body
+  status:
+    from: state
+    map: {open: OPEN, closed: CLOSED}
+  ticket_type: type.name
+  remote_created_at: created_at
+  remote_updated_at: updated_at
+  completed_at: closed_at
+  ticket_url: html_url
+  tags: labels[*].name
+  collections: {refs: Collection, from: repository.id}

@@ -1,0 +1,8 @@
+lens: teamwork.teams -> ticketing.Team@1
+read:
+  from: GET /teams.json?includeSubteams=true&includeCompanyTeams=true&includeProjectTeams=true
+  records: teams
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: description

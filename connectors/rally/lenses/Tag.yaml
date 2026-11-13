@@ -1,0 +1,7 @@
+lens: rally.tags -> ticketing.Tag@1
+read:
+  from: GET /tag?order=ObjectID&fetch=ObjectID,ObjectUUID,Name,Archived,CreationDate
+  strategy: hash_snapshot
+id: ObjectUUID
+fields:
+  name: Name

@@ -1,0 +1,24 @@
+lens: zoho_desk.tickets -> ticketing.Ticket@1
+read:
+  from: GET /tickets?sortBy=createdTime
+  get: GET /tickets/{id}
+  strategy: hash_snapshot
+fields:
+  name: subject
+  status:
+    from: status
+    map: {Open: OPEN, On Hold: ON_HOLD, Escalated: IN_PROGRESS, Closed: CLOSED}
+    put: {OPEN: Open, IN_PROGRESS: Open, ON_HOLD: On Hold, CLOSED: Closed}
+  priority:
+    from: priority
+    map: {Urgent: URGENT, High: HIGH, Medium: NORMAL, Low: LOW}
+  ticket_type: category
+  due_date: dueDate
+  contact: {ref: Contact, from: contactId, read: only}
+  account: {ref: Account, from: accountId, read: only}
+  ticket_url: {from: webUrl, read: only}
+  remote_created_at: {from: createdTime, read: only}
+  completed_at: {from: closedTime, read: only}
+  assignees: {refs: User, from: assigneeId, read: only}
+write:
+  update: PATCH /tickets/{id}

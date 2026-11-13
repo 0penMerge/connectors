@@ -1,0 +1,7 @@
+lens: gladly.topics -> ticketing.Tag@1
+read:
+  from: GET /api/v1/topics
+  get: GET /api/v1/topics/{id}
+  strategy: hash_snapshot
+fields:
+  name: name

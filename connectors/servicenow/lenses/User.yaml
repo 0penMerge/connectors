@@ -1,0 +1,11 @@
+lens: servicenow.sys_user -> ticketing.User@1
+read:
+  from: GET /api/now/table/sys_user?sysparm_exclude_reference_link=true&sysparm_fields=sys_id,name,user_name,email,active,photo,sys_created_on,sys_updated_on&sysparm_query=ORDERBYsys_created_on
+  get: GET /api/now/table/sys_user/{id}
+  strategy: hash_snapshot
+id: sys_id
+fields:
+  name: name
+  email_address: email
+write:
+  record: result

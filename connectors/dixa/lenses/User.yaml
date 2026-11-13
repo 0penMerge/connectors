@@ -1,0 +1,11 @@
+lens: dixa.agents -> ticketing.User@1
+read:
+  from: GET /v1/agents?pageLimit=100
+  get: GET /v1/agents/{id}
+  strategy: hash_snapshot
+fields:
+  name: displayName
+  email_address: email
+  avatar: avatarUrl
+write:
+  record: data

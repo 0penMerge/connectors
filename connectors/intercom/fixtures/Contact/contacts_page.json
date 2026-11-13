@@ -1,0 +1,51 @@
+{
+  "response": {
+    "type": "list",
+    "data": [
+      {
+        "type": "contact",
+        "id": "6329bd9ffe4e2e91dac76188",
+        "name": "Joe Example",
+        "email": "joe@example.com",
+        "phone": "+353871234567",
+        "companies": {
+          "type": "list",
+          "data": [
+            {
+              "id": "6329bdc1fe4e2e91dac7618b"
+            }
+          ]
+        }
+      }
+    ],
+    "pages": {
+      "type": "pages",
+      "next": {
+        "starting_after": "WzE2NjM1OTcyMjMwMDAsIjYzMjliZDlmZmU0ZTJlOTFkYWM3NjE4OCJd"
+      }
+    }
+  },
+  "expected_records": 1,
+  "expected_next": "WzE2NjM1OTcyMjMwMDAsIjYzMjliZDlmZmU0ZTJlOTFkYWM3NjE4OCJd",
+  "native": {
+    "type": "contact",
+    "id": "6329bd9ffe4e2e91dac76188",
+    "name": "Joe Example",
+    "email": "joe@example.com",
+    "phone": "+353871234567",
+    "companies": {
+      "type": "list",
+      "data": [
+        {
+          "id": "6329bdc1fe4e2e91dac7618b"
+        }
+      ]
+    }
+  },
+  "unified": {
+    "name": "Joe Example",
+    "email_address": "joe@example.com",
+    "phone_number": "+353871234567",
+    "account": "6329bdc1fe4e2e91dac7618b"
+  }
+}

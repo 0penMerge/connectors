@@ -1,0 +1,16 @@
+lens: slack.users -> chat.User@1
+read:
+  from: GET /users.list?limit=200
+  records: members
+  get: GET /users.info?user={id}
+  strategy: hash_snapshot
+fields:
+  username: name
+  display_name: profile.display_name
+  first_name: profile.first_name
+  last_name: profile.last_name
+  is_bot: is_bot
+  avatar: profile.image_192
+  remote_updated_at: {from: updated, as: datetime, from_format: epoch_seconds}
+write:
+  record: user

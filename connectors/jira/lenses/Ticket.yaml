@@ -1,0 +1,30 @@
+lens: jira.issues -> ticketing.Ticket@1
+read:
+  from: GET /rest/api/3/search/jql?jql=order+by+updated+asc&fields=*navigable&maxResults=100
+  records: issues
+  page:
+    has_more: isLast
+    has_more_invert: true
+    mode: cursor
+    next: nextPageToken
+    param: nextPageToken
+  get: GET /rest/api/3/issue/{id}
+  strategy: hash_snapshot
+fields:
+  name: fields.summary
+  status:
+    from: fields.status.statusCategory.key
+    map: {new: OPEN, indeterminate: IN_PROGRESS, done: CLOSED}
+  ticket_type: fields.issuetype.name
+  priority:
+    from: fields.priority.name
+    map: {Highest: URGENT, High: HIGH, Medium: NORMAL, Low: LOW, Lowest: LOW}
+  due_date: fields.duedate
+  creator: {ref: User, from: fields.creator.accountId}
+  parent_ticket: {ref: Ticket, from: fields.parent.id}
+  tags: fields.labels
+  remote_created_at: fields.created
+  remote_updated_at: fields.updated
+  completed_at: fields.resolutiondate
+  assignees: {refs: User, from: fields.assignee.accountId}
+  collections: {refs: Collection, from: fields.project.id}

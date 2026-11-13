@@ -1,0 +1,38 @@
+lens: zendesk.tickets -> ticketing.Ticket@1
+read:
+  from: GET /api/v2/incremental/tickets/cursor.json?start_time=0
+  records: tickets
+  page: {has_more: end_of_stream, has_more_invert: true, mode: next_url, next: after_url}
+  keep: status != 'deleted'
+  get: GET /api/v2/tickets/{id}
+  strategy: hash_snapshot
+fields:
+  name: subject
+  description: {from: description, read: only}
+  status:
+    from: status
+    map:
+      new: OPEN
+      open: OPEN
+      pending: ON_HOLD
+      hold: ON_HOLD
+      solved: CLOSED
+      closed: CLOSED
+    put: {OPEN: open, IN_PROGRESS: open, ON_HOLD: hold, CLOSED: solved}
+  priority:
+    from: priority
+    map: {urgent: URGENT, high: HIGH, normal: NORMAL, low: LOW}
+  ticket_type: type
+  due_date: due_at
+  tags: tags
+  contact: {ref: Contact, from: requester_id, read: only}
+  creator: {ref: User, from: submitter_id, read: only}
+  account: {ref: Account, from: organization_id, read: only}
+  remote_created_at: {from: created_at, read: only}
+  remote_updated_at: {from: updated_at, read: only}
+  assignees: {refs: User, from: assignee_id, read: only}
+  assigned_teams: {refs: Team, from: group_id, read: only}
+write:
+  update: PUT /api/v2/tickets/{id}
+  body: ticket
+  record: ticket

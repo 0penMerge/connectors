@@ -1,0 +1,10 @@
+lens: box.users -> filestorage.User@1
+read:
+  from: GET /2.0/users?usemarker=true&limit=1000&fields=id,type,name,login,status,created_at,modified_at
+  records: entries
+  page: {mode: cursor, next: next_marker, param: marker}
+  get: GET /2.0/users/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  email_address: login

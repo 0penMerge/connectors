@@ -1,0 +1,24 @@
+lens: jira_data_center.issues -> ticketing.Ticket@1
+read:
+  from: GET /rest/api/2/search?jql=order+by+updated+asc&fields=*navigable
+  get: GET /rest/api/2/issue/{id}
+  strategy: hash_snapshot
+fields:
+  name: fields.summary
+  description: fields.description
+  status:
+    from: fields.status.statusCategory.key
+    map: {new: OPEN, indeterminate: IN_PROGRESS, done: CLOSED}
+  ticket_type: fields.issuetype.name
+  priority:
+    from: fields.priority.name
+    map: {Highest: URGENT, High: HIGH, Medium: NORMAL, Low: LOW, Lowest: LOW}
+  due_date: fields.duedate
+  creator: {ref: User, from: fields.creator.key}
+  parent_ticket: {ref: Ticket, from: fields.parent.id}
+  tags: fields.labels
+  remote_created_at: fields.created
+  remote_updated_at: fields.updated
+  completed_at: fields.resolutiondate
+  assignees: {refs: User, from: fields.assignee.key}
+  collections: {refs: Collection, from: fields.project.id}

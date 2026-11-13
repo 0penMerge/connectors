@@ -1,0 +1,9 @@
+lens: shortcut.members -> ticketing.User@1
+read:
+  from: GET /members
+  get: GET /members/{id}
+  strategy: hash_snapshot
+fields:
+  name: profile.name
+  email_address: profile.email_address
+  avatar: profile.display_icon.url

@@ -1,0 +1,17 @@
+lens: linear.customers -> ticketing.Account@1
+read:
+  from: GET /graphql
+  records: data.customers.nodes
+  page:
+    has_more: data.customers.pageInfo.hasNextPage
+    mode: graphql
+    next: data.customers.pageInfo.endCursor
+    path: /graphql
+    query: query($first:Int!,$after:String){customers(first:$first,after:$after){nodes{id name domains externalIds
+      createdAt updatedAt} pageInfo{hasNextPage endCursor}}}
+    size: 100
+  strategy: hash_snapshot
+  scopes: [read]
+fields:
+  name: name
+  domains: domains

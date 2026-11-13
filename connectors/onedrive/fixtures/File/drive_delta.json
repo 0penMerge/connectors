@@ -1,0 +1,57 @@
+{
+  "response": {
+    "@odata.nextLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=MzslMjM0OyUyMzE7MzsxMzIwOzA7",
+    "value": [
+      {
+        "id": "01BYE5RZ6QN3ZWBTUFOFD3GSPGOHDJD36K",
+        "name": "budget.xlsx",
+        "size": 26345,
+        "webUrl": "https://contoso-my.sharepoint.com/personal/ann/Documents/budget.xlsx",
+        "file": {
+          "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        },
+        "parentReference": {
+          "driveId": "b!-RIj2DuyvEyV",
+          "id": "01BYE5RZ56Y2GOVW7725BZO354PWSELRRZ"
+        },
+        "createdDateTime": "2024-01-01T00:00:00Z",
+        "lastModifiedDateTime": "2024-01-02T00:00:00Z"
+      },
+      {
+        "id": "01BYE5RZ56Y2GOVW7725BZO354PWSELRRZ",
+        "name": "Finance",
+        "folder": {
+          "childCount": 1
+        },
+        "parentReference": {
+          "driveId": "b!-RIj2DuyvEyV",
+          "id": "01BYE5RZ56Y2GOVW7725BZO354PWSELRRY"
+        }
+      }
+    ]
+  },
+  "expected_records": 2,
+  "expected_next": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=MzslMjM0OyUyMzE7MzsxMzIwOzA7",
+  "native": {
+    "id": "01BYE5RZ6QN3ZWBTUFOFD3GSPGOHDJD36K",
+    "name": "budget.xlsx",
+    "size": 26345,
+    "webUrl": "https://contoso-my.sharepoint.com/personal/ann/Documents/budget.xlsx",
+    "file": {
+      "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    "parentReference": {
+      "driveId": "b!-RIj2DuyvEyV",
+      "id": "01BYE5RZ56Y2GOVW7725BZO354PWSELRRZ"
+    },
+    "createdDateTime": "2024-01-01T00:00:00Z",
+    "lastModifiedDateTime": "2024-01-02T00:00:00Z"
+  },
+  "unified": {
+    "name": "budget.xlsx",
+    "size": 26345,
+    "mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "folder": "01BYE5RZ56Y2GOVW7725BZO354PWSELRRZ",
+    "drive": "b!-RIj2DuyvEyV"
+  }
+}

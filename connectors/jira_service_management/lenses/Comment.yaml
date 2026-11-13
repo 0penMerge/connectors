@@ -1,0 +1,11 @@
+lens: jira_service_management.issue_comments -> ticketing.Comment@1
+read:
+  from: GET /rest/api/3/issue/{parent_id}/comment?orderBy=created
+  records: comments
+  page: {mode: offset, param: startAt, size: 100, limit_param: maxResults}
+  strategy: hash_snapshot
+parent: {model: Ticket, inject: _issue_id}
+fields:
+  ticket: {ref: Ticket, from: _issue_id}
+  user: {ref: User, from: author.accountId}
+  remote_created_at: created

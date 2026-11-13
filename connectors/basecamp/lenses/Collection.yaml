@@ -1,0 +1,12 @@
+lens: basecamp.projects -> ticketing.Collection@1
+read:
+  from: GET /projects.json
+  get: GET /projects/{id}.json
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: description
+  collection_type: {const: PROJECT}
+  collection_url: app_url
+  remote_created_at: created_at
+  remote_updated_at: updated_at

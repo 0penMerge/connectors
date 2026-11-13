@@ -1,0 +1,9 @@
+lens: kustomer.teams -> ticketing.Team@1
+read:
+  from: GET /v1/teams?pageSize=100
+  get: GET /v1/teams/{id}
+  strategy: hash_snapshot
+fields:
+  name: attributes.name
+write:
+  record: data

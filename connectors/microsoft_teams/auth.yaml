@@ -1,0 +1,37 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
+token:
+  url: https://login.microsoftonline.com/common/oauth2/v2.0/token
+scopes:
+  param: scope
+  separator: ' '
+  default: [offline_access, Chat.ReadBasic, Team.ReadBasic.All, User.ReadBasic.All]
+refresh:
+  rotates: true
+scope_catalog:
+- id: offline_access
+  label: Offline access
+  description: Issue refresh tokens so syncs keep running.
+  recommended: true
+- id: Chat.ReadBasic
+  label: Read names and members of chats
+  description: List the signed-in user's 1:1, group and meeting chats (no message content).
+  models: [Conversation]
+  operations: [read]
+- id: Team.ReadBasic.All
+  label: Read the names and descriptions of teams
+  description: List all teams in the organization.
+  models: [Group]
+  operations: [read]
+- id: User.ReadBasic.All
+  label: Read all users' basic profiles
+  description: List directory users.
+  models: [User]
+  operations: [read]
+- id: Chat.Read
+  label: Read chat messages
+  description: Read chat messages (passthrough only; messages are listed per chat).
+notes: Microsoft identity platform v2.0, work or school accounts only (Teams APIs do not support personal accounts).
+  Each refresh returns a new refresh token; superseded tokens stay valid until their own expiry.

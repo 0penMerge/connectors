@@ -1,0 +1,24 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://app.clickup.com/api
+token:
+  url: https://api.clickup.com/api/v2/oauth/token
+scopes:
+  param: scope
+  separator: ' '
+  default: [default]
+discover:
+  steps:
+  - id: team
+    request: {url: 'https://api.clickup.com/api/v2/team'}
+    choose: {list: teams, value: id, label: name, into: config.team_id}
+  identity: {tenant_id: '{config.team_id}'}
+base_url: https://api.clickup.com/api/v2/team/{config.team_id}
+scope_catalog:
+- id: default
+  label: Workspace access
+  description: ClickUp OAuth has no scopes; the user picks which Workspaces the app may access during authorization.
+    Access tokens currently do not expire and no refresh token is issued.
+notes: ClickUp OAuth (authorization code). The token endpoint takes client_id, client_secret and code. team_id is
+  the Workspace id returned by GET /api/v2/team after authorization.

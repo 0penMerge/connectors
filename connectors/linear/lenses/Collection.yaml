@@ -1,0 +1,21 @@
+lens: linear.projects -> ticketing.Collection@1
+read:
+  from: GET /graphql
+  records: data.projects.nodes
+  page:
+    has_more: data.projects.pageInfo.hasNextPage
+    mode: graphql
+    next: data.projects.pageInfo.endCursor
+    path: /graphql
+    query: query($first:Int!,$after:String){projects(first:$first,after:$after){nodes{id name description url createdAt
+      updatedAt startedAt completedAt canceledAt targetDate status{id name type}} pageInfo{hasNextPage endCursor}}}
+    size: 100
+  strategy: hash_snapshot
+  scopes: [read]
+fields:
+  name: name
+  description: description
+  collection_url: url
+  collection_type: {const: PROJECT}
+  remote_created_at: createdAt
+  remote_updated_at: updatedAt

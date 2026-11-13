@@ -1,156 +1,48 @@
-{
-  "apiVersion": "openmerge.dev/connector/v1",
-  "kind": "Connector",
-  "metadata": {
-    "id": "hubspot_ticketing",
-    "version": "1.0.0",
-    "coreAbi": "2",
-    "name": "HubSpot Ticketing",
-    "company": "HubSpot, Inc.",
-    "description": "Sync HubSpot Service Hub tickets, owners, companies and contacts through the OpenMerge ticketing model.",
-    "logo": {
-      "url": "https://cdn.openmerge.dev/connectors/hubspot_ticketing.svg"
-    }
-  },
-  "runtime": {
-    "entrypoint": "plugin.py:HubSpotTicketingPlugin"
-  },
-  "categories": [
-    "ticketing@1"
-  ],
-  "capabilities": {
-    "reads": [
-      "hash_snapshot"
-    ],
-    "writes": [
-      "create",
-      "update"
-    ],
-    "dynamicSchema": false,
-    "customFields": false
-  },
-  "auth": {
-    "type": "oauth2",
-    "driver": "oauth2",
-    "authorization_url": "https://app.hubspot.com/oauth/authorize",
-    "token_url": "https://api.hubapi.com/oauth/v3/token",
-    "refresh_rotates": false,
-    "rotation_grace_seconds": null,
-    "scopes_param": "scope",
-    "default_scopes": [
-      "oauth",
-      "tickets",
-      "crm.objects.owners.read",
-      "crm.objects.companies.read",
-      "crm.objects.contacts.read"
-    ],
-    "scope_catalog": [
-      {
-        "id": "oauth",
-        "label": "OAuth identity",
-        "description": "Complete and identify the HubSpot OAuth installation.",
-        "recommended": true
-      },
-      {
-        "id": "tickets",
-        "label": "Tickets",
-        "description": "Read, create and update tickets; read ticket pipelines.",
-        "models": [
-          "Ticket",
-          "Collection"
-        ],
-        "operations": [
-          "read",
-          "create",
-          "update"
-        ],
-        "recommended": true
-      },
-      {
-        "id": "crm.objects.owners.read",
-        "label": "Read owners",
-        "description": "Read HubSpot owners (users that tickets are assigned to).",
-        "models": [
-          "User"
-        ],
-        "operations": [
-          "read"
-        ]
-      },
-      {
-        "id": "crm.objects.companies.read",
-        "label": "Read companies",
-        "description": "Read companies.",
-        "models": [
-          "Account"
-        ],
-        "operations": [
-          "read"
-        ]
-      },
-      {
-        "id": "crm.objects.contacts.read",
-        "label": "Read contacts",
-        "description": "Read contacts.",
-        "models": [
-          "Contact"
-        ],
-        "operations": [
-          "read"
-        ]
-      }
-    ],
-    "connection_config_fields": [],
-    "notes": "HubSpot public app OAuth (same app conventions as the HubSpot CRM connector). Refresh tokens do not rotate; access tokens live 30 minutes."
-  },
-  "setup": {
-    "oauthAppFields": [
-      {
-        "id": "client_id",
-        "component": "text",
-        "label": "Client ID",
-        "required": true
-      },
-      {
-        "id": "client_secret",
-        "component": "secret",
-        "label": "Client secret",
-        "required": true,
-        "writeOnly": true
-      }
-    ],
-    "instructions": [
-      {
-        "component": "callback_url",
-        "label": "Add this redirect URL to your HubSpot Ticketing OAuth app"
-      }
-    ]
-  },
-  "api": {
-    "base_url": "https://api.hubapi.com",
-    "describe_endpoint": "/",
-    "pagination": {
-      "style": "cursor",
-      "param": "after",
-      "records_path": "results",
-      "next_path": "paging.next.after"
-    },
-    "rate_limit_headers": {
-      "remaining": "X-HubSpot-RateLimit-Remaining",
-      "reset": "X-HubSpot-RateLimit-Interval-Milliseconds",
-      "reset_style": "duration_milliseconds"
-    },
-    "authorization_scheme": "Bearer",
-    "schema_adapter": "declared",
-    "notes": "CRM v3 object lists page with limit + after; the next cursor is paging.next.after. Requested properties are listed explicitly (unrequested ones are omitted). The list endpoint has no updated-since filter (only the POST search API does), so models are hash snapshots. hs_pipeline_stage and hs_pipeline are internal ids, not labels."
-  },
-  "webhooks": {
-    "supported": false,
-    "automatic": false
-  },
-  "provenance": {
-    "author": "human:nath@datakart.ai",
-    "created_at": "2026-11-12T00:00:00Z",
-    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://developers.hubspot.com/docs/guides/api/crm/objects/tickets"
-  }
-}
+apiVersion: openmerge.dev/connector/v1
+kind: Connector
+metadata:
+  id: hubspot_ticketing
+  version: 1.0.0
+  coreAbi: '3'
+  name: HubSpot Ticketing
+  company: HubSpot, Inc.
+  description: Sync HubSpot Service Hub tickets, owners, companies and contacts through the OpenMerge ticketing
+    model.
+  logo: {url: 'https://cdn.openmerge.dev/connectors/hubspot_ticketing.svg'}
+categories: [ticketing@1]
+capabilities:
+  reads: [hash_snapshot]
+  writes: [create, update]
+  dynamicSchema: false
+  customFields: false
+setup:
+  oauthAppFields:
+  - {id: client_id, component: text, label: Client ID, required: true}
+  - id: client_secret
+    component: secret
+    label: Client secret
+    required: true
+    writeOnly: true
+  instructions:
+  - {component: callback_url, label: Add this redirect URL to your HubSpot Ticketing OAuth app}
+api:
+  base_url: https://api.hubapi.com
+  describe_endpoint: /
+  pagination: {mode: cursor, next_path: paging.next.after, param: after, records_path: results}
+  rate_limit_headers:
+    remaining: X-HubSpot-RateLimit-Remaining
+    reset: X-HubSpot-RateLimit-Interval-Milliseconds
+    reset_style: duration_milliseconds
+  authorization_scheme: Bearer
+  schema_adapter: declared
+  notes: CRM v3 object lists page with limit + after; the next cursor is paging.next.after. Requested properties
+    are listed explicitly (unrequested ones are omitted). The list endpoint has no updated-since filter (only the
+    POST search API does), so models are hash snapshots. hs_pipeline_stage and hs_pipeline are internal ids, not
+    labels.
+webhooks:
+  supported: false
+  automatic: false
+provenance:
+  author: human:nath@datakart.ai
+  created_at: '2026-11-12T00:00:00Z'
+  reason: Provider descriptor for the Merge-compatible Ticketing category, from https://developers.hubspot.com/docs/guides/api/crm/objects/tickets

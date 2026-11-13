@@ -1,0 +1,50 @@
+{
+  "response": {
+    "value": [
+      {
+        "id": "1616965872395",
+        "replyToId": null,
+        "subject": null,
+        "createdDateTime": "2021-03-28T21:11:12.395Z",
+        "lastModifiedDateTime": "2021-03-28T21:11:12.395Z",
+        "deletedDateTime": null,
+        "from": {
+          "user": {
+            "id": "8ea0e38b-efb3-4757-924a-5f94061cf8c2",
+            "displayName": "Robin Kline"
+          }
+        },
+        "body": {
+          "contentType": "text",
+          "content": "Hello world"
+        }
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "1616965872395",
+    "replyToId": null,
+    "subject": null,
+    "createdDateTime": "2021-03-28T21:11:12.395Z",
+    "lastModifiedDateTime": "2021-03-28T21:11:12.395Z",
+    "deletedDateTime": null,
+    "from": {
+      "user": {
+        "id": "8ea0e38b-efb3-4757-924a-5f94061cf8c2",
+        "displayName": "Robin Kline"
+      }
+    },
+    "body": {
+      "contentType": "text",
+      "content": "Hello world"
+    },
+    "_chat_id": "19:abc@thread.v2"
+  },
+  "unified": {
+    "conversation_id": "19:abc@thread.v2",
+    "user_id": "8ea0e38b-efb3-4757-924a-5f94061cf8c2",
+    "body": "Hello world"
+  }
+}

@@ -1,0 +1,9 @@
+lens: gitlab.members -> ticketing.User@1
+read:
+  from: GET /members/all
+  strategy: hash_snapshot
+  scopes: [read_api]
+fields:
+  name: name
+  email_address: email
+  avatar: avatar_url

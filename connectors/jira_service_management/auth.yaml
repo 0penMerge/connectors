@@ -1,0 +1,58 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://auth.atlassian.com/authorize
+  params: {audience: api.atlassian.com, prompt: consent}
+token:
+  url: https://auth.atlassian.com/oauth/token
+  encoding: json
+scopes:
+  param: scope
+  separator: ' '
+  default: ['read:jira-work', 'read:jira-user', 'read:servicedesk-request', 'manage:servicedesk-customer', offline_access]
+refresh:
+  rotates: true
+  grace_seconds: 0
+discover:
+  steps:
+  - id: site
+    request: {url: 'https://api.atlassian.com/oauth/token/accessible-resources'}
+    choose:
+      list: $
+      value: id
+      label: name
+      into: config.cloud_id
+      also: {config.site_url: url}
+  identity: {tenant_id: '{config.cloud_id}'}
+base_url: https://api.atlassian.com/ex/jira/{config.cloud_id}
+scope_catalog:
+- id: offline_access
+  label: Offline access
+  description: Issue refresh tokens so syncs keep running.
+  recommended: true
+- id: read:jira-work
+  label: Read Jira work
+  description: Read service-project issues (requests), projects and project roles through the Jira platform API.
+  models: [Collection, Comment, Role, Ticket]
+  operations: [read]
+- id: read:jira-user
+  label: Read Jira users
+  description: Read user profiles (agents and customers) and email addresses.
+  models: [User]
+  operations: [read]
+- id: read:servicedesk-request
+  label: Read service desk requests
+  description: Read service desks, request types and customer requests through the Service Management API.
+- id: manage:servicedesk-customer
+  label: Manage service desk customers
+  description: Read customer organizations (GET /rest/servicedeskapi/organization requires this classic scope).
+  models: [Account]
+  operations: [read]
+- id: write:servicedesk-request
+  label: Write service desk requests
+  description: Create customer requests and add request comments.
+- id: write:jira-work
+  label: Write Jira work
+  description: Create and edit issues and comments.
+notes: Atlassian 3LO (same app type as Jira Cloud), with the Jira Service Management API scopes enabled on the app.
+  cloud_id is the site id returned by https://api.atlassian.com/oauth/token/accessible-resources after authorization.

@@ -1,0 +1,10 @@
+lens: zendesk.users -> ticketing.User@1
+read:
+  from: GET /api/v2/users?page[size]=100
+  get: GET /api/v2/users/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  email_address: email
+  is_active: active
+  avatar: photo.content_url

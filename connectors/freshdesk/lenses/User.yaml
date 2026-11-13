@@ -1,0 +1,9 @@
+lens: freshdesk.agents -> ticketing.User@1
+read:
+  from: GET /agents
+  get: GET /agents/{id}
+  strategy: hash_snapshot
+fields:
+  name: contact.name
+  email_address: contact.email
+  is_active: contact.active

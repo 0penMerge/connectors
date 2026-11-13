@@ -1,0 +1,8 @@
+lens: azure_devops.teams -> ticketing.Team@1
+read:
+  from: GET /_apis/teams?api-version=7.1-preview.3
+  strategy: hash_snapshot
+  scopes: [499b84ac-1321-427f-aa17-267ca6975798/vso.project]
+fields:
+  name: name
+  description: description

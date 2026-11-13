@@ -1,0 +1,11 @@
+lens: freshdesk.contacts -> ticketing.Contact@1
+read:
+  from: GET /contacts
+  get: GET /contacts/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  email_address: email
+  phone_number: {coalesce: [phone, mobile]}
+  details: description
+  account: {ref: Account, from: company_id}

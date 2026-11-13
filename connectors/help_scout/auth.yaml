@@ -1,0 +1,27 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://secure.helpscout.net/authentication/authorizeClientApplication
+token:
+  url: https://api.helpscout.net/v2/oauth2/token
+scopes:
+  param: scope
+  separator: ' '
+  default: [default]
+refresh:
+  rotates: true
+  grace_seconds: 0
+discover:
+  steps:
+  - id: me
+    request: {url: 'https://api.helpscout.net/v2/users/me'}
+    save:
+      identity.user_id: id
+      identity.email: {path: email, required: false}
+scope_catalog:
+- id: default
+  label: Default access
+  description: 'Help Scout OAuth has no scopes: the token acts as the authorizing user and sees whatever that user''s
+    role allows (organizations additionally need the ''Access the contacts and companies directory'' permission).'
+notes: Authorization-code flow (Mailbox API 2.0). Access tokens last 2 days; each refresh returns a new refresh
+  token that must replace the stored one.

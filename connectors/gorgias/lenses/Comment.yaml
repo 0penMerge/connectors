@@ -1,0 +1,9 @@
+lens: gorgias.messages -> ticketing.Comment@1
+read:
+  from: GET /messages?limit=100&order_by=created_datetime:asc
+  strategy: hash_snapshot
+fields:
+  body: body_text
+  html_body: body_html
+  ticket: {ref: Ticket, from: ticket_id}
+  remote_created_at: created_datetime

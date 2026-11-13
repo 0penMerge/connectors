@@ -1,0 +1,7 @@
+lens: trello.lists -> ticketing.Collection@1
+read:
+  from: GET /lists?filter=all
+  strategy: hash_snapshot
+fields:
+  name: name
+  collection_type: {const: LIST}

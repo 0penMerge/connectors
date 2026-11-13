@@ -1,0 +1,8 @@
+lens: front.accounts -> ticketing.Account@1
+read:
+  from: GET /accounts?limit=100
+  get: GET /accounts/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  domains: domains

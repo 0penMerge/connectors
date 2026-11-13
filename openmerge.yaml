@@ -1,0 +1,15 @@
+# Publisher metadata for the OpenMerge connector marketplace.
+# The package namespace is not set here: the release pipeline derives it from the
+# lower-cased GitHub owner of this repository (0penMerge -> 0penmerge) at release time.
+apiVersion: openmerge.dev/publisher/v1
+kind: Publisher
+name: OpenMerge
+url: https://openmerge.dev
+visibility: public            # default visibility of new releases (private | unlisted | public)
+listing:
+  title: OpenMerge connectors
+  description: >-
+    First-party declarative connectors for the Merge-compatible Ticketing, File Storage and Chat
+    categories: help desks, issue trackers, project tools, cloud drives and team chat.
+  categories: [ticketing, filestorage, chat]
+  support: https://github.com/0penMerge/connectors/issues

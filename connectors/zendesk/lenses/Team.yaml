@@ -1,0 +1,9 @@
+lens: zendesk.groups -> ticketing.Team@1
+read:
+  from: GET /api/v2/groups?page[size]=100
+  records: groups
+  get: GET /api/v2/groups/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: description

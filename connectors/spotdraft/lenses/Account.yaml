@@ -1,0 +1,6 @@
+lens: spotdraft.counter_parties -> ticketing.Account@1
+read:
+  from: GET /api/v2.1/public/counter_parties/
+  strategy: hash_snapshot
+fields:
+  name: name

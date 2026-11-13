@@ -1,0 +1,8 @@
+lens: gitlab.groups -> ticketing.Team@1
+read:
+  from: GET /descendant_groups?order_by=id&sort=asc
+  strategy: hash_snapshot
+  scopes: [read_api]
+fields:
+  name: full_name
+  description: description

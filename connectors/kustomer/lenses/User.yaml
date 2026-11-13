@@ -1,0 +1,10 @@
+lens: kustomer.users -> ticketing.User@1
+read:
+  from: GET /v1/users?pageSize=100
+  get: GET /v1/users/{id}
+  strategy: hash_snapshot
+fields:
+  name: {coalesce: [attributes.displayName, attributes.name]}
+  email_address: attributes.email
+write:
+  record: data

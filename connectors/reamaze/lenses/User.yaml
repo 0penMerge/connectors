@@ -1,0 +1,9 @@
+lens: reamaze.staff -> ticketing.User@1
+read:
+  from: GET /api/v1/staff.json
+  records: staff
+  strategy: hash_snapshot
+id: email
+fields:
+  name: name
+  email_address: email

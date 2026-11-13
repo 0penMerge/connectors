@@ -1,0 +1,11 @@
+lens: jira_data_center.projects -> ticketing.Collection@1
+read:
+  from: GET /rest/api/2/project?expand=description
+  records: $
+  page: {mode: single}
+  get: GET /rest/api/2/project/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: description
+  collection_type: {const: PROJECT}
