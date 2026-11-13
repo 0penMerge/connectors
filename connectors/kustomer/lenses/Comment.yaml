@@ -1,0 +1,12 @@
+lens: kustomer.messages -> ticketing.Comment@1
+read:
+  from: GET /v1/messages?pageSize=100
+  get: GET /v1/messages/{id}
+  strategy: hash_snapshot
+fields:
+  body: attributes.preview
+  is_private: {const: false}
+  ticket: {ref: Ticket, from: relationships.conversation.data.id}
+  remote_created_at: attributes.createdAt
+write:
+  record: data
