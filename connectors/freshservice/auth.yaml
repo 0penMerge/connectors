@@ -1,0 +1,14 @@
+type: recipe
+use: basic
+inputs:
+- {id: username, remove: true}
+- {id: password, remove: true}
+- id: subdomain
+  label: Freshservice subdomain (the part before .freshservice.com)
+  pattern: '[a-z0-9][a-z0-9-]{0,62}'
+  stage: credentials
+- {id: api_key, label: API key, secret: true, component: secret}
+basic:
+  username: '{secret.api_key}'
+  password: X
+base_url: https://{config.subdomain}.freshservice.com/api/v2
