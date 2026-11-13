@@ -1,0 +1,20 @@
+{
+  "response": [
+    {
+      "id": "zGaHBuEARLCD8xnYtbYfiA",
+      "name": "Ann Agent",
+      "emailAddress": "ann@acme.test"
+    }
+  ],
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "zGaHBuEARLCD8xnYtbYfiA",
+    "name": "Ann Agent",
+    "emailAddress": "ann@acme.test"
+  },
+  "unified": {
+    "name": "Ann Agent",
+    "email_address": "ann@acme.test"
+  }
+}
