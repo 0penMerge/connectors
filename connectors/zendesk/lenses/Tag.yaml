@@ -1,0 +1,8 @@
+lens: zendesk.tags -> ticketing.Tag@1
+read:
+  from: GET /api/v2/tags?page[size]=100
+  records: tags
+  strategy: hash_snapshot
+id: name
+fields:
+  name: name
