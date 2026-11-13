@@ -1,0 +1,39 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://account.box.com/api/oauth2/authorize
+token:
+  url: https://api.box.com/oauth2/token
+scopes:
+  param: scope
+  separator: ' '
+  default: [root_readonly, manage_managed_users, manage_groups]
+refresh:
+  rotates: true
+  grace_seconds: 0
+discover:
+  steps:
+  - id: me
+    request: {url: 'https://api.box.com/2.0/users/me'}
+    save:
+      identity.user_id: id
+      identity.email: {path: login, required: false}
+      identity.display_name: {path: name, required: false}
+      identity.tenant_id: {path: enterprise.id, required: false}
+scope_catalog:
+- id: root_readonly
+  label: Read all files and folders
+  description: Read files and folders the user can access.
+- id: manage_managed_users
+  label: Manage users
+  description: List the enterprise's managed users (admin or co-admin authorization required).
+  models: [User]
+  operations: [read]
+- id: manage_groups
+  label: Manage groups
+  description: List the enterprise's groups (admin authorization required).
+  models: [Group]
+  operations: [read]
+notes: 'Box OAuth 2.0 user authentication. Scopes must also be enabled on the Box app in the Developer Console;
+  the scope parameter can only narrow them. Refresh tokens are single-use: every refresh returns a new refresh token
+  and invalidates the old one.'
