@@ -1,0 +1,54 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://{config.subdomain}.gorgias.com/oauth/authorize
+token:
+  url: https://{config.subdomain}.gorgias.com/oauth/token
+  client_auth: client_secret_basic
+scopes:
+  param: scope
+  separator: ' '
+  default: [openid, offline, 'tickets:read', 'customers:read', 'users:read', 'tags:read']
+inputs:
+- id: subdomain
+  label: Gorgias subdomain (the part before .gorgias.com)
+  pattern: '[a-z0-9][a-z0-9-]{0,62}'
+  stage: before_redirect
+discover:
+  identity: {tenant_id: '{config.subdomain}'}
+base_url: https://{config.subdomain}.gorgias.com/api
+scope_catalog:
+- id: openid
+  label: OpenID
+  description: Base OpenID Connect scope required by the Gorgias authorization server.
+- id: offline
+  label: Offline access
+  description: Issue a refresh token so syncs keep running after the 24-hour access token expires.
+  recommended: true
+- id: tickets:read
+  label: Read tickets
+  description: Read tickets and ticket messages.
+  models: [Ticket, Comment]
+  operations: [read]
+- id: tickets:write
+  label: Write tickets
+  description: Update ticket subject, status and priority.
+- id: customers:read
+  label: Read customers
+  description: Read customers.
+  models: [Contact]
+  operations: [read]
+- id: users:read
+  label: Read users
+  description: Read helpdesk users (agents) and teams.
+  models: [User, Team]
+  operations: [read]
+- id: tags:read
+  label: Read tags
+  description: Read tags.
+  models: [Tag]
+  operations: [read]
+notes: 'Per-tenant OAuth on {subdomain}.gorgias.com: the subdomain must be collected before redirecting (the token
+  response does not return it). Token requests use HTTP Basic client_id:client_secret. Access tokens last 24 hours;
+  refresh tokens (offline scope) do not expire and rotation is undocumented. state and nonce are recommended authorize
+  parameters; PKCE is not supported.'
