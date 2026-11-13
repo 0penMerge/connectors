@@ -1,0 +1,11 @@
+lens: zoho_desk.departments -> ticketing.Collection@1
+read:
+  from: GET /departments
+  records: data
+  page: {first: 0, mode: offset, param: from, size: 200, limit_param: limit}
+  get: GET /departments/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: description
+  remote_created_at: createdTime
