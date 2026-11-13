@@ -1,0 +1,37 @@
+lens: azure_devops.workitems -> ticketing.Ticket@1
+read:
+  from: GET /_apis/wit/reporting/workitemrevisions?includeLatestOnly=true&api-version=7.1
+  records: values
+  page:
+    has_more: isLastBatch
+    has_more_invert: true
+    mode: cursor
+    next: continuationToken
+    param: continuationToken
+  strategy: hash_snapshot
+  scopes: [499b84ac-1321-427f-aa17-267ca6975798/vso.work]
+fields:
+  name: fields["System.Title"]
+  description: fields["System.Description"]
+  status:
+    from: fields["System.State"]
+    map:
+      New: OPEN
+      To Do: OPEN
+      Proposed: OPEN
+      Active: IN_PROGRESS
+      Doing: IN_PROGRESS
+      Committed: IN_PROGRESS
+      Resolved: CLOSED
+      Closed: CLOSED
+      Done: CLOSED
+      Removed: CLOSED
+  ticket_type: fields["System.WorkItemType"]
+  parent_ticket: {ref: Ticket, from: 'fields["System.Parent"]'}
+  remote_created_at: fields["System.CreatedDate"]
+  remote_updated_at: fields["System.ChangedDate"]
+  completed_at: fields["Microsoft.VSTS.Common.ClosedDate"]
+  due_date: fields["Microsoft.VSTS.Scheduling.DueDate"]
+  priority:
+    from: fields["Microsoft.VSTS.Common.Priority"]
+    map: {'1': URGENT, '2': HIGH, '3': NORMAL, '4': LOW}
