@@ -1,0 +1,7 @@
+lens: hive.teams -> ticketing.Team@1
+read:
+  from: GET /teams?first=200
+  strategy: hash_snapshot
+id: node._id
+fields:
+  name: node.name
