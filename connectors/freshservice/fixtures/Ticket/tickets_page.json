@@ -1,0 +1,51 @@
+{
+  "response": {
+    "tickets": [
+      {
+        "id": 1,
+        "subject": "Support Needed...",
+        "description": "<div>Details about the issue...</div>",
+        "description_text": "Details about the issue...",
+        "status": 3,
+        "priority": 4,
+        "type": "Incident",
+        "due_by": "2020-04-01T07:00:00Z",
+        "requester_id": 1000000675,
+        "responder_id": null,
+        "group_id": 2,
+        "department_id": 9,
+        "created_at": "2020-03-30T07:00:00Z",
+        "updated_at": "2020-03-30T07:00:00Z"
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": 1,
+    "subject": "Support Needed...",
+    "description": "<div>Details about the issue...</div>",
+    "description_text": "Details about the issue...",
+    "status": 3,
+    "priority": 4,
+    "type": "Incident",
+    "due_by": "2020-04-01T07:00:00Z",
+    "requester_id": 1000000675,
+    "responder_id": null,
+    "group_id": 2,
+    "department_id": 9,
+    "created_at": "2020-03-30T07:00:00Z",
+    "updated_at": "2020-03-30T07:00:00Z"
+  },
+  "unified": {
+    "name": "Support Needed...",
+    "status": "ON_HOLD",
+    "priority": "URGENT",
+    "ticket_type": "Incident",
+    "contact": "1000000675",
+    "account": "9",
+    "assigned_teams": [
+      "2"
+    ]
+  }
+}
