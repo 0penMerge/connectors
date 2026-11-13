@@ -1,0 +1,25 @@
+{
+  "response": {
+    "projects": [
+      {
+        "id": 170876000000041000,
+        "id_string": "170876000000041000",
+        "name": "Mobile app",
+        "description": "iOS and Android"
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": 170876000000041000,
+    "id_string": "170876000000041000",
+    "name": "Mobile app",
+    "description": "iOS and Android"
+  },
+  "unified": {
+    "name": "Mobile app",
+    "description": "iOS and Android",
+    "collection_type": "PROJECT"
+  }
+}
