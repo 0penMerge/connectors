@@ -1,0 +1,60 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://accounts.zoho.com/oauth/v2/auth
+  params: {access_type: offline, prompt: consent}
+token:
+  url: https://accounts.zoho.com/oauth/v2/token
+scopes:
+  param: scope
+  separator: ','
+  default: [Desk.tickets.READ, Desk.contacts.READ, Desk.accounts.READ, Desk.basic.READ]
+config_from_token:
+  api_domain: {path: api_domain, required: false}
+apply:
+  headers: {Authorization: 'Zoho-oauthtoken {access_token}', orgId: '{config.org_id}'}
+discover:
+  steps:
+  - id: organization
+    request:
+      url: https://desk.zoho.com/api/v1/organizations
+      headers: {Authorization: 'Zoho-oauthtoken {access_token}'}
+      auth: none
+    choose: {list: data, value: id, label: companyName, into: config.org_id}
+  identity: {tenant_id: '{config.org_id}'}
+base_url: https://desk.zoho.com/api/v1
+scope_catalog:
+- id: Desk.tickets.READ
+  label: Read tickets
+  description: List and read tickets.
+  models: [Comment, Ticket]
+  operations: [read]
+  recommended: true
+- id: Desk.tickets.UPDATE
+  label: Update tickets
+  description: Update ticket subject, status, priority, category and due date.
+  models: [Ticket]
+  operations: [update]
+- id: Desk.contacts.READ
+  label: Read contacts
+  description: List and read contacts.
+  models: [Contact]
+  operations: [read]
+  recommended: true
+- id: Desk.accounts.READ
+  label: Read accounts
+  description: List and read accounts.
+  models: [Account]
+  operations: [read]
+  recommended: true
+- id: Desk.basic.READ
+  label: Read organization basics
+  description: 'List agents, departments, teams and roles (each endpoint also accepts its specific scope: Desk.agents.READ,
+    Desk.departments.READ, Desk.teams.READ, Desk.permissions.READ).'
+  models: [User, Collection, Team, Role]
+  operations: [read]
+  recommended: true
+notes: Zoho Accounts OAuth (server-based client from api-console.zoho.com). access_type=offline returns a non-rotating
+  refresh token. The authorization URL above is the US data center; EU/IN/AU/JP/CA/SA/CN accounts use the matching
+  accounts.zoho.<tld> host, which this spec format cannot express (the Zoho CRM bundle's endpoint_regions pattern
+  should be copied when promoted).
