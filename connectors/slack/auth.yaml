@@ -1,0 +1,79 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://slack.com/oauth/v2/authorize
+token:
+  url: https://slack.com/api/oauth.v2.access
+scopes:
+  param: user_scope
+  separator: ','
+  default: ['channels:read', 'groups:read', 'im:read', 'mpim:read', 'users:read', 'usergroups:read', 'channels:history',
+    'groups:history', 'im:history', 'mpim:history']
+token_paths:
+  access_token: authed_user.access_token
+  scope: authed_user.scope
+  refresh_token: authed_user.refresh_token
+  expires_in: authed_user.expires_in
+  token_type: authed_user.token_type
+identity_from_token:
+  tenant_id: team.id
+  user_id: authed_user.id
+  display_name: {path: team.name, required: false}
+refresh:
+  'on': [http_401]
+scope_catalog:
+- id: channels:read
+  label: View public channels
+  description: List public channels in the workspace.
+  models: [Conversation]
+  operations: [read]
+- id: groups:read
+  label: View private channels
+  description: List private channels the app has been added to.
+  models: [Conversation]
+  operations: [read]
+- id: im:read
+  label: View direct messages
+  description: List direct message conversations the app is part of.
+  models: [Conversation]
+  operations: [read]
+- id: mpim:read
+  label: View group direct messages
+  description: List multi-person direct messages the app is part of.
+  models: [Conversation]
+  operations: [read]
+- id: users:read
+  label: View people
+  description: List workspace members and their profiles.
+  models: [User]
+  operations: [read]
+- id: users:read.email
+  label: View email addresses
+  description: Include profile.email on users (requires users:read).
+- id: usergroups:read
+  label: View user groups
+  description: List workspace user groups.
+  models: [Group]
+  operations: [read]
+- id: channels:history
+  label: channels:history
+  models: [Message]
+  operations: [read]
+  description: Read message history for this conversation type.
+- id: groups:history
+  label: groups:history
+  models: [Message]
+  operations: [read]
+  description: Read message history for this conversation type.
+- id: im:history
+  label: im:history
+  models: [Message]
+  operations: [read]
+  description: Read message history for this conversation type.
+- id: mpim:history
+  label: mpim:history
+  models: [Message]
+  operations: [read]
+  description: Read message history for this conversation type.
+notes: Slack OAuth v2 with bot-token scopes (comma-separated scope parameter). Bot tokens do not expire unless token
+  rotation is enabled on the Slack app; if rotation is enabled, refresh tokens rotate on every refresh.
