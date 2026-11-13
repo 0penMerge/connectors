@@ -1,133 +1,53 @@
-{
-  "apiVersion": "openmerge.dev/connector/v1",
-  "kind": "Connector",
-  "metadata": {
-    "id": "linear",
-    "version": "1.0.0",
-    "coreAbi": "2",
-    "name": "Linear",
-    "company": "Linear",
-    "description": "Sync Linear issues, projects, teams, users, labels, comments, attachments and customers through the OpenMerge ticketing model.",
-    "logo": {
-      "url": "https://cdn.openmerge.dev/connectors/linear.svg"
-    }
-  },
-  "runtime": {
-    "entrypoint": "plugin.py:LinearPlugin"
-  },
-  "categories": [
-    "ticketing@1"
-  ],
-  "capabilities": {
-    "reads": [
-      "hash_snapshot"
-    ],
-    "writes": [],
-    "dynamicSchema": false,
-    "customFields": false
-  },
-  "auth": {
-    "type": "oauth2",
-    "driver": "oauth2",
-    "authorization_url": "https://linear.app/oauth/authorize",
-    "token_url": "https://api.linear.app/oauth/token",
-    "refresh_rotates": true,
-    "rotation_grace_seconds": 1800,
-    "scopes_param": "scope",
-    "default_scopes": [
-      "read"
-    ],
-    "scope_catalog": [
-      {
-        "id": "read",
-        "label": "Read",
-        "description": "Read access to the workspace's issues, projects, teams, users, labels, comments, attachments and customers. Always granted.",
-        "models": [
-          "Ticket",
-          "Collection",
-          "Team",
-          "User",
-          "Tag",
-          "Comment",
-          "Attachment",
-          "Account"
-        ],
-        "operations": [
-          "read"
-        ],
-        "recommended": true
-      },
-      {
-        "id": "write",
-        "label": "Write",
-        "description": "Write access to the user's account."
-      },
-      {
-        "id": "issues:create",
-        "label": "Create issues",
-        "description": "Create issues and their attachments."
-      },
-      {
-        "id": "comments:create",
-        "label": "Create comments",
-        "description": "Create issue comments."
-      }
-    ],
-    "connection_config_fields": [],
-    "scope_separator": ",",
-    "authorization_params": {
-      "actor": "user"
-    },
-    "notes": "Linear OAuth 2.0 authorization code flow; scopes are comma-separated in the authorize request. Access tokens expire after 24 hours; refresh tokens rotate on every refresh (30-day lifetime) and a replayed refresh within 30 minutes returns the same replacement credentials. PKCE (S256) is supported."
-  },
-  "setup": {
-    "oauthAppFields": [
-      {
-        "id": "client_id",
-        "component": "text",
-        "label": "Client ID",
-        "required": true
-      },
-      {
-        "id": "client_secret",
-        "component": "secret",
-        "label": "Client secret",
-        "required": true,
-        "writeOnly": true
-      }
-    ],
-    "instructions": [
-      {
-        "component": "callback_url",
-        "label": "Add this redirect URL to your Linear OAuth app"
-      }
-    ]
-  },
-  "api": {
-    "base_url": "https://api.linear.app",
-    "describe_endpoint": "/",
-    "pagination": {
-      "style": "cursor",
-      "param": "cursor",
-      "records_path": "data.issues.nodes",
-      "next_path": "data.issues.pageInfo.endCursor"
-    },
-    "rate_limit_headers": {
-      "remaining": null,
-      "reset": null,
-      "reset_style": "auto_seconds"
-    },
-    "authorization_scheme": "Bearer",
-    "schema_adapter": "declared",
-    "notes": "GraphQL only: every read is a POST to /graphql with Relay connections (first/after, pageInfo.hasNextPage/endCursor). Archived records are excluded by default. Writes are GraphQL mutations, so none are declared. Customers require the Customer Requests feature; the list is empty otherwise."
-  },
-  "webhooks": {
-    "supported": false,
-    "automatic": false
-  },
-  "provenance": {
-    "author": "human:nath@datakart.ai",
-    "created_at": "2026-11-12T00:00:00Z",
-    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://linear.app/developers/graphql"
-  }
-}
+apiVersion: openmerge.dev/connector/v1
+kind: Connector
+metadata:
+  id: linear
+  version: 1.0.0
+  coreAbi: '3'
+  name: Linear
+  company: Linear
+  description: Sync Linear issues, projects, teams, users, labels, comments, attachments and customers through the
+    OpenMerge ticketing model.
+  logo: {url: 'https://cdn.openmerge.dev/connectors/linear.svg'}
+categories: [ticketing@1]
+capabilities:
+  reads: [hash_snapshot]
+  writes: []
+  dynamicSchema: false
+  customFields: false
+setup:
+  oauthAppFields:
+  - {id: client_id, component: text, label: Client ID, required: true}
+  - id: client_secret
+    component: secret
+    label: Client secret
+    required: true
+    writeOnly: true
+  instructions:
+  - {component: callback_url, label: Add this redirect URL to your Linear OAuth app}
+api:
+  base_url: https://api.linear.app
+  describe_endpoint: /
+  pagination:
+    has_more_path: data.issues.pageInfo.hasNextPage
+    mode: graphql
+    next_path: data.issues.pageInfo.endCursor
+    path: /graphql
+    query: query($first:Int!,$after:String){issues(first:$first,after:$after){nodes{id identifier title description
+      priority priorityLabel dueDate createdAt updatedAt completedAt canceledAt url state{id name type} creator{id}
+      assignee{id} parent{id} team{id} project{id} labelIds} pageInfo{hasNextPage endCursor}}}
+    records_path: data.issues.nodes
+    size: 100
+  rate_limit_headers: {remaining: null, reset: null, reset_style: auto_seconds}
+  authorization_scheme: Bearer
+  schema_adapter: declared
+  notes: 'GraphQL only: every read is a POST to /graphql with Relay connections (first/after, pageInfo.hasNextPage/endCursor).
+    Archived records are excluded by default. Writes are GraphQL mutations, so none are declared. Customers require
+    the Customer Requests feature; the list is empty otherwise.'
+webhooks:
+  supported: false
+  automatic: false
+provenance:
+  author: human:nath@datakart.ai
+  created_at: '2026-11-12T00:00:00Z'
+  reason: Provider descriptor for the Merge-compatible Ticketing category, from https://linear.app/developers/graphql
