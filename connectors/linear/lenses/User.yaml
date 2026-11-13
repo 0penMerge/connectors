@@ -1,0 +1,19 @@
+lens: linear.users -> ticketing.User@1
+read:
+  from: GET /graphql
+  records: data.users.nodes
+  page:
+    has_more: data.users.pageInfo.hasNextPage
+    mode: graphql
+    next: data.users.pageInfo.endCursor
+    path: /graphql
+    query: query($first:Int!,$after:String){users(first:$first,after:$after,includeDisabled:true){nodes{id name
+      displayName email active admin avatarUrl createdAt updatedAt} pageInfo{hasNextPage endCursor}}}
+    size: 100
+  strategy: hash_snapshot
+  scopes: [read]
+fields:
+  name: name
+  email_address: email
+  is_active: active
+  avatar: avatarUrl
