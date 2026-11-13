@@ -1,0 +1,9 @@
+lens: aha.users -> ticketing.User@1
+read:
+  from: GET /users
+  records: users
+  get: GET /users/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  email_address: email
