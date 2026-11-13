@@ -1,0 +1,20 @@
+lens: aha.features -> ticketing.Ticket@1
+read:
+  from: GET /features?fields=id,reference_num,name,description,workflow_status,tags,created_by_user,assigned_to_user,due_date,start_date,created_at,updated_at,url,release,epic,workflow_kind
+  get: GET /features/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: {from: description.body, read: only}
+  status: {from: workflow_status.name, read: only}
+  ticket_type: {from: workflow_kind.name, read: only}
+  due_date: {from: due_date, read: only}
+  creator: {ref: User, from: created_by_user.id, read: only}
+  tags: {from: tags, read: only}
+  remote_created_at: {from: created_at, read: only}
+  remote_updated_at: {from: updated_at, read: only}
+  ticket_url: {from: url, read: only}
+write:
+  update: PUT /features/{id}
+  body: feature
+  record: feature
