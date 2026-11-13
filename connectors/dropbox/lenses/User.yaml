@@ -1,0 +1,17 @@
+lens: dropbox.team_members -> filestorage.User@1
+read:
+  from: GET /2/team/members/list_v2
+  records: members
+  page:
+    body: {limit: 1000}
+    continue_path: /2/team/members/list/continue_v2
+    has_more: has_more
+    mode: rpc
+    next: cursor
+    path: /2/team/members/list_v2
+  strategy: hash_snapshot
+  scopes: [members.read]
+id: profile.team_member_id
+fields:
+  name: profile.name.display_name
+  email_address: profile.email
