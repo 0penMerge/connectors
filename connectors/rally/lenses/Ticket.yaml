@@ -1,0 +1,18 @@
+lens: rally.artifacts -> ticketing.Ticket@1
+read:
+  from: GET /artifact?types=hierarchicalrequirement,defect,task&order=ObjectID&fetch=ObjectID,ObjectUUID,FormattedID,Name,Description,ScheduleState,State,Priority,Severity,CreatedBy,Owner,Parent,WorkProduct,Project,Iteration,Tags,CreationDate,LastUpdateDate,AcceptedDate,ClosedDate,Blocked
+  strategy: hash_snapshot
+id: ObjectUUID
+fields:
+  name: Name
+  description: Description
+  status:
+    from: ScheduleState
+    map: {Defined: OPEN, In-Progress: IN_PROGRESS, Completed: CLOSED, Accepted: CLOSED}
+  priority: Priority
+  ticket_type: _type
+  creator: {ref: User, from: CreatedBy._refObjectUUID}
+  parent_ticket: {ref: Ticket, from: Parent._refObjectUUID}
+  remote_created_at: CreationDate
+  remote_updated_at: LastUpdateDate
+  completed_at: AcceptedDate
