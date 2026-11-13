@@ -1,0 +1,45 @@
+{
+  "response": {
+    "nextPageToken": "~!!~AI9FV7Q",
+    "files": [
+      {
+        "id": "1ZdR3L3qP4Bkq8noWLJHSr_iBau0DNT4Kli4SxNc2YEo",
+        "name": "Q3 plan.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "description": "Draft",
+        "parents": [
+          "0B1pz5q6WLu5aSmV0Y0ZpTkVGQTQ"
+        ],
+        "driveId": "0AFkXKoiF0z1DUk9PVA",
+        "webViewLink": "https://docs.google.com/document/d/1ZdR3/edit",
+        "createdTime": "2024-01-01T00:00:00.000Z",
+        "modifiedTime": "2024-01-02T00:00:00.000Z",
+        "size": "52342",
+        "trashed": false
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": "~!!~AI9FV7Q",
+  "native": {
+    "id": "1ZdR3L3qP4Bkq8noWLJHSr_iBau0DNT4Kli4SxNc2YEo",
+    "name": "Q3 plan.docx",
+    "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "description": "Draft",
+    "parents": [
+      "0B1pz5q6WLu5aSmV0Y0ZpTkVGQTQ"
+    ],
+    "driveId": "0AFkXKoiF0z1DUk9PVA",
+    "webViewLink": "https://docs.google.com/document/d/1ZdR3/edit",
+    "createdTime": "2024-01-01T00:00:00.000Z",
+    "modifiedTime": "2024-01-02T00:00:00.000Z",
+    "size": "52342",
+    "trashed": false
+  },
+  "unified": {
+    "name": "Q3 plan.docx",
+    "size": 52342,
+    "folder": "0B1pz5q6WLu5aSmV0Y0ZpTkVGQTQ",
+    "drive": "0AFkXKoiF0z1DUk9PVA"
+  }
+}
