@@ -1,0 +1,14 @@
+lens: servicenow.sys_attachment -> ticketing.Attachment@1
+read:
+  from: GET /api/now/attachment?sysparm_query=table_name%3Dincident%5EORDERBYsys_created_on
+  get: GET /api/now/attachment/{id}
+  strategy: hash_snapshot
+id: sys_id
+fields:
+  file_name: file_name
+  content_type: content_type
+  file_url: download_link
+  ticket: {ref: Ticket, from: table_sys_id}
+  remote_created_at: sys_created_on
+write:
+  record: result
