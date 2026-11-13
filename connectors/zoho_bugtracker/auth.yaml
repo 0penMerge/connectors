@@ -1,0 +1,46 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://accounts.zoho.com/oauth/v2/auth
+  params: {access_type: offline, prompt: consent}
+token:
+  url: https://accounts.zoho.com/oauth/v2/token
+scopes:
+  param: scope
+  separator: ','
+  default: [ZohoBugTracker.portals.READ, ZohoBugTracker.projects.READ, ZohoBugTracker.users.READ]
+config_from_token:
+  api_domain: {path: api_domain, required: false}
+apply:
+  headers: {Authorization: 'Zoho-oauthtoken {access_token}'}
+discover:
+  steps:
+  - id: portal
+    request: {url: 'https://bugtracker.zoho.com/restapi/portals/'}
+    choose: {list: portals, value: id_string, label: name, into: config.portal_id}
+  identity: {tenant_id: '{config.portal_id}'}
+base_url: https://bugtracker.zoho.com/restapi/portal/{config.portal_id}
+scope_catalog:
+- id: ZohoBugTracker.portals.READ
+  label: Read portals
+  description: List the portals the user belongs to (GET /restapi/portals/) to resolve portal_id.
+  recommended: true
+- id: ZohoBugTracker.projects.READ
+  label: Read projects
+  description: List and read projects in the portal.
+  models: [Collection]
+  operations: [read]
+  recommended: true
+- id: ZohoBugTracker.users.READ
+  label: Read users
+  description: List portal users.
+  models: [User]
+  operations: [read]
+  recommended: true
+- id: ZohoBugTracker.bugs.READ
+  label: Read bugs
+  description: Read bugs and bug comments (project-scoped endpoints; not synced by this declarative spec).
+notes: 'Zoho Accounts OAuth with ZohoBugTracker.* scopes; tokens minted with ZohoBugTracker scopes only work against
+  bugtracker.zoho.com (not projectsapi.zoho.com) and vice versa. US data center shown; other regions use accounts.zoho.<tld>
+  / bugtracker.zoho.<tld>. portal_id is not part of the token response: resolve it from GET /restapi/portals/ after
+  authorization.'
