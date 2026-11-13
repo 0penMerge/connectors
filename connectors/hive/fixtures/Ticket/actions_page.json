@@ -1,0 +1,45 @@
+{
+  "response": {
+    "edges": [
+      {
+        "node": {
+          "_id": "hEQNGbhBq3qQpZjnA",
+          "title": "Prepare Q3 plan",
+          "description": "Draft",
+          "status": "In Progress",
+          "deadline": "2024-07-15T00:00:00.000Z",
+          "createdBy": "u-1",
+          "parent": null,
+          "createdAt": "2024-06-01T00:00:00.000Z",
+          "modifiedAt": "2024-06-02T00:00:00.000Z"
+        },
+        "cursor": "a1"
+      }
+    ],
+    "pageInfo": {
+      "hasNextPage": true,
+      "endCursor": "a1"
+    }
+  },
+  "expected_records": 1,
+  "expected_next": "a1",
+  "native": {
+    "node": {
+      "_id": "hEQNGbhBq3qQpZjnA",
+      "title": "Prepare Q3 plan",
+      "description": "Draft",
+      "status": "In Progress",
+      "deadline": "2024-07-15T00:00:00.000Z",
+      "createdBy": "u-1",
+      "parent": null,
+      "createdAt": "2024-06-01T00:00:00.000Z",
+      "modifiedAt": "2024-06-02T00:00:00.000Z"
+    },
+    "cursor": "a1"
+  },
+  "unified": {
+    "name": "Prepare Q3 plan",
+    "status": "In Progress",
+    "creator": "u-1"
+  }
+}
