@@ -1,0 +1,9 @@
+lens: intercom.tags -> ticketing.Tag@1
+read:
+  from: GET /tags
+  records: data
+  page: {mode: single}
+  get: GET /tags/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
