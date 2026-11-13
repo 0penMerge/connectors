@@ -1,0 +1,8 @@
+lens: freshdesk.companies -> ticketing.Account@1
+read:
+  from: GET /companies
+  get: GET /companies/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  domains: domains
