@@ -1,0 +1,11 @@
+lens: slack.conversations -> chat.Conversation@1
+read:
+  from: GET /conversations.list?types=public_channel,private_channel,mpim,im&exclude_archived=false&limit=200
+  get: GET /conversations.info?channel={id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: purpose.value
+  remote_created_at: {from: created, as: datetime, from_format: epoch_seconds}
+write:
+  record: channel
