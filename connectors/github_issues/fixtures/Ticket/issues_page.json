@@ -1,0 +1,64 @@
+{
+  "response": [
+    {
+      "id": 1,
+      "number": 1347,
+      "title": "Found a bug",
+      "body": "I'm having a problem with this.",
+      "state": "open",
+      "type": {
+        "name": "Bug"
+      },
+      "labels": [
+        {
+          "id": 208045946,
+          "name": "bug"
+        }
+      ],
+      "repository": {
+        "id": 1296269
+      },
+      "html_url": "https://github.com/octocat/Hello-World/issues/1347",
+      "created_at": "2011-04-22T13:33:48Z",
+      "updated_at": "2011-04-22T13:33:48Z",
+      "closed_at": null
+    }
+  ],
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": 1,
+    "number": 1347,
+    "title": "Found a bug",
+    "body": "I'm having a problem with this.",
+    "state": "open",
+    "type": {
+      "name": "Bug"
+    },
+    "labels": [
+      {
+        "id": 208045946,
+        "name": "bug"
+      }
+    ],
+    "repository": {
+      "id": 1296269
+    },
+    "html_url": "https://github.com/octocat/Hello-World/issues/1347",
+    "created_at": "2011-04-22T13:33:48Z",
+    "updated_at": "2011-04-22T13:33:48Z",
+    "closed_at": null
+  },
+  "unified": {
+    "name": "Found a bug",
+    "status": "OPEN",
+    "ticket_type": "Bug",
+    "tags": [
+      "bug"
+    ],
+    "collections": [
+      "1296269"
+    ],
+    "ticket_url": "https://github.com/octocat/Hello-World/issues/1347"
+  }
+}
