@@ -1,0 +1,9 @@
+lens: asana.teams -> ticketing.Team@1
+read:
+  from: GET /teams?limit=100&opt_fields=name,description
+  strategy: hash_snapshot
+  scopes: ['teams:read']
+id: gid
+fields:
+  name: name
+  description: description
