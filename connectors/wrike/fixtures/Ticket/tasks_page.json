@@ -1,0 +1,68 @@
+{
+  "response": {
+    "kind": "tasks",
+    "nextPageToken": "AE2HWKQAAAAAAAAAAAAAAAAAAAA",
+    "data": [
+      {
+        "id": "IEAAAAAQKQAAAAAA",
+        "title": "Test task",
+        "description": "",
+        "status": "Deferred",
+        "importance": "Normal",
+        "dates": {
+          "type": "Backlog"
+        },
+        "authorIds": [
+          "KUAAAAAA"
+        ],
+        "responsibleIds": [
+          "KUAAAAAB"
+        ],
+        "parentIds": [
+          "IEAAAAAQI4AAAAAA"
+        ],
+        "superTaskIds": [],
+        "createdDate": "2024-01-01T00:00:00Z",
+        "updatedDate": "2024-01-02T00:00:00Z",
+        "permalink": "https://www.wrike.com/open.htm?id=1"
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": "AE2HWKQAAAAAAAAAAAAAAAAAAAA",
+  "native": {
+    "id": "IEAAAAAQKQAAAAAA",
+    "title": "Test task",
+    "description": "",
+    "status": "Deferred",
+    "importance": "Normal",
+    "dates": {
+      "type": "Backlog"
+    },
+    "authorIds": [
+      "KUAAAAAA"
+    ],
+    "responsibleIds": [
+      "KUAAAAAB"
+    ],
+    "parentIds": [
+      "IEAAAAAQI4AAAAAA"
+    ],
+    "superTaskIds": [],
+    "createdDate": "2024-01-01T00:00:00Z",
+    "updatedDate": "2024-01-02T00:00:00Z",
+    "permalink": "https://www.wrike.com/open.htm?id=1"
+  },
+  "unified": {
+    "name": "Test task",
+    "status": "ON_HOLD",
+    "priority": "NORMAL",
+    "creator": "KUAAAAAA",
+    "assignees": [
+      "KUAAAAAB"
+    ],
+    "collections": [
+      "IEAAAAAQI4AAAAAA"
+    ]
+  }
+}
