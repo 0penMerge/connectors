@@ -1,0 +1,13 @@
+lens: asana.projects -> ticketing.Collection@1
+read:
+  from: GET /projects?limit=100&opt_fields=name,notes,created_at,modified_at,permalink_url,archived,team.gid
+  strategy: hash_snapshot
+  scopes: ['projects:read']
+id: gid
+fields:
+  name: name
+  description: notes
+  collection_type: {const: PROJECT}
+  collection_url: permalink_url
+  remote_created_at: created_at
+  remote_updated_at: modified_at
