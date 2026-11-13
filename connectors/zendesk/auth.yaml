@@ -1,0 +1,45 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://{config.subdomain}.zendesk.com/oauth/authorizations/new
+token:
+  url: https://{config.subdomain}.zendesk.com/oauth/tokens
+  encoding: json
+scopes:
+  param: scope
+  separator: ' '
+  default: [read]
+refresh:
+  rotates: true
+  grace_seconds: 0
+inputs:
+- id: subdomain
+  label: Zendesk subdomain (the part before .zendesk.com)
+  pattern: '[a-z0-9][a-z0-9-]{0,62}'
+  stage: before_redirect
+discover:
+  steps:
+  - id: me
+    request: {url: 'https://{config.subdomain}.zendesk.com/api/v2/users/me.json'}
+    save:
+      identity.user_id: user.id
+      identity.email: {path: user.email, required: false}
+      identity.display_name: {path: user.name, required: false}
+  identity: {tenant_id: '{config.subdomain}'}
+probe:
+  request: {url: 'https://{config.subdomain}.zendesk.com/api/v2/users/me.json'}
+base_url: https://{config.subdomain}.zendesk.com
+scope_catalog:
+- id: read
+  label: Read
+  description: Read access to all Support resources (tickets, users, organizations, groups, tags, custom roles).
+  models: [Account, Comment, Contact, Role, Tag, Team, Ticket, User]
+  operations: [read]
+  recommended: true
+- id: write
+  label: Write
+  description: Write access to Support resources; required to update tickets.
+notes: 'Per-tenant OAuth: authorization and token URLs live on the customer''s {subdomain}.zendesk.com host, so
+  the subdomain must be collected before redirecting (the token response does not return it). Zendesk issues expiring
+  access tokens with single-use refresh tokens (each refresh returns a new refresh token and invalidates the old
+  pair). Resource-scoped variants (tickets:read, users:read, organizations:read) exist if narrower grants are wanted.'
