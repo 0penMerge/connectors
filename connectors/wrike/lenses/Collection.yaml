@@ -1,0 +1,9 @@
+lens: wrike.folders -> ticketing.Collection@1
+read:
+  from: GET /folders?fields=%5B%22description%22%5D
+  strategy: hash_snapshot
+  scopes: [wsReadOnly]
+fields:
+  name: title
+  description: description
+  remote_created_at: project.createdDate
