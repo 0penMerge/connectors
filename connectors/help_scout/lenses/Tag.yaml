@@ -1,0 +1,8 @@
+lens: help_scout.tags -> ticketing.Tag@1
+read:
+  from: GET /v2/tags
+  records: _embedded.tags
+  get: GET /v2/tags/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
