@@ -1,0 +1,24 @@
+{
+  "response": {
+    "value": [
+      {
+        "id": "87d349ed-44d7-43e1-9a83-5f2406dee5bd",
+        "displayName": "Adele Vance",
+        "mail": "AdeleV@contoso.com",
+        "userPrincipalName": "AdeleV@contoso.com"
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "87d349ed-44d7-43e1-9a83-5f2406dee5bd",
+    "displayName": "Adele Vance",
+    "mail": "AdeleV@contoso.com",
+    "userPrincipalName": "AdeleV@contoso.com"
+  },
+  "unified": {
+    "name": "Adele Vance",
+    "email_address": "AdeleV@contoso.com"
+  }
+}
