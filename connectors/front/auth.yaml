@@ -1,0 +1,19 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://app.frontapp.com/oauth/authorize
+token:
+  url: https://app.frontapp.com/oauth/token
+  client_auth: client_secret_basic
+scopes:
+  param: scope
+  separator: ' '
+  default: [default]
+scope_catalog:
+- id: default
+  label: Default access
+  description: Front OAuth requests carry no scope parameter; the app's resource access (shared/private namespaces,
+    read/write) is configured on the Front app in the developer settings and granted at install.
+notes: Token exchange and refresh authenticate with HTTP Basic client_id:client_secret. Access tokens last 60 minutes;
+  refresh tokens last 6 months and the same refresh token is returned on refresh until its final 24 hours, when
+  a new one (new 6-month window) is issued, so always store the refresh_token from each response.
