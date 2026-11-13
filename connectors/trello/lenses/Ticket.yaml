@@ -1,0 +1,16 @@
+lens: trello.cards -> ticketing.Ticket@1
+read:
+  from: GET /cards/all
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: desc
+  due_date: due
+  remote_updated_at: dateLastActivity
+  ticket_url: url
+  status:
+    from: closed
+    map: {'true': CLOSED, 'false': OPEN}
+  assignees: {refs: User, from: idMembers}
+  collections: {refs: Collection, from: idList}
+  tags: labels[*].name
