@@ -1,0 +1,8 @@
+lens: bitbucket.workspace_members -> ticketing.User@1
+read:
+  from: GET /members
+  strategy: hash_snapshot
+id: user.uuid
+fields:
+  name: user.display_name
+  avatar: user.links.avatar.href
