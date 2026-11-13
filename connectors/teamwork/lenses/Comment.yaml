@@ -1,0 +1,11 @@
+lens: teamwork.comments -> ticketing.Comment@1
+read:
+  from: GET /projects/api/v3/comments.json?objectTypes=task
+  records: comments
+  strategy: hash_snapshot
+fields:
+  body: body
+  html_body: htmlBody
+  user: {ref: User, from: postedByUserId}
+  ticket: {ref: Ticket, from: objectId}
+  remote_created_at: postedDateTime
