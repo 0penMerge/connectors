@@ -1,104 +1,49 @@
-{
-  "apiVersion": "openmerge.dev/connector/v1",
-  "kind": "Connector",
-  "metadata": {
-    "id": "bitbucket",
-    "version": "1.0.0",
-    "coreAbi": "2",
-    "name": "Bitbucket",
-    "company": "Atlassian",
-    "description": "Sync Bitbucket Cloud workspace projects and members through the OpenMerge ticketing model.",
-    "logo": {
-      "url": "https://cdn.openmerge.dev/connectors/bitbucket.svg"
-    }
-  },
-  "runtime": {
-    "entrypoint": "plugin.py:BitbucketPlugin"
-  },
-  "categories": [
-    "ticketing@1"
-  ],
-  "capabilities": {
-    "reads": [
-      "hash_snapshot"
-    ],
-    "writes": [],
-    "dynamicSchema": false,
-    "customFields": false
-  },
-  "auth": {
-    "type": "oauth2",
-    "driver": "oauth2",
-    "authorization_url": "https://bitbucket.org/site/oauth2/authorize",
-    "token_url": "https://bitbucket.org/site/oauth2/access_token",
-    "refresh_rotates": true,
-    "rotation_grace_seconds": 0,
-    "scopes_param": "scope",
-    "default_scopes": [
-      "default"
-    ],
-    "scope_catalog": [
-      {
-        "id": "default",
-        "label": "Consumer scopes",
-        "description": "Bitbucket Cloud does not accept a scope parameter on the grant; the OAuth consumer itself must be configured with Account: Read and Projects: Read (plus Repositories and Issues: Read for passthrough calls)."
-      }
-    ],
-    "connection_config_fields": [
-      "workspace"
-    ],
-    "token_endpoint_auth": "client_secret_basic",
-    "notes": "Bitbucket Cloud OAuth consumer, authorization code grant. Access tokens expire after 1 hour; refresh tokens rotate on use. workspace is the workspace slug chosen by the user after authorization."
-  },
-  "setup": {
-    "oauthAppFields": [
-      {
-        "id": "client_id",
-        "component": "text",
-        "label": "Client ID",
-        "required": true
-      },
-      {
-        "id": "client_secret",
-        "component": "secret",
-        "label": "Client secret",
-        "required": true,
-        "writeOnly": true
-      }
-    ],
-    "instructions": [
-      {
-        "component": "callback_url",
-        "label": "Add this redirect URL to your Bitbucket OAuth app"
-      }
-    ]
-  },
-  "api": {
-    "base_url": "https://api.bitbucket.org/2.0/workspaces/{workspace}",
-    "describe_endpoint": "/",
-    "pagination": {
-      "style": "offset",
-      "param": "page",
-      "records_path": "values",
-      "next_path": "next",
-      "limit_param": "pagelen"
-    },
-    "rate_limit_headers": {
-      "remaining": null,
-      "reset": null,
-      "reset_style": "auto_seconds"
-    },
-    "authorization_scheme": "Bearer",
-    "schema_adapter": "declared",
-    "notes": "OAuth calls must go to api.bitbucket.org with a Bearer token. Collections use page/pagelen with records under values. Issues are only listed per repository (/repositories/{workspace}/{repo_slug}/issues), so Ticket is not declared."
-  },
-  "webhooks": {
-    "supported": false,
-    "automatic": false
-  },
-  "provenance": {
-    "author": "human:nath@datakart.ai",
-    "created_at": "2026-11-12T00:00:00Z",
-    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://developer.atlassian.com/cloud/bitbucket/rest/api-group-workspaces/"
-  }
-}
+apiVersion: openmerge.dev/connector/v1
+kind: Connector
+metadata:
+  id: bitbucket
+  version: 1.0.0
+  coreAbi: '3'
+  name: Bitbucket
+  company: Atlassian
+  description: Sync Bitbucket Cloud workspace projects and members through the OpenMerge ticketing model.
+  logo: {url: 'https://cdn.openmerge.dev/connectors/bitbucket.svg'}
+categories: [ticketing@1]
+capabilities:
+  reads: [hash_snapshot]
+  writes: []
+  dynamicSchema: false
+  customFields: false
+setup:
+  oauthAppFields:
+  - {id: client_id, component: text, label: Client ID, required: true}
+  - id: client_secret
+    component: secret
+    label: Client secret
+    required: true
+    writeOnly: true
+  instructions:
+  - {component: callback_url, label: Add this redirect URL to your Bitbucket OAuth app}
+api:
+  base_url: https://api.bitbucket.org/2.0/workspaces/{workspace}
+  describe_endpoint: /
+  pagination:
+    first: 1
+    mode: page
+    param: page
+    records_path: values
+    size: 100
+    limit_param: pagelen
+  rate_limit_headers: {remaining: null, reset: null, reset_style: auto_seconds}
+  authorization_scheme: Bearer
+  schema_adapter: declared
+  notes: OAuth calls must go to api.bitbucket.org with a Bearer token. Collections use page/pagelen with records
+    under values. Issues are only listed per repository (/repositories/{workspace}/{repo_slug}/issues), so Ticket
+    is not declared.
+webhooks:
+  supported: false
+  automatic: false
+provenance:
+  author: human:nath@datakart.ai
+  created_at: '2026-11-12T00:00:00Z'
+  reason: Provider descriptor for the Merge-compatible Ticketing category, from https://developer.atlassian.com/cloud/bitbucket/rest/api-group-workspaces/
