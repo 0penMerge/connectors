@@ -1,0 +1,9 @@
+lens: intercom.teams -> ticketing.Team@1
+read:
+  from: GET /teams
+  records: teams
+  page: {mode: single}
+  get: GET /teams/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
