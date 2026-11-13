@@ -1,0 +1,31 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://github.com/login/oauth/authorize
+token:
+  url: https://github.com/login/oauth/access_token
+  headers: {Accept: application/json}
+scopes:
+  param: scope
+  separator: ' '
+  default: [default]
+refresh:
+  rotates: true
+  grace_seconds: 0
+discover:
+  steps:
+  - id: me
+    request: {url: 'https://api.github.com/user'}
+    save:
+      identity.user_id: id
+      identity.display_name: {path: login, required: false}
+      identity.email: {path: email, required: false}
+scope_catalog:
+- id: default
+  label: GitHub App permissions
+  description: 'GitHub App user-to-server tokens ignore OAuth scopes; access comes from the app''s configured permissions
+    (Repository: Issues read, Metadata read; Organization: Members read for teams) intersected with what the user
+    can see in repositories where the app is installed.'
+notes: 'GitHub App user access tokens via the web application flow. With token expiration enabled, access tokens
+  last 8 hours and each refresh returns a new refresh token while invalidating the previous one (6-month refresh
+  lifetime). The token endpoint must be called with Accept: application/json.'
