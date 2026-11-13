@@ -1,0 +1,15 @@
+type: recipe
+use: basic
+inputs:
+- {id: username, remove: true}
+- {id: password, remove: true}
+- id: organization
+  label: Organization (the <organization> in <organization>.gladly.com)
+  pattern: '[a-z0-9][a-z0-9-]{0,62}'
+  stage: credentials
+- {id: agent_email, label: API user email, secret: true, component: text}
+- {id: api_token, label: API token, secret: true, component: secret}
+basic:
+  username: '{secret.agent_email}'
+  password: '{secret.api_token}'
+base_url: https://{config.organization}.gladly.com
