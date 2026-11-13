@@ -1,0 +1,8 @@
+lens: front.contacts -> ticketing.Contact@1
+read:
+  from: GET /contacts?limit=100
+  get: GET /contacts/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  details: description
