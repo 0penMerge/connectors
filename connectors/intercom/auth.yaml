@@ -1,0 +1,26 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://app.intercom.com/oauth
+token:
+  url: https://api.intercom.io/auth/eagle/token
+scopes:
+  param: scope
+  separator: ' '
+  default: [default]
+discover:
+  steps:
+  - id: me
+    request: {url: 'https://api.intercom.io/me'}
+    save:
+      identity.user_id: id
+      identity.email: {path: email, required: false}
+      identity.tenant_id: {path: app.id_code, required: false}
+scope_catalog:
+- id: default
+  label: Default access
+  description: Intercom does not take scopes on the authorize request; permissions (read conversations, read users
+    and companies, read admins, read tags, write users) are ticked on the app's Authorization page in the Developer
+    Hub and shown to the installer.
+notes: Authorization-code flow; the token endpoint takes code, client_id and client_secret in the body and returns
+  a non-expiring access token (no refresh token). EU and AU workspaces authorize at app.eu.intercom.com / app.au.intercom.com.
