@@ -1,0 +1,11 @@
+lens: dixa.tags -> ticketing.Tag@1
+read:
+  from: GET /v1/tags?includeDeactivated=true
+  records: data
+  page: {mode: single}
+  get: GET /v1/tags/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+write:
+  record: data
