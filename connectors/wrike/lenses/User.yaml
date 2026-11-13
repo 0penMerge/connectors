@@ -1,0 +1,10 @@
+lens: wrike.contacts -> ticketing.User@1
+read:
+  from: GET /contacts?types=%5B%22Person%22%5D
+  get: GET /contacts/{id}
+  strategy: hash_snapshot
+  scopes: [wsReadOnly]
+fields:
+  email_address: primaryEmail
+  avatar: avatarUrl
+  name: {join: [firstName, lastName], sep: ' '}
