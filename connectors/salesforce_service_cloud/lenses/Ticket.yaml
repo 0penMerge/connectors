@@ -1,0 +1,29 @@
+lens: salesforce_service_cloud.Case -> ticketing.Ticket@1
+read:
+  from: GET /services/data/v67.0/query?q=SELECT+Id,CaseNumber,Subject,Description,Status,Priority,Type,Origin,Reason,IsClosed,ClosedDate,AccountId,ContactId,OwnerId,ParentId,CreatedById,CreatedDate,LastModifiedDate+FROM+Case+ORDER+BY+CreatedDate+ASC
+  get: GET /services/data/v67.0/sobjects/Case/{id}
+  strategy: hash_snapshot
+id: Id
+fields:
+  name: Subject
+  description: Description
+  status:
+    from: Status
+    map:
+      New: OPEN
+      Working: IN_PROGRESS
+      Escalated: IN_PROGRESS
+      On Hold: ON_HOLD
+      Closed: CLOSED
+  priority:
+    from: Priority
+    map: {High: HIGH, Medium: NORMAL, Low: LOW}
+  ticket_type: Type
+  account: {ref: Account, from: AccountId}
+  contact: {ref: Contact, from: ContactId}
+  creator: {ref: User, from: CreatedById}
+  parent_ticket: {ref: Ticket, from: ParentId}
+  remote_created_at: CreatedDate
+  remote_updated_at: LastModifiedDate
+  completed_at: ClosedDate
+  assignees: {refs: User, from: OwnerId}
