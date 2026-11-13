@@ -1,0 +1,9 @@
+lens: freshservice.departments -> ticketing.Account@1
+read:
+  from: GET /departments
+  records: departments
+  get: GET /departments/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  domains: domains
