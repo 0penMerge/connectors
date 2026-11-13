@@ -1,0 +1,15 @@
+lens: microsoft_teams.chat_messages -> chat.Message@1
+read:
+  from: GET /v1.0/chats/{parent_id}/messages?$top=50
+  keep: not exists deletedDateTime
+  strategy: hash_snapshot
+parent: {model: Conversation, inject: _chat_id}
+fields:
+  conversation_id: {ref: Conversation, from: _chat_id}
+  user_id: {ref: User, from: from.user.id}
+  root_message_id: {ref: Message, from: replyToId}
+  body: body.content
+  subject_line: subject
+  url: webUrl
+  remote_created_at: createdDateTime
+  remote_updated_at: lastModifiedDateTime
