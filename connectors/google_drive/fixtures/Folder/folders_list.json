@@ -1,0 +1,33 @@
+{
+  "response": {
+    "files": [
+      {
+        "id": "0B1pz5q6WLu5aSmV0Y0ZpTkVGQTQ",
+        "name": "Planning",
+        "mimeType": "application/vnd.google-apps.folder",
+        "parents": [
+          "0AFkXKoiF0z1DUk9PVA"
+        ],
+        "driveId": "0AFkXKoiF0z1DUk9PVA",
+        "webViewLink": "https://drive.google.com/drive/folders/0B1pz5q6WLu5aSmV0Y0ZpTkVGQTQ"
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "0B1pz5q6WLu5aSmV0Y0ZpTkVGQTQ",
+    "name": "Planning",
+    "mimeType": "application/vnd.google-apps.folder",
+    "parents": [
+      "0AFkXKoiF0z1DUk9PVA"
+    ],
+    "driveId": "0AFkXKoiF0z1DUk9PVA",
+    "webViewLink": "https://drive.google.com/drive/folders/0B1pz5q6WLu5aSmV0Y0ZpTkVGQTQ"
+  },
+  "unified": {
+    "name": "Planning",
+    "parent_folder": "0AFkXKoiF0z1DUk9PVA",
+    "drive": "0AFkXKoiF0z1DUk9PVA"
+  }
+}
