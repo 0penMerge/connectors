@@ -1,0 +1,14 @@
+lens: shortcut.epics -> ticketing.Collection@1
+read:
+  from: GET /epics/paginated
+  records: data
+  page: {first: 1, mode: page, param: page, size: 250, limit_param: page_size}
+  get: GET /epics/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  description: description
+  collection_url: app_url
+  collection_type: {const: PROJECT}
+  remote_created_at: created_at
+  remote_updated_at: updated_at
