@@ -1,0 +1,7 @@
+lens: front.teams -> ticketing.Team@1
+read:
+  from: GET /teams
+  get: GET /teams/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
