@@ -1,0 +1,7 @@
+lens: teamwork.tags -> ticketing.Tag@1
+read:
+  from: GET /projects/api/v3/tags.json
+  records: tags
+  strategy: hash_snapshot
+fields:
+  name: name
