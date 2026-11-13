@@ -1,0 +1,51 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://app.asana.com/-/oauth_authorize
+token:
+  url: https://app.asana.com/-/oauth_token
+scopes:
+  param: scope
+  separator: ' '
+  default: ['users:read', 'projects:read', 'teams:read', 'tags:read']
+identity_from_token:
+  user_id: data.gid
+  email: {path: data.email, required: false}
+  display_name: {path: data.name, required: false}
+discover:
+  steps:
+  - id: workspace
+    request: {url: 'https://app.asana.com/api/1.0/workspaces'}
+    choose: {list: data, value: gid, label: name, into: config.workspace_gid}
+  identity: {tenant_id: '{config.workspace_gid}'}
+base_url: https://app.asana.com/api/1.0/workspaces/{config.workspace_gid}
+scope_catalog:
+- id: users:read
+  label: Read users
+  description: Read workspace members, names, emails and photos.
+  models: [User]
+  operations: [read]
+- id: projects:read
+  label: Read projects
+  description: Read workspace projects.
+  models: [Collection]
+  operations: [read]
+- id: teams:read
+  label: Read teams
+  description: Read teams in an organization workspace.
+  models: [Team]
+  operations: [read]
+- id: tags:read
+  label: Read tags
+  description: Read workspace tags.
+  models: [Tag]
+  operations: [read]
+- id: tasks:read
+  label: Read tasks
+  description: Read tasks (reserved; Asana has no paginated workspace-wide task list).
+- id: workspaces:read
+  label: Read workspaces
+  description: List the workspaces the user belongs to (used to pick workspace_gid).
+notes: Asana OAuth with granular scopes (the app must be configured for specific scopes; apps on full permissions
+  use scope 'default'). Access tokens last one hour; refresh tokens are long-lived and not rotated. workspace_gid
+  is chosen after authorization from GET /api/1.0/workspaces.
