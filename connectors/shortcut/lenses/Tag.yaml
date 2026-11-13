@@ -1,0 +1,7 @@
+lens: shortcut.labels -> ticketing.Tag@1
+read:
+  from: GET /labels
+  get: GET /labels/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
