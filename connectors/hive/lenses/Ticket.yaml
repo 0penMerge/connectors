@@ -1,0 +1,15 @@
+lens: hive.actions -> ticketing.Ticket@1
+read:
+  from: GET /actions?first=200&sortBy=createdAt%20asc
+  strategy: hash_snapshot
+id: node._id
+fields:
+  name: node.title
+  description: node.description
+  status: node.status
+  due_date: node.deadline
+  completed_at: node.checkedDate
+  creator: {ref: User, from: node.createdBy}
+  parent_ticket: {ref: Ticket, from: node.parent}
+  remote_created_at: node.createdAt
+  remote_updated_at: node.modifiedAt
