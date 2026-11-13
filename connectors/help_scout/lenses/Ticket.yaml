@@ -1,0 +1,26 @@
+lens: help_scout.conversations -> ticketing.Ticket@1
+read:
+  from: GET /v2/conversations?status=all&sortField=modifiedAt&sortOrder=asc
+  get: GET /v2/conversations/{id}
+  strategy: timestamp_delta
+  cursor:
+    field: userUpdatedAt
+    tieBreaker: id
+    parameter: modifiedSince
+    overlapSeconds: 300
+    precision: seconds
+    parameters: {status: all, sortField: modifiedAt, sortOrder: asc}
+  reconcile_every: 86400
+fields:
+  name: subject
+  status:
+    from: status
+    map: {active: OPEN, pending: ON_HOLD, closed: CLOSED}
+  ticket_type: type
+  contact: {ref: Contact, from: primaryCustomer.id}
+  ticket_url: _links.web.href
+  remote_created_at: createdAt
+  remote_updated_at: userUpdatedAt
+  completed_at: closedAt
+  assignees: {refs: User, from: assignee.id}
+  tags: tags[*].tag
