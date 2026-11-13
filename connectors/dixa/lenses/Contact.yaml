@@ -1,0 +1,11 @@
+lens: dixa.endusers -> ticketing.Contact@1
+read:
+  from: GET /v1/endusers?pageLimit=100
+  get: GET /v1/endusers/{id}
+  strategy: hash_snapshot
+fields:
+  name: displayName
+  email_address: email
+  phone_number: phoneNumber
+write:
+  record: data
