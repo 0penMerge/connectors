@@ -1,0 +1,11 @@
+lens: front.conversation_messages -> ticketing.Comment@1
+read:
+  from: GET /conversations/{parent_id}/messages?limit=100
+  strategy: hash_snapshot
+parent: {model: Ticket, inject: _conversation_id}
+fields:
+  ticket: {ref: Ticket, from: _conversation_id}
+  user: {ref: User, from: author.id}
+  body: text
+  html_body: body
+  remote_created_at: {from: created_at, as: datetime, from_format: epoch_seconds}
