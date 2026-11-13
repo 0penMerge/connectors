@@ -1,0 +1,11 @@
+lens: servicenow.sys_user_group -> ticketing.Team@1
+read:
+  from: GET /api/now/table/sys_user_group?sysparm_exclude_reference_link=true&sysparm_query=ORDERBYsys_created_on
+  get: GET /api/now/table/sys_user_group/{id}
+  strategy: hash_snapshot
+id: sys_id
+fields:
+  name: name
+  description: description
+write:
+  record: result
