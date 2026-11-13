@@ -1,104 +1,52 @@
-{
-  "apiVersion": "openmerge.dev/connector/v1",
-  "kind": "Connector",
-  "metadata": {
-    "id": "rally",
-    "version": "1.0.0",
-    "coreAbi": "2",
-    "name": "Rally",
-    "company": "Broadcom",
-    "description": "Sync Rally (Broadcom Agile Central) work items, projects, users, tags, discussions and attachments through the OpenMerge ticketing model.",
-    "logo": {
-      "url": "https://cdn.openmerge.dev/connectors/rally.svg"
-    }
-  },
-  "runtime": {
-    "entrypoint": "plugin.py:RallyPlugin"
-  },
-  "categories": [
-    "ticketing@1"
-  ],
-  "capabilities": {
-    "reads": [
-      "hash_snapshot"
-    ],
-    "writes": [],
-    "dynamicSchema": false,
-    "customFields": false
-  },
-  "auth": {
-    "type": "oauth2",
-    "driver": "oauth2",
-    "authorization_url": "https://rally1.rallydev.com/login/oauth2/auth",
-    "token_url": "https://rally1.rallydev.com/login/oauth2/token",
-    "refresh_rotates": false,
-    "rotation_grace_seconds": null,
-    "scopes_param": "scope",
-    "default_scopes": [
-      "alm"
-    ],
-    "scope_catalog": [
-      {
-        "id": "alm",
-        "label": "Rally ALM",
-        "description": "Rally's single OAuth scope: access the Web Services API (WSAPI) with the authorizing user's Rally permissions."
-      }
-    ],
-    "connection_config_fields": [],
-    "notes": "Create an OAuth client in Rally under Settings > Access > OAuth Clients (client id, client secret, callback URL). Authorization-code grant: GET /login/oauth2/auth with response_type=code, client_id, redirect_uri, scope=alm, state; then POST form-encoded code, redirect_uri, grant_type=authorization_code, client_id, client_secret to /login/oauth2/token. Rally expects the resulting access token in a 'ZSESSIONID: <token>' request header (the same header used for Rally API keys), not 'Authorization: Bearer'."
-  },
-  "setup": {
-    "oauthAppFields": [
-      {
-        "id": "client_id",
-        "component": "text",
-        "label": "Client ID",
-        "required": true
-      },
-      {
-        "id": "client_secret",
-        "component": "secret",
-        "label": "Client secret",
-        "required": true,
-        "writeOnly": true
-      }
-    ],
-    "instructions": [
-      {
-        "component": "callback_url",
-        "label": "Add this redirect URL to your Rally OAuth app"
-      }
-    ]
-  },
-  "api": {
-    "base_url": "https://rally1.rallydev.com/slm/webservice/v2.0",
-    "describe_endpoint": "/",
-    "pagination": {
-      "style": "offset",
-      "param": "start",
-      "records_path": "QueryResult.Results",
-      "next_path": "next",
-      "limit_param": "pagesize"
-    },
-    "rate_limit_headers": {
-      "remaining": null,
-      "reset": null,
-      "reset_style": "auto_seconds"
-    },
-    "authorization_scheme": "Bearer",
-    "schema_adapter": "declared",
-    "auth_headers": {
-      "ZSESSIONID": "{access_token}"
-    },
-    "notes": "The OAuth access token is sent in the ZSESSIONID header (api.auth_headers). Queries return {QueryResult: {Results: [...], TotalResultCount, StartIndex, PageSize}} and page with 1-based start plus pagesize (max 2000). Queries run against the authorizing user's default workspace unless a workspace=/workspace/<ObjectID> parameter is added. References are objects with _ref, _refObjectUUID and _refObjectName; records are keyed by ObjectUUID. Explicit fetch lists are used instead of fetch=true per Broadcom WSAPI best practice."
-  },
-  "webhooks": {
-    "supported": false,
-    "automatic": false
-  },
-  "provenance": {
-    "author": "human:nath@datakart.ai",
-    "created_at": "2026-11-12T00:00:00Z",
-    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://rally1.rallydev.com/slm/doc/webservice/"
-  }
-}
+apiVersion: openmerge.dev/connector/v1
+kind: Connector
+metadata:
+  id: rally
+  version: 1.0.0
+  coreAbi: '3'
+  name: Rally
+  company: Broadcom
+  description: Sync Rally (Broadcom Agile Central) work items, projects, users, tags, discussions and attachments
+    through the OpenMerge ticketing model.
+  logo: {url: 'https://cdn.openmerge.dev/connectors/rally.svg'}
+categories: [ticketing@1]
+capabilities:
+  reads: [hash_snapshot]
+  writes: []
+  dynamicSchema: false
+  customFields: false
+setup:
+  oauthAppFields:
+  - {id: client_id, component: text, label: Client ID, required: true}
+  - id: client_secret
+    component: secret
+    label: Client secret
+    required: true
+    writeOnly: true
+  instructions:
+  - {component: callback_url, label: Add this redirect URL to your Rally OAuth app}
+api:
+  base_url: https://rally1.rallydev.com/slm/webservice/v2.0
+  describe_endpoint: /
+  pagination:
+    first: 1
+    mode: offset
+    param: start
+    records_path: QueryResult.Results
+    size: 200
+    limit_param: pagesize
+  rate_limit_headers: {remaining: null, reset: null, reset_style: auto_seconds}
+  authorization_scheme: Bearer
+  schema_adapter: declared
+  notes: 'The OAuth access token is sent in the ZSESSIONID header (api.auth_headers). Queries return {QueryResult:
+    {Results: [...], TotalResultCount, StartIndex, PageSize}} and page with 1-based start plus pagesize (max 2000).
+    Queries run against the authorizing user''s default workspace unless a workspace=/workspace/<ObjectID> parameter
+    is added. References are objects with _ref, _refObjectUUID and _refObjectName; records are keyed by ObjectUUID.
+    Explicit fetch lists are used instead of fetch=true per Broadcom WSAPI best practice.'
+webhooks:
+  supported: false
+  automatic: false
+provenance:
+  author: human:nath@datakart.ai
+  created_at: '2026-11-12T00:00:00Z'
+  reason: Provider descriptor for the Merge-compatible Ticketing category, from https://rally1.rallydev.com/slm/doc/webservice/
