@@ -1,0 +1,14 @@
+lens: github_issues.repositories -> ticketing.Collection@1
+read:
+  from: GET /user/repos?affiliation=owner,collaborator,organization_member&sort=full_name&direction=asc
+  strategy: hash_snapshot
+fields:
+  name: full_name
+  description: description
+  access_level:
+    from: visibility
+    map: {public: PUBLIC, private: PRIVATE, internal: COMPANY}
+  collection_url: html_url
+  collection_type: {const: PROJECT}
+  remote_created_at: created_at
+  remote_updated_at: updated_at
