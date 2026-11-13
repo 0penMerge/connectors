@@ -1,0 +1,14 @@
+lens: microsoft_teams.chats -> chat.Conversation@1
+read:
+  from: GET /v1.0/chats?$top=50
+  get: GET /v1.0/chats/{id}
+  strategy: hash_snapshot
+  scopes: [Chat.ReadBasic]
+fields:
+  name: topic
+  type:
+    from: chatType
+    map: {oneOnOne: ONE_ON_ONE_CHAT, group: GROUP_CHAT, meeting: MEETING_CHAT}
+  url: webUrl
+  remote_created_at: createdDateTime
+  remote_updated_at: lastUpdatedDateTime
