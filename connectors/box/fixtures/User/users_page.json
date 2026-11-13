@@ -1,0 +1,28 @@
+{
+  "response": {
+    "total_count": 1,
+    "entries": [
+      {
+        "id": "11446498",
+        "type": "user",
+        "name": "Aaron Levie",
+        "login": "ceo@example.com",
+        "status": "active"
+      }
+    ],
+    "next_marker": null
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "11446498",
+    "type": "user",
+    "name": "Aaron Levie",
+    "login": "ceo@example.com",
+    "status": "active"
+  },
+  "unified": {
+    "name": "Aaron Levie",
+    "email_address": "ceo@example.com"
+  }
+}
