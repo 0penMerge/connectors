@@ -1,0 +1,30 @@
+{
+  "response": {
+    "data": [
+      {
+        "id": 12,
+        "name": "Onboarding revamp",
+        "description": "Q3",
+        "app_url": "https://app.shortcut.com/acme/epic/12",
+        "created_at": "2024-01-01T00:00:00Z",
+        "updated_at": "2024-01-02T00:00:00Z"
+      }
+    ],
+    "next": null,
+    "total": 1
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": 12,
+    "name": "Onboarding revamp",
+    "description": "Q3",
+    "app_url": "https://app.shortcut.com/acme/epic/12",
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-01-02T00:00:00Z"
+  },
+  "unified": {
+    "name": "Onboarding revamp",
+    "collection_type": "PROJECT"
+  }
+}
