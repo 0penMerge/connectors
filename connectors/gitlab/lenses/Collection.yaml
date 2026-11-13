@@ -1,0 +1,14 @@
+lens: gitlab.projects -> ticketing.Collection@1
+read:
+  from: GET /projects?include_subgroups=true&order_by=id&sort=asc
+  strategy: hash_snapshot
+  scopes: [read_api]
+fields:
+  name: name_with_namespace
+  description: description
+  access_level:
+    from: visibility
+    map: {public: PUBLIC, private: PRIVATE, internal: COMPANY}
+  collection_url: web_url
+  collection_type: {const: PROJECT}
+  remote_created_at: created_at
