@@ -1,0 +1,15 @@
+lens: servicenow.sys_journal_field -> ticketing.Comment@1
+read:
+  from: GET /api/now/table/sys_journal_field?sysparm_exclude_reference_link=true&sysparm_query=name%3Dincident%5EelementINcomments%2Cwork_notes%5EORDERBYsys_created_on
+  get: GET /api/now/table/sys_journal_field/{id}
+  strategy: hash_snapshot
+id: sys_id
+fields:
+  body: value
+  ticket: {ref: Ticket, from: element_id}
+  remote_created_at: sys_created_on
+  is_private:
+    from: element
+    map: {work_notes: true, comments: false}
+write:
+  record: result
