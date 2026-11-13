@@ -1,0 +1,52 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize
+token:
+  url: https://login.microsoftonline.com/organizations/oauth2/v2.0/token
+scopes:
+  param: scope
+  separator: ' '
+  default: [499b84ac-1321-427f-aa17-267ca6975798/vso.work, 499b84ac-1321-427f-aa17-267ca6975798/vso.project, offline_access]
+refresh:
+  rotates: true
+  grace_seconds: 86400
+discover:
+  steps:
+  - id: profile
+    request:
+      url: https://app.vssps.visualstudio.com/_apis/profile/profiles/me
+      query: {api-version: '7.1'}
+    save:
+      config.member_id: id
+      identity.user_id: id
+      identity.email: {path: emailAddress, required: false}
+      identity.display_name: {path: displayName, required: false}
+  - id: organization
+    request:
+      url: https://app.vssps.visualstudio.com/_apis/accounts
+      query: {memberId: '{config.member_id}', api-version: '7.1'}
+    choose: {list: value, value: accountName, label: accountName, into: config.organization}
+  identity: {tenant_id: '{config.organization}'}
+base_url: https://dev.azure.com/{config.organization}
+scope_catalog:
+- id: offline_access
+  label: Offline access
+  description: Issue refresh tokens so syncs keep running.
+  recommended: true
+- id: 499b84ac-1321-427f-aa17-267ca6975798/vso.work
+  label: Work items (read)
+  description: Read work items, queries, boards and area/iteration paths.
+  models: [Ticket]
+  operations: [read]
+- id: 499b84ac-1321-427f-aa17-267ca6975798/vso.project
+  label: Project and team (read)
+  description: Read projects and teams.
+  models: [Collection, Team]
+  operations: [read]
+- id: 499b84ac-1321-427f-aa17-267ca6975798/vso.work_write
+  label: Work items (read and write)
+  description: Create and update work items.
+notes: Microsoft Entra ID delegated OAuth for the Azure DevOps resource (499b84ac-1321-427f-aa17-267ca6975798);
+  legacy Azure DevOps OAuth apps are deprecated. Work/school accounts only (MSA users are not supported by Entra
+  apps for Azure DevOps). organization is the dev.azure.com organization name chosen by the user.
