@@ -1,0 +1,50 @@
+type: recipe
+use: oauth2.authorization_code
+authorize:
+  url: https://{config.host}/rest/oauth2/latest/authorize
+token:
+  url: https://{config.host}/rest/oauth2/latest/token
+scopes:
+  param: scope
+  separator: ' '
+  default: [READ]
+refresh:
+  rotates: true
+  grace_seconds: 0
+pkce: S256
+inputs:
+- id: host
+  label: Jira Data Center host name (e.g. jira.example.com)
+  pattern: '[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+'
+  stage: before_redirect
+discover:
+  steps:
+  - id: myself
+    request: {url: 'https://{config.host}/rest/api/2/myself'}
+    save:
+      identity.user_id: key
+      identity.email: {path: emailAddress, required: false}
+      identity.display_name: {path: displayName, required: false}
+  identity: {tenant_id: '{config.host}'}
+base_url: https://{config.host}
+scope_catalog:
+- id: READ
+  label: Read
+  description: View projects, issues, users and roles the authorizing user can see.
+  models: [Collection, Comment, Role, Ticket, User]
+  operations: [read]
+  recommended: true
+- id: WRITE
+  label: Write
+  description: Create and edit issues and comments (includes READ).
+- id: ADMIN
+  label: Project admin
+  description: Administer projects the user administers (includes WRITE).
+- id: SYSTEM_ADMIN
+  label: System admin
+  description: Full system administration (includes ADMIN); avoid unless required.
+notes: Jira Data Center OAuth 2.0 provider (incoming application link, Jira 8.22+). The admin creates an External
+  application link with redirect URL = the OpenMerge callback; endpoints are per instance at https://{host}/rest/oauth2/latest/{authorize,token}.
+  host is the instance origin without scheme and may include a context path (e.g. jira.example.com or example.com/jira).
+  PKCE (S256) is supported but not required. Access tokens live 2 hours; refreshing invalidates the previous access
+  and refresh token pair. The instance must be reachable from OpenMerge over HTTPS.
