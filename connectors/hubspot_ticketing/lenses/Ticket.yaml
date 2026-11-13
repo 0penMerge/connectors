@@ -1,0 +1,23 @@
+lens: hubspot_ticketing.tickets -> ticketing.Ticket@1
+read:
+  from: GET /crm/v3/objects/tickets?limit=100&properties=subject,content,hs_pipeline,hs_pipeline_stage,hs_ticket_priority,hs_ticket_category,hubspot_owner_id,closed_date,createdate,hs_lastmodifieddate
+  get: GET /crm/v3/objects/tickets/{id}?properties=subject,content,hs_pipeline,hs_pipeline_stage,hs_ticket_priority,hs_ticket_category,hubspot_owner_id,closed_date,createdate,hs_lastmodifieddate
+  strategy: hash_snapshot
+fields:
+  name: properties.subject
+  description: properties.content
+  status:
+    from: properties.hs_pipeline_stage
+    map: {'1': OPEN, '2': ON_HOLD, '3': IN_PROGRESS, '4': CLOSED}
+  priority:
+    from: properties.hs_ticket_priority
+    map: {LOW: LOW, MEDIUM: NORMAL, HIGH: HIGH, URGENT: URGENT}
+  ticket_type: {from: properties.hs_ticket_category, read: only}
+  remote_created_at: {from: createdAt, read: only}
+  remote_updated_at: {from: updatedAt, read: only}
+  completed_at: {from: properties.closed_date, read: only}
+  assignees: {refs: User, from: properties.hubspot_owner_id, read: only}
+  collections: {refs: Collection, from: properties.hs_pipeline, read: only}
+write:
+  create: POST /crm/v3/objects/tickets
+  update: PATCH /crm/v3/objects/tickets/{id}
