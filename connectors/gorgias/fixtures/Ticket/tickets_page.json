@@ -1,0 +1,75 @@
+{
+  "response": {
+    "data": [
+      {
+        "id": 9801,
+        "subject": "Refund request",
+        "status": "open",
+        "priority": "normal",
+        "customer": {
+          "id": 5121
+        },
+        "assignee_user": {
+          "id": 23
+        },
+        "assignee_team": {
+          "id": 4
+        },
+        "tags": [
+          {
+            "id": 1,
+            "name": "refund"
+          }
+        ],
+        "created_datetime": "2024-01-03T12:00:00+00:00",
+        "updated_datetime": "2024-01-03T13:00:00+00:00",
+        "closed_datetime": null
+      }
+    ],
+    "meta": {
+      "next_cursor": "eyJpZCI6OTgwMX0",
+      "prev_cursor": null
+    }
+  },
+  "expected_records": 1,
+  "expected_next": "eyJpZCI6OTgwMX0",
+  "native": {
+    "id": 9801,
+    "subject": "Refund request",
+    "status": "open",
+    "priority": "normal",
+    "customer": {
+      "id": 5121
+    },
+    "assignee_user": {
+      "id": 23
+    },
+    "assignee_team": {
+      "id": 4
+    },
+    "tags": [
+      {
+        "id": 1,
+        "name": "refund"
+      }
+    ],
+    "created_datetime": "2024-01-03T12:00:00+00:00",
+    "updated_datetime": "2024-01-03T13:00:00+00:00",
+    "closed_datetime": null
+  },
+  "unified": {
+    "name": "Refund request",
+    "status": "OPEN",
+    "priority": "NORMAL",
+    "contact": "5121",
+    "assignees": [
+      "23"
+    ],
+    "assigned_teams": [
+      "4"
+    ],
+    "tags": [
+      "refund"
+    ]
+  }
+}
