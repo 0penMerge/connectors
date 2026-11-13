@@ -1,0 +1,43 @@
+{
+  "response": {
+    "pagelen": 100,
+    "page": 1,
+    "size": 1,
+    "values": [
+      {
+        "uuid": "{0d8a5f5c-1b0a-4a2c-9a3e-2f7f0b4b2c11}",
+        "key": "PRJ",
+        "name": "Platform",
+        "description": "Core services",
+        "links": {
+          "html": {
+            "href": "https://bitbucket.org/acme/workspace/projects/PRJ"
+          }
+        },
+        "created_on": "2020-01-01T00:00:00.000000+00:00",
+        "updated_on": "2020-01-02T00:00:00.000000+00:00"
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "uuid": "{0d8a5f5c-1b0a-4a2c-9a3e-2f7f0b4b2c11}",
+    "key": "PRJ",
+    "name": "Platform",
+    "description": "Core services",
+    "links": {
+      "html": {
+        "href": "https://bitbucket.org/acme/workspace/projects/PRJ"
+      }
+    },
+    "created_on": "2020-01-01T00:00:00.000000+00:00",
+    "updated_on": "2020-01-02T00:00:00.000000+00:00"
+  },
+  "unified": {
+    "name": "Platform",
+    "description": "Core services",
+    "collection_type": "PROJECT",
+    "collection_url": "https://bitbucket.org/acme/workspace/projects/PRJ"
+  }
+}
