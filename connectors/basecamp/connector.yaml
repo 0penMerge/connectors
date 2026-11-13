@@ -1,105 +1,45 @@
-{
-  "apiVersion": "openmerge.dev/connector/v1",
-  "kind": "Connector",
-  "metadata": {
-    "id": "basecamp",
-    "version": "1.0.0",
-    "coreAbi": "2",
-    "name": "Basecamp",
-    "company": "37signals",
-    "description": "Sync Basecamp to-dos, projects, people and to-do comments through the OpenMerge ticketing model.",
-    "logo": {
-      "url": "https://cdn.openmerge.dev/connectors/basecamp.svg"
-    }
-  },
-  "runtime": {
-    "entrypoint": "plugin.py:BasecampPlugin"
-  },
-  "categories": [
-    "ticketing@1"
-  ],
-  "capabilities": {
-    "reads": [
-      "hash_snapshot"
-    ],
-    "writes": [],
-    "dynamicSchema": false,
-    "customFields": false
-  },
-  "auth": {
-    "type": "oauth2",
-    "driver": "oauth2",
-    "authorization_url": "https://launchpad.37signals.com/authorization/new",
-    "token_url": "https://launchpad.37signals.com/authorization/token",
-    "refresh_rotates": false,
-    "rotation_grace_seconds": null,
-    "scopes_param": "scope",
-    "default_scopes": [
-      "default"
-    ],
-    "scope_catalog": [
-      {
-        "id": "default",
-        "label": "Account access",
-        "description": "37signals Launchpad OAuth has no scopes; the token grants the authorizing person's access to their Basecamp accounts."
-      }
-    ],
-    "connection_config_fields": [
-      "account_id"
-    ],
-    "authorization_params": {
-      "type": "web_server"
-    },
-    "notes": "37signals Launchpad OAuth 2. Launchpad expects type=web_server on the authorize and code-exchange requests and type=refresh (with refresh_token) on refresh. Access tokens last two weeks; refresh tokens are long-lived. account_id comes from GET https://launchpad.37signals.com/authorization.json (accounts[].id with product bc3)."
-  },
-  "setup": {
-    "oauthAppFields": [
-      {
-        "id": "client_id",
-        "component": "text",
-        "label": "Client ID",
-        "required": true
-      },
-      {
-        "id": "client_secret",
-        "component": "secret",
-        "label": "Client secret",
-        "required": true,
-        "writeOnly": true
-      }
-    ],
-    "instructions": [
-      {
-        "component": "callback_url",
-        "label": "Add this redirect URL to your Basecamp OAuth app"
-      }
-    ]
-  },
-  "api": {
-    "base_url": "https://3.basecampapi.com/{account_id}",
-    "describe_endpoint": "/",
-    "pagination": {
-      "style": "offset",
-      "param": "page",
-      "records_path": "records",
-      "next_path": "next"
-    },
-    "rate_limit_headers": {
-      "remaining": null,
-      "reset": null,
-      "reset_style": "auto_seconds"
-    },
-    "authorization_scheme": "Bearer",
-    "schema_adapter": "declared",
-    "notes": "Basecamp 4 (bc3) API. Every request must send a User-Agent naming the app and a contact URL or email, or it gets 400. Collections use geared pagination (15, 30, 50, then 100 per page) advertised in the Link header; the plugin walks ?page=N and stops on a page shorter than 15, which may cost one extra empty request. Recordings endpoints default to status=active, so archived and trashed items are treated as absent. No updated-since filter exists, so reads are hashed snapshots."
-  },
-  "webhooks": {
-    "supported": false,
-    "automatic": false
-  },
-  "provenance": {
-    "author": "human:nath@datakart.ai",
-    "created_at": "2026-11-12T00:00:00Z",
-    "reason": "Provider descriptor for the Merge-compatible Ticketing category, from https://github.com/basecamp/bc3-api"
-  }
-}
+apiVersion: openmerge.dev/connector/v1
+kind: Connector
+metadata:
+  id: basecamp
+  version: 1.0.0
+  coreAbi: '3'
+  name: Basecamp
+  company: 37signals
+  description: Sync Basecamp to-dos, projects, people and to-do comments through the OpenMerge ticketing model.
+  logo: {url: 'https://cdn.openmerge.dev/connectors/basecamp.svg'}
+categories: [ticketing@1]
+capabilities:
+  reads: [hash_snapshot]
+  writes: []
+  dynamicSchema: false
+  customFields: false
+setup:
+  oauthAppFields:
+  - {id: client_id, component: text, label: Client ID, required: true}
+  - id: client_secret
+    component: secret
+    label: Client secret
+    required: true
+    writeOnly: true
+  instructions:
+  - {component: callback_url, label: Add this redirect URL to your Basecamp OAuth app}
+api:
+  base_url: https://3.basecampapi.com/{account_id}
+  describe_endpoint: /
+  pagination: {first: 1, mode: page, param: page, size: 15, records_path: $}
+  rate_limit_headers: {remaining: null, reset: null, reset_style: auto_seconds}
+  authorization_scheme: Bearer
+  schema_adapter: declared
+  notes: Basecamp 4 (bc3) API. Every request must send a User-Agent naming the app and a contact URL or email, or
+    it gets 400. Collections use geared pagination (15, 30, 50, then 100 per page) advertised in the Link header;
+    page pagination walks ?page=N and stops on a page shorter than 15, which may cost one extra empty request. Recordings
+    endpoints default to status=active, so archived and trashed items are treated as absent. No updated-since filter
+    exists, so reads are hashed snapshots.
+webhooks:
+  supported: false
+  automatic: false
+provenance:
+  author: human:nath@datakart.ai
+  created_at: '2026-11-12T00:00:00Z'
+  reason: Provider descriptor for the Merge-compatible Ticketing category, from https://github.com/basecamp/bc3-api
