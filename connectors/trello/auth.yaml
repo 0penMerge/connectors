@@ -1,0 +1,21 @@
+type: recipe
+use: oauth1a
+oauth1a:
+  request_token_url: https://trello.com/1/OAuthGetRequestToken
+  authorize_url: https://trello.com/1/OAuthAuthorizeToken
+  access_token_url: https://trello.com/1/OAuthGetAccessToken
+authorize:
+  params: {name: OpenMerge, scope: read, expiration: never}
+discover:
+  steps:
+  - id: me
+    request: {url: 'https://api.trello.com/1/members/me'}
+    save:
+      identity.user_id: id
+      identity.display_name: {path: fullName, required: false}
+  - id: board
+    request:
+      url: https://api.trello.com/1/members/me/boards
+      query: {fields: 'id,name', filter: open}
+    choose: {list: $, value: id, label: name, into: config.board_id}
+base_url: https://api.trello.com/1/boards/{config.board_id}
