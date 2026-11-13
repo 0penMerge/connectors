@@ -1,0 +1,9 @@
+lens: zendesk.organizations -> ticketing.Account@1
+read:
+  from: GET /api/v2/organizations?page[size]=100
+  records: organizations
+  get: GET /api/v2/organizations/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
+  domains: domain_names
