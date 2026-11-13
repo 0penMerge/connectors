@@ -1,0 +1,12 @@
+type: recipe
+use: api_key
+inputs:
+- id: orgname
+  label: Organization name (the <orgname> in <orgname>.kustomerapp.com)
+  pattern: '[a-z0-9][a-z0-9-]{0,62}'
+  stage: credentials
+api_key:
+  in: header
+  name: Authorization
+  prefix: 'Bearer '
+base_url: https://{config.orgname}.api.kustomerapp.com
