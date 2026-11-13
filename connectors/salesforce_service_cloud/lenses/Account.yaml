@@ -1,0 +1,8 @@
+lens: salesforce_service_cloud.Account -> ticketing.Account@1
+read:
+  from: GET /services/data/v67.0/query?q=SELECT+Id,Name,Website,CreatedDate,LastModifiedDate+FROM+Account+ORDER+BY+CreatedDate+ASC
+  get: GET /services/data/v67.0/sobjects/Account/{id}
+  strategy: hash_snapshot
+id: Id
+fields:
+  name: Name
