@@ -1,0 +1,10 @@
+lens: asana.users -> ticketing.User@1
+read:
+  from: GET /users?opt_fields=name,email,photo.image_60x60
+  strategy: hash_snapshot
+  scopes: ['users:read']
+id: gid
+fields:
+  name: name
+  email_address: email
+  avatar: photo.image_60x60
