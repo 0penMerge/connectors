@@ -1,0 +1,12 @@
+lens: ironclad.users -> ticketing.User@1
+read:
+  from: GET /scim/v2/Users
+  records: Resources
+  page: {first: 1, mode: offset, param: startIndex, size: 200, limit_param: count}
+  get: GET /scim/v2/Users/{id}
+  strategy: hash_snapshot
+  scopes: [scim.users.readUsers]
+fields:
+  name: {coalesce: [displayName, userName]}
+  email_address: {coalesce: [emails.0.value, userName]}
+  is_active: active
