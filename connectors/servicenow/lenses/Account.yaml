@@ -1,0 +1,10 @@
+lens: servicenow.core_company -> ticketing.Account@1
+read:
+  from: GET /api/now/table/core_company?sysparm_exclude_reference_link=true&sysparm_query=ORDERBYsys_created_on
+  get: GET /api/now/table/core_company/{id}
+  strategy: hash_snapshot
+id: sys_id
+fields:
+  name: name
+write:
+  record: result
