@@ -1,0 +1,10 @@
+lens: dropbox.files -> filestorage.File@1
+read:
+  from: GET /2/files/list_folder
+  keep: {eq: ['[".tag"]', file]}
+  strategy: hash_snapshot
+  scopes: [files.metadata.read]
+fields:
+  name: name
+  size: size
+  remote_updated_at: server_modified
