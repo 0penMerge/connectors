@@ -1,0 +1,29 @@
+{
+  "response": {
+    "data": [
+      {
+        "gid": "12345",
+        "name": "Greg Sanchez",
+        "email": "gsanchez@example.com",
+        "photo": {
+          "image_60x60": "https://..."
+        }
+      }
+    ],
+    "next_page": null
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "gid": "12345",
+    "name": "Greg Sanchez",
+    "email": "gsanchez@example.com",
+    "photo": {
+      "image_60x60": "https://..."
+    }
+  },
+  "unified": {
+    "name": "Greg Sanchez",
+    "email_address": "gsanchez@example.com"
+  }
+}
