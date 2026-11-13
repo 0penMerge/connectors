@@ -1,0 +1,14 @@
+lens: ironclad.workflows -> ticketing.Ticket@1
+read:
+  from: GET /public/api/v1/workflows?status=active,paused,completed,cancelled
+  get: GET /public/api/v1/workflows/{id}
+  strategy: hash_snapshot
+  scopes: [public.workflows.readWorkflows]
+fields:
+  name: title
+  status:
+    from: status
+    map: {active: IN_PROGRESS, paused: ON_HOLD, completed: CLOSED, cancelled: CLOSED}
+  creator: {ref: User, from: creator.id}
+  remote_created_at: created
+  remote_updated_at: lastUpdated
