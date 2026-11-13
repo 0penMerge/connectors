@@ -1,0 +1,9 @@
+lens: jira.roles -> ticketing.Role@1
+read:
+  from: GET /rest/api/3/role
+  records: $
+  page: {mode: single}
+  get: GET /rest/api/3/role/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
