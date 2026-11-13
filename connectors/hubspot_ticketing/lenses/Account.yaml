@@ -1,0 +1,7 @@
+lens: hubspot_ticketing.companies -> ticketing.Account@1
+read:
+  from: GET /crm/v3/objects/companies?limit=100&properties=name,domain,createdate,hs_lastmodifieddate
+  get: GET /crm/v3/objects/companies/{id}?properties=name,domain,createdate,hs_lastmodifieddate
+  strategy: hash_snapshot
+fields:
+  name: properties.name
