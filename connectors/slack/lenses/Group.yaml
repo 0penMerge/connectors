@@ -1,0 +1,8 @@
+lens: slack.usergroups -> chat.Group@1
+read:
+  from: GET /usergroups.list?include_disabled=true
+  records: usergroups
+  page: {mode: single}
+  strategy: hash_snapshot
+fields:
+  name: name
