@@ -1,0 +1,9 @@
+lens: zoho_bugtracker.users -> ticketing.User@1
+read:
+  from: GET /users/?user_type=all
+  records: users
+  strategy: hash_snapshot
+fields:
+  name: name
+  email_address: email
+  is_active: active
