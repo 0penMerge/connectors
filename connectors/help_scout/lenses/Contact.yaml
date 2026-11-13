@@ -1,0 +1,12 @@
+lens: help_scout.customers -> ticketing.Contact@1
+read:
+  from: GET /v3/customers
+  records: _embedded.customers
+  get: GET /v2/customers/{id}
+  strategy: hash_snapshot
+fields:
+  email_address: _embedded.emails.0.value
+  phone_number: _embedded.phones.0.value
+  details: background
+  account: {ref: Account, from: organizationId}
+  name: {join: [firstName, lastName], sep: ' '}
