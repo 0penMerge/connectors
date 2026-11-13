@@ -1,0 +1,46 @@
+{
+  "response": {
+    "data": [
+      {
+        "id": "1892000000042034",
+        "subject": "Real Time analysis Requirement",
+        "status": "Open",
+        "priority": "High",
+        "category": "General",
+        "dueDate": "2016-06-21T16:16:16.000Z",
+        "contactId": "1892000000042032",
+        "accountId": null,
+        "assigneeId": "1892000000056007",
+        "webUrl": "https://desk.zoho.com/support/ShowHomePage.do#Cases/dv/1892000000042034",
+        "createdTime": "2013-11-04T11:39:07.000Z",
+        "closedTime": null
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "1892000000042034",
+    "subject": "Real Time analysis Requirement",
+    "status": "Open",
+    "priority": "High",
+    "category": "General",
+    "dueDate": "2016-06-21T16:16:16.000Z",
+    "contactId": "1892000000042032",
+    "accountId": null,
+    "assigneeId": "1892000000056007",
+    "webUrl": "https://desk.zoho.com/support/ShowHomePage.do#Cases/dv/1892000000042034",
+    "createdTime": "2013-11-04T11:39:07.000Z",
+    "closedTime": null
+  },
+  "unified": {
+    "name": "Real Time analysis Requirement",
+    "status": "OPEN",
+    "priority": "HIGH",
+    "ticket_type": "General",
+    "contact": "1892000000042032",
+    "assignees": [
+      "1892000000056007"
+    ]
+  }
+}
