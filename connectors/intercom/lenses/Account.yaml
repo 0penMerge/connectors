@@ -1,0 +1,9 @@
+lens: intercom.companies -> ticketing.Account@1
+read:
+  from: GET /companies
+  records: data
+  page: {first: 1, mode: page, param: page, size: 50, limit_param: per_page}
+  get: GET /companies/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
