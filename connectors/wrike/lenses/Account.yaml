@@ -1,0 +1,7 @@
+lens: wrike.account -> ticketing.Account@1
+read:
+  from: GET /account
+  strategy: hash_snapshot
+  scopes: [Default]
+fields:
+  name: name
