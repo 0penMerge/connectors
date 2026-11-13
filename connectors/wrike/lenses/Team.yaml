@@ -1,0 +1,8 @@
+lens: wrike.groups -> ticketing.Team@1
+read:
+  from: GET /groups
+  get: GET /groups/{id}
+  strategy: hash_snapshot
+  scopes: [amReadOnlyGroup]
+fields:
+  name: title
