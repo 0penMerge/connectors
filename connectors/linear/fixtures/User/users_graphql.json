@@ -1,0 +1,39 @@
+{
+  "response": {
+    "data": {
+      "users": {
+        "nodes": [
+          {
+            "id": "u1",
+            "name": "Ann Lee",
+            "displayName": "ann",
+            "email": "ann@acme.test",
+            "active": true,
+            "admin": false,
+            "avatarUrl": "https://public.linear.app/avatar.png"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": null
+        }
+      }
+    }
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "u1",
+    "name": "Ann Lee",
+    "displayName": "ann",
+    "email": "ann@acme.test",
+    "active": true,
+    "admin": false,
+    "avatarUrl": "https://public.linear.app/avatar.png"
+  },
+  "unified": {
+    "name": "Ann Lee",
+    "email_address": "ann@acme.test",
+    "is_active": true
+  }
+}
