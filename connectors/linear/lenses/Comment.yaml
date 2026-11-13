@@ -1,0 +1,19 @@
+lens: linear.comments -> ticketing.Comment@1
+read:
+  from: GET /graphql
+  records: data.comments.nodes
+  page:
+    has_more: data.comments.pageInfo.hasNextPage
+    mode: graphql
+    next: data.comments.pageInfo.endCursor
+    path: /graphql
+    query: query($first:Int!,$after:String){comments(first:$first,after:$after){nodes{id body url createdAt updatedAt
+      editedAt user{id} issue{id} parent{id}} pageInfo{hasNextPage endCursor}}}
+    size: 100
+  strategy: hash_snapshot
+  scopes: [read]
+fields:
+  body: body
+  user: {ref: User, from: user.id}
+  ticket: {ref: Ticket, from: issue.id}
+  remote_created_at: createdAt
