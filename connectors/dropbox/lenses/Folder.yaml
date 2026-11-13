@@ -1,0 +1,8 @@
+lens: dropbox.folders -> filestorage.Folder@1
+read:
+  from: GET /2/files/list_folder
+  keep: {eq: ['[".tag"]', folder]}
+  strategy: hash_snapshot
+  scopes: [files.metadata.read]
+fields:
+  name: name
