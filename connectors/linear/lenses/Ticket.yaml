@@ -1,0 +1,31 @@
+lens: linear.issues -> ticketing.Ticket@1
+read:
+  from: GET /graphql
+  strategy: hash_snapshot
+  scopes: [read]
+fields:
+  name: title
+  description: description
+  status:
+    from: state.type
+    map:
+      triage: OPEN
+      backlog: OPEN
+      unstarted: OPEN
+      started: IN_PROGRESS
+      completed: CLOSED
+      canceled: CLOSED
+  priority:
+    from: priority
+    map: {'1': URGENT, '2': HIGH, '3': NORMAL, '4': LOW}
+    other: 'null'
+  due_date: dueDate
+  creator: {ref: User, from: creator.id}
+  parent_ticket: {ref: Ticket, from: parent.id}
+  remote_created_at: createdAt
+  remote_updated_at: updatedAt
+  completed_at: completedAt
+  ticket_url: url
+  assignees: {refs: User, from: assignee.id}
+  assigned_teams: {refs: Team, from: team.id}
+  collections: {refs: Collection, from: project.id}
