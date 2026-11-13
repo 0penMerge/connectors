@@ -1,0 +1,9 @@
+lens: zendesk.custom_roles -> ticketing.Role@1
+read:
+  from: GET /api/v2/custom_roles
+  records: custom_roles
+  page: {mode: single}
+  get: GET /api/v2/custom_roles/{id}
+  strategy: hash_snapshot
+fields:
+  name: name
