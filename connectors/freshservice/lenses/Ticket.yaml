@@ -1,0 +1,27 @@
+lens: freshservice.tickets -> ticketing.Ticket@1
+read:
+  from: GET /tickets?updated_since=1970-01-01T00:00:00Z
+  get: GET /tickets/{id}
+  strategy: hash_snapshot
+fields:
+  name: subject
+  description: description
+  ticket_type: {from: type, read: only}
+  due_date: {from: due_by, read: only}
+  contact: {ref: Contact, from: requester_id, read: only}
+  account: {ref: Account, from: department_id, read: only}
+  remote_created_at: {from: created_at, read: only}
+  remote_updated_at: {from: updated_at, read: only}
+  status:
+    from: status
+    map: {'2': OPEN, '3': ON_HOLD, '4': CLOSED, '5': CLOSED}
+    put: {OPEN: 2, IN_PROGRESS: 2, ON_HOLD: 3, CLOSED: 5}
+  priority:
+    from: priority
+    map: {'1': LOW, '2': NORMAL, '3': HIGH, '4': URGENT}
+    put: {LOW: 1, NORMAL: 2, HIGH: 3, URGENT: 4}
+  assignees: {refs: User, from: responder_id, read: only}
+  assigned_teams: {refs: Team, from: group_id, read: only}
+write:
+  update: PUT /tickets/{id}
+  record: ticket
