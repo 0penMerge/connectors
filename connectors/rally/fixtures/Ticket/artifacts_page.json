@@ -1,0 +1,45 @@
+{
+  "response": {
+    "QueryResult": {
+      "TotalResultCount": 1,
+      "StartIndex": 1,
+      "PageSize": 200,
+      "Results": [
+        {
+          "_type": "HierarchicalRequirement",
+          "ObjectUUID": "b5d5b8a4-1a1d-4c69-a6f4-0a0c0f6d4b1e",
+          "Name": "Login with SSO",
+          "Description": "<p>SAML</p>",
+          "ScheduleState": "In-Progress",
+          "CreatedBy": {
+            "_refObjectUUID": "u-uuid-1"
+          },
+          "Parent": null,
+          "CreationDate": "2024-02-01T00:00:00.000Z",
+          "LastUpdateDate": "2024-02-02T00:00:00.000Z"
+        }
+      ]
+    }
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "_type": "HierarchicalRequirement",
+    "ObjectUUID": "b5d5b8a4-1a1d-4c69-a6f4-0a0c0f6d4b1e",
+    "Name": "Login with SSO",
+    "Description": "<p>SAML</p>",
+    "ScheduleState": "In-Progress",
+    "CreatedBy": {
+      "_refObjectUUID": "u-uuid-1"
+    },
+    "Parent": null,
+    "CreationDate": "2024-02-01T00:00:00.000Z",
+    "LastUpdateDate": "2024-02-02T00:00:00.000Z"
+  },
+  "unified": {
+    "name": "Login with SSO",
+    "status": "IN_PROGRESS",
+    "ticket_type": "HierarchicalRequirement",
+    "creator": "u-uuid-1"
+  }
+}
