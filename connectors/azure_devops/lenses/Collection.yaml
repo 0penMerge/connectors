@@ -1,0 +1,14 @@
+lens: azure_devops.projects -> ticketing.Collection@1
+read:
+  from: GET /_apis/projects?api-version=7.1
+  get: GET /_apis/projects/{id}?api-version=7.1
+  strategy: hash_snapshot
+  scopes: [499b84ac-1321-427f-aa17-267ca6975798/vso.project]
+fields:
+  name: name
+  description: description
+  access_level:
+    from: visibility
+    map: {public: PUBLIC, private: PRIVATE, internal: COMPANY}
+  collection_type: {const: PROJECT}
+  remote_updated_at: lastUpdateTime
