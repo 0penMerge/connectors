@@ -1,0 +1,62 @@
+{
+  "response": [
+    {
+      "id": 20,
+      "subject": "Support needed..",
+      "description": "<div>Details about the issue...</div>",
+      "description_text": "Details about the issue...",
+      "status": 2,
+      "priority": 1,
+      "type": "Question",
+      "due_by": "2015-08-20T11:30:00Z",
+      "tags": [
+        "billing"
+      ],
+      "requester_id": 129,
+      "responder_id": 1203,
+      "group_id": 7,
+      "company_id": 3,
+      "created_at": "2015-08-17T11:30:00Z",
+      "updated_at": "2015-08-17T11:30:00Z"
+    }
+  ],
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": 20,
+    "subject": "Support needed..",
+    "description": "<div>Details about the issue...</div>",
+    "description_text": "Details about the issue...",
+    "status": 2,
+    "priority": 1,
+    "type": "Question",
+    "due_by": "2015-08-20T11:30:00Z",
+    "tags": [
+      "billing"
+    ],
+    "requester_id": 129,
+    "responder_id": 1203,
+    "group_id": 7,
+    "company_id": 3,
+    "created_at": "2015-08-17T11:30:00Z",
+    "updated_at": "2015-08-17T11:30:00Z"
+  },
+  "unified": {
+    "name": "Support needed..",
+    "description": "<div>Details about the issue...</div>",
+    "status": "OPEN",
+    "priority": "LOW",
+    "ticket_type": "Question",
+    "tags": [
+      "billing"
+    ],
+    "contact": "129",
+    "account": "3",
+    "assignees": [
+      "1203"
+    ],
+    "assigned_teams": [
+      "7"
+    ]
+  }
+}
