@@ -1,0 +1,58 @@
+{
+  "response": [
+    {
+      "id": "5abbe4b7ddc1b351ef961414",
+      "name": "Ship v2",
+      "desc": "Release checklist",
+      "closed": false,
+      "due": "2024-06-01T12:00:00.000Z",
+      "idMembers": [
+        "5abbe4b7ddc1b351ef961400"
+      ],
+      "idList": "5abbe4b7ddc1b351ef961420",
+      "labels": [
+        {
+          "id": "l1",
+          "name": "release"
+        }
+      ],
+      "dateLastActivity": "2024-05-20T09:00:00.000Z",
+      "url": "https://trello.com/c/abc123/1-ship-v2"
+    }
+  ],
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "5abbe4b7ddc1b351ef961414",
+    "name": "Ship v2",
+    "desc": "Release checklist",
+    "closed": false,
+    "due": "2024-06-01T12:00:00.000Z",
+    "idMembers": [
+      "5abbe4b7ddc1b351ef961400"
+    ],
+    "idList": "5abbe4b7ddc1b351ef961420",
+    "labels": [
+      {
+        "id": "l1",
+        "name": "release"
+      }
+    ],
+    "dateLastActivity": "2024-05-20T09:00:00.000Z",
+    "url": "https://trello.com/c/abc123/1-ship-v2"
+  },
+  "unified": {
+    "name": "Ship v2",
+    "description": "Release checklist",
+    "status": "OPEN",
+    "assignees": [
+      "5abbe4b7ddc1b351ef961400"
+    ],
+    "collections": [
+      "5abbe4b7ddc1b351ef961420"
+    ],
+    "tags": [
+      "release"
+    ]
+  }
+}
