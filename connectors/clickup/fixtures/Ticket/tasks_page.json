@@ -1,0 +1,67 @@
+{
+  "response": {
+    "tasks": [
+      {
+        "id": "9hx",
+        "name": "Updated Task Name",
+        "text_content": "New Task Content",
+        "description": "New Task Content",
+        "status": {
+          "status": "in progress",
+          "type": "custom"
+        },
+        "priority": {
+          "priority": "urgent"
+        },
+        "date_created": "1567780450202",
+        "date_updated": "1567780450202",
+        "date_closed": null,
+        "due_date": "1508369194377",
+        "parent": null,
+        "tags": [
+          {
+            "name": "backend"
+          }
+        ],
+        "url": "https://app.clickup.com/t/9hx"
+      }
+    ]
+  },
+  "expected_records": 1,
+  "expected_next": null,
+  "native": {
+    "id": "9hx",
+    "name": "Updated Task Name",
+    "text_content": "New Task Content",
+    "description": "New Task Content",
+    "status": {
+      "status": "in progress",
+      "type": "custom"
+    },
+    "priority": {
+      "priority": "urgent"
+    },
+    "date_created": "1567780450202",
+    "date_updated": "1567780450202",
+    "date_closed": null,
+    "due_date": "1508369194377",
+    "parent": null,
+    "tags": [
+      {
+        "name": "backend"
+      }
+    ],
+    "url": "https://app.clickup.com/t/9hx"
+  },
+  "unified": {
+    "name": "Updated Task Name",
+    "description": "New Task Content",
+    "status": "IN_PROGRESS",
+    "priority": "URGENT",
+    "due_date": "2017-10-18T23:26:34.377Z",
+    "remote_created_at": "2019-09-06T14:34:10.202Z",
+    "tags": [
+      "backend"
+    ]
+  }
+}
